@@ -13,3 +13,7 @@ code/*.tex  linguist-vendored
 jiemin_writeup/* linguist-vendored
 jiemin_writeup/Infocom2017/* linguist-vendored
 jiemin_writeup/fwcg/* linguist-vendored
+
+.jiemin_writeup/* linguist-vendored
+.jiemin_writeup/Infocom2017/* linguist-vendored
+.jiemin_writeup/fwcg/* linguist-vendored
