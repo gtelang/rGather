@@ -18,3 +18,11 @@ jiemin_writeup/*.log linguist-vendored
 jiemin_writeup/*.bbl linguist-vendored
 
 
+jiemin_writeup/Infocom2017/*.tex linguist-vendored
+jiemin_writeup/Infocom2017/*.sty linguist-vendored
+jiemin_writeup/Infocom2017/*.log linguist-vendored
+jiemin_writeup/Infocom2017/*.bib linguist-vendored
+jiemin_writeup/Infocom2017/*.log linguist-vendored
+jiemin_writeup/Infocom2017/*.bbl linguist-vendored
+
+
