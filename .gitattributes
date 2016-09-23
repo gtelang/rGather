@@ -9,3 +9,12 @@ code/*.hpp linguist-language=C++
 code/*.html linguist-vendored
 code/*.css  linguist-vendored
 code/*.tex  linguist-vendored
+
+jiemin_writeup/*.tex linguist-vendored
+jiemin_writeup/*.sty linguist-vendored
+jiemin_writeup/*.log linguist-vendored
+jiemin_writeup/*.bib linguist-vendored
+jiemin_writeup/*.log linguist-vendored
+jiemin_writeup/*.bbl linguist-vendored
+
+
