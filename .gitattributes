@@ -4,6 +4,8 @@ code/*.hpp linguist-language=C++
 *.html linguist-vendored
 *.css  linguist-vendored
 *.js   linguist-vendored
+*.tex  linguist-vendored
+*.mp4  linguist-vendored
 code/*.html linguist-vendored
 code/*.css  linguist-vendored
-
+code/*.tex  linguist-vendored
