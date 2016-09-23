@@ -10,19 +10,6 @@ code/*.html linguist-vendored
 code/*.css  linguist-vendored
 code/*.tex  linguist-vendored
 
-jiemin_writeup/*.tex linguist-vendored
-jiemin_writeup/*.sty linguist-vendored
-jiemin_writeup/*.log linguist-vendored
-jiemin_writeup/*.bib linguist-vendored
-jiemin_writeup/*.log linguist-vendored
-jiemin_writeup/*.bbl linguist-vendored
-
-
-jiemin_writeup/Infocom2017/*.tex linguist-vendored
-jiemin_writeup/Infocom2017/*.sty linguist-vendored
-jiemin_writeup/Infocom2017/*.log linguist-vendored
-jiemin_writeup/Infocom2017/*.bib linguist-vendored
-jiemin_writeup/Infocom2017/*.log linguist-vendored
-jiemin_writeup/Infocom2017/*.bbl linguist-vendored
-
-
+jiemin_writeup/* linguist-vendored
+jiemin_writeup/Infocom2017/* linguist-vendored
+jiemin_writeup/fwcg/* linguist-vendored
