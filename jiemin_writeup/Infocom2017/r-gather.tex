@@ -1,0 +1,58 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{mystyle}
+\usepackage{graphicx}
+\usepackage{color}
+
+
+\newcommand{\denselist}{\itemsep 0pt\parsep=0.8pt\partopsep 0pt}
+\newcommand{\bitem}{\begin{itemize}\denselist}
+\newcommand{\eitem}{\end{itemize}}
+\newcommand{\benum}{\begin{enumerate}\denselist}
+\newcommand{\eenum}{\end{enumerate}}
+
+\title{Distributed $r$-gather: Geographically Coherent Cardinality Clustering for Mobile Networks}
+
+\newcommand{\myparagraph}[1]{\vspace*{1mm}\noindent {\bf #1}}
+\newcommand{\rik}[1]{\vspace{2mm}\noindent {\bf \marginpar{***}\noindent Rik's comment:} #1\vspace{2mm}} 
+
+\newcommand{\Frechet}{Fr\'echet }
+\newcommand{\eps}{\varepsilon}
+\newcommand{\dst}{\displaystyle}
+
+
+
+
+%compliles with pdflatex
+\begin{document}
+%\setcopyright{acmcopyright}
+\maketitle
+
+
+\begin{abstract}
+
+Grouping mobile nodes into clusters can ease the management of a large number of devices and their information. Since applications and communication in mobile devices are highly location dependent, clustering by location is particularly useful in this context. In this paper, we consider the $r$-gather problem in which we must group nodes into clusters each having at least $r$ nodes (so that each cluster has a meaningful population), while minimizing the maximum diameter of the clusters (so that each cluster is geographically coherent).
+
+We present several new results on the $r$-gather problem, including hardness of approximation in a variety of geometric settings and new distributed approximation algorithms for optimizing the maximum diameter of a cluster. In particular, our distributed algorithm for $r$-gather clustering allows computation to be pushed to the edges of the network. This method produces provably near-optimal results and can adapt to the dynamics of nodes in motion. The distributed approach naturally comes with the advantage of greater resilience. Additionally, we show that it achieves local optimality; i.e., from the point of view of any particular node, the solution is nearly as favorable as possible, irrespective of the global configuration. 
+
+\end{abstract} 
+
+\input{intro.tex}
+%\input{related.tex}
+\input{theory.tex}
+\input{algorithm.tex}
+\input{experiment.tex}
+%\vspace*{-3mm}
+
+\section{Conclusion}
+In this paper we investigated the $r$-gather problem, a varient of geometric clustering for the mobile settings. We improved hardness results for metrics in the Euclidean setting, and proposed algorithm for the dynamic setting when nodes move around and regrouping is allowed. Further, we proposed a distributed algorithm which uses local operations that gives a $4$-approximation. We evaluated the algorithms on a real data set and show that actually the distributed algorithm (though with worst case approximation ratio worse than previous centralized algorithms) actually perform better in practice, in terms of maximum cluster diameter. We expect that the algorithms find other applications in mobile computing. 
+
+
+
+\begin{small}
+\bibliographystyle{abbrv}
+\bibliography{r-gather,privacy,jie}
+\end{small}
+
+
+\end{document}

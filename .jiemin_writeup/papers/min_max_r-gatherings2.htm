@@ -1,0 +1,937 @@
+
+
+<!DOCTYPE html>
+
+
+
+
+
+
+<!--[if IE 8]><html class="ie8" lang="en-US"><![endif]-->
+<!--[if IE 9]><html class="ie9" lang="en-US"><![endif]-->
+<!--[if gt IE 9]><!--><html lang="en-US"><!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="INDEX,FOLLOW,NOARCHIVE,NOODP,NOYDIR">
+
+    <style type="text/css">.body-container, .article-layout-container { display: none; }</style>
+    <link rel="stylesheet" href="//sdfestaticassets-us-east-1.sciencedirectassets.com/prod/d6839ff586e40d1e8f7cb88be4987c6c5cbaeb89/stylesheets/core.css" type="text/css">
+    <!--[if (lte IE 9) & (!IEMobile)]>
+    <link rel="stylesheet" href="//sdfestaticassets-us-east-1.sciencedirectassets.com/prod/d6839ff586e40d1e8f7cb88be4987c6c5cbaeb89/stylesheets/ie.css">
+    <![endif]-->
+
+    <link rel="icon" href="//sdfestaticassets-us-east-1.sciencedirectassets.com/prod/d6839ff586e40d1e8f7cb88be4987c6c5cbaeb89/images/faviconSD.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="//sdfestaticassets-us-east-1.sciencedirectassets.com/prod/d6839ff586e40d1e8f7cb88be4987c6c5cbaeb89/images/faviconSD.ico" type="image/x-icon">
+    <script>
+        var sdEndpoint = "//www.sciencedirect.com";
+    </script>
+<link rel="stylesheet" href="//sdfestaticassets-us-east-1.sciencedirectassets.com/prod/d6839ff586e40d1e8f7cb88be4987c6c5cbaeb89/stylesheets/article.css" type="text/css">
+<link rel="canonical" href="//www.sciencedirect.com/science/article/pii/S0304397510002689">
+<meta name="citation_publisher" content="Elsevier">
+<meta name="citation_type" content="JOUR">
+<meta name="citation_journal_title" content="Theoretical Computer Science">
+<meta name="citation_title" content="On min–max r-gatherings">
+<meta name="citation_pii" content="S0304397510002689">
+<meta name="citation_doi" content="10.1016/j.tcs.2010.04.040">
+
+<meta name="citation_issn" content="0304-3975">
+    <meta name="citation_volume" content="412">
+    <meta name="citation_issue" content="7">
+
+<meta name="citation_publication_date" content="2011/02/25">
+
+    <meta name="citation_firstpage" content="573">
+    <meta name="citation_lastpage" content="582">
+
+      <meta name="citation_author" content="Amitai Armon">
+
+    <meta name="citation_fulltext_world_readable" content="">
+
+<meta name="dc.identifier" content="doi:10.1016/j.tcs.2010.04.040">
+<title>
+    On min–max r-gatherings
+</title>
+
+<script type="text/javascript">
+    var prs = {
+        rt: function(label,ts) { this[label]=(ts||ts==0?ts:new Date().getTime()); }
+    };
+
+    var SDM = {
+        cpc: 'SDFE',
+        ud: '334567|<SAInfo><SAId>36</SAId><SAName>SUNY Consortium</SAName><SANum>S000000036</SANum></SAInfo>|C000017318|28228|IPRANGE',
+        pm: {
+            pii: 'S0304397510002689',
+            issnisbn: '03043975',
+            eid: "1-s2.0-S0304397510002689",
+            cid: "271538",
+            pdfEid: "1-s2.0-S0304397510002689-main.pdf",
+            coverDate: "25-Feb-2011",
+            itemWeight: "HEAD-AND-TAIL",
+            entitled: true,
+            contentType: 'JL'
+        },
+        pageType: "article_full",
+        si: {
+            sds: "ea85cef5cc0b5769e60f1bd8e15d4bd988343cd544e942104230826d94893af006623b4713d9cede"
+        },
+        tid: "web-cf8e73d2-f414-4999-a11c-c9ddf8eba259",
+        ep: {
+            prDevice: "http://pa.elsevier.com",
+            pru: "http://pa.elsevier.com"
+        },
+        pf: {
+            oa: {
+                item: "true"
+            }
+        },
+
+    };
+</script>
+
+</head>
+<body class="">
+<a href="#content" class="skip-to-content accessible-text">Skip to content</a>
+
+    <div id="left-menu" class="left-menu" role="region" aria-label="Search and Navigation">
+
+<div class="left-menu-header">
+    <ul class="navigation-links publication-type-links">
+        <li class="list-item"><a href="//www.sciencedirect.com/science/journals">Journals</a></li>
+        <li class="list-item"><a href="//www.sciencedirect.com/science/bookbshsrw">Books</a></li>
+    </ul>
+</div>
+
+<div class="left-menu-search">
+
+<form id="qkSrchLeft" class="utility-search-form" name="qkSrch" method="get" target="_top" action="//www.sciencedirect.com/science" role="search" aria-label="ScienceDirect">
+    <input type="hidden" name="_ob" value="QuickSearchURL">
+    <input type="hidden" name="_method" value="submitForm">
+    <input type="hidden" name="_acct" value="C000017318">
+    <input type="hidden" name="searchtype" value="a">
+    <input type="hidden" name="_origin" value="article">
+    <input type="hidden" name="_zone" value="qSearch">
+    <input type="hidden" name="md5" value="1e0a1a1d73edfa7b195d2e7b052e27f1">
+
+<input class="quick-search-value" placeholder="Search ScienceDirect" title="Search ScienceDirect"
+       type="text" name="qs_all" id="qs_all_left" value="" size="35" maxlength="450">
+
+    <input class="quick-search-submit" id="submit_search_left" type="submit"
+           alt="Submit Quick Search" title="Submit Quick Search" name="sdSearch">
+
+    <a class="advanced-search-link" href="//www.sciencedirect.com/science/search">Advanced search</a>
+</form>
+</div>
+
+<div class="left-menu-user-actions">
+
+    <ul class="left-menu-user-utility-links">
+
+<li class="list-item"><a href="//www.sciencedirect.com/science?_ob=ShoppingCartURL&_method=display&_zone=TopNavBar&_origin=article&md5=98a3e89aa38c5044516e5e4ca8b64e74" target="_top" title="Shopping cart" id="sd-shopping-cart-link-left-menu">Shopping cart</a></li>
+
+
+    <li id="user-actions-left-menu" class="list-item user-actions">
+
+        <a href="#" id="signout-drawer-left-menu" class="user-actions-toggle js-user-actions-toggle no-label" role="button" aria-controls="user-actions-window" aria-expanded="false" aria-haspopup="true">
+            <i class="user-actions-toggle-icon"></i>
+                <span class="user-actions-toggle-label user-actions-username">Sign in</span>
+        </a>
+    </li>
+
+<li class="list-item">
+    <a id="help-link-left-menu" href="http://help.sciencedirect.com/flare/sdhelp_Left.htm#CSHID=browse_open_doc.htm|StartTopic=Content%2Fbrowse_open_doc.htm|SkinName=svs_SD" target="sdhelp" title="Help (Opens new window)">
+        Help
+    </a>
+</li>
+
+    </ul>
+</div>
+    </div>
+
+    <a href="#" class="left-menu-toggle" aria-controls="left-menu" aria-expanded="false" title="Search and Navigation">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" version="1.1">
+            <path fill="#fff" d="M2,4v3h20v-3h-20zm0,6v3h20v-3h-20zm0,6v3h20v-3h-20z"></path>
+        </svg>
+    </a>
+<div class="page-container">
+
+    <link rel="stylesheet" href="//sdfestaticassets-us-east-1.sciencedirectassets.com/prod/dc43fc43104671aa10ee63a6cc48a673e09a5fc9/style.css" type="text/css">
+    <div class="ccs-component">
+        <div class="header" role="banner"><div class="els-header"><div class="els-header-leftside"><div class="els-header-wordmark"><a class="els-main-title" href="/"><span aria-label="ScienceDirect" class="icon svg-wordmark-sciencedirect-orange"><span class="svg-text">ScienceDirect</span></span></a></div></div><div class="els-header-sub-nav"><ul class="els-header-icons"><li class="els-header-icons-item els-header-user"><a aria-controls="ccs-profilePopup" aria-expanded="false" id="ccs-profilePopupLink" class="link-inherit els-header-user-link"><span class="signIn_User" tabindex="0"><span class="els-header-user-sign-in">Sign in</span><span class="icon svg-sdfe-arrow-down els-header-user-icon-signin"></span></span></a><div class="SignInOut"><div class="ccs-signin-popup" role="dialog" id="ccs-profilePopup"><div class="ccs-signin-popup-body-border"><div class="ccs-signin-body ccs-signin-popup-body"><form class="SignInForm ccs-signin-local" action="https://www.sciencedirect.com/science/MiamiLoginURL" method="POST"><input type="hidden" value="login" name="login"/><input type="hidden" value="MiamiLogonURL" name="_ob"/><input type="hidden" value="http://www.sciencedirect.com/science/article/pii/S0304397510002689" name="returnURL"/><input type="hidden" value="http://www.sciencedirect.com/science/article/pii/S0304397510002689" name="return-url"/><input type="hidden" value="http://www.sciencedirect.com/science/article/pii/S0304397510002689" name="targetURL"/><input type="hidden" value="https://www.sciencedirect.com/science/MiamiLoginURL" name="invalidLoginURL"/><div><h3>Sign in using your ScienceDirect credentials</h3><div class="ccs-signin-form"><div><label class="ccs-signin-form-left">Username</label><span class="ccs-signin-form-right"><input class="ccs-signin-username" name="userid" id="ccs-signin-username-input" title="Please enter your username here" type="text"/></span></div><div><label class="ccs-signin-form-left">Password</label><span class="ccs-signin-form-right"><input class="ccs-signin-password" name="password" title="Please enter your password here" type="password"/></span></div><div><label class="ccs-signin-form-left"></label><span class="ccs-signin-form-right"><input class="" name="rememberid" title="Checking this option will log you in automatically next time you visit ScienceDirect" type="checkbox" checked=""/><label>Remember me</label></span></div><div><label class="ccs-signin-form-left"></label><span class="ccs-signin-form-right"><input class="ccs-signin-submit" value="Sign in" title="Sign in to ScienceDirect" type="submit"/><a class="ccs-signin-not-registered link-inherit" href="https://www.sciencedirect.com/science/register-new-user" target="_top">Register now</a></span></div><div><label class="ccs-signin-form-left"></label><span class="ccs-signin-form-right"><a class="link-inherit" href="/science?_ob=ReminderURL&amp;_method=display&amp;md5=4a97631c25ac81c09ad2f961106e9da2" target="passwd" title="Click here for help in recovering your ScienceDirect access">Forgotten username or password?</a></span></div></div></div></form><div class="InstitutionalLogin ccs-signin-remote"><h3>Sign in via your institution</h3><ul class="ccs-signin-institution"><li class="ccs-signin-open-athens"><a class="link-inherit" href="https://auth.elsevier.com/ShibAuth/institutionLogin?entityID=https%3A%2F%2Fidp.eduserv.org.uk%2Fopenathens&amp;appReturnURL=http%3A%2F%2Fwww.sciencedirect.com%2Fscience%2Farticle%2Fpii%2FS0304397510002689" title="Log in using OpenAthens">OpenAthens login</a></li><li class="ccs-signin-external"><a class="link-inherit" href="/science/externallogin" title="Other institution login">Other institution login</a></li></ul></div></div></div></div></div></li><li class="Help els-header-icons-item"><a class="link-inherit els-header-help" href="/science?_ob=HelpURL&amp;_file=browse_open_doc.htm&amp;_btn=Y" title="Help" target="_blank"><span aria-label="Help" class="icon svg-help"><span class="svg-text">Help</span></span></a></li></ul><ul class="JournalsAndBooks els-header-navigation" role="navigation"><li class="els-header-navigation-section"><a class="link-inherit els-header-navigation-item" href="/science/journals">Journals</a></li><li class="els-header-navigation-section"><a class="link-inherit els-header-navigation-item" href="/science/bookbshsrw">Books</a></li></ul><div class="HamburgerButton" id="hamburger-button"><button id="ccs-mobileHamburgerButton" aria-controls="" aria-expanded="false" aria-label="Menu" class="link"><span class="svg-hamburger-closed"></span></button><script>(function ccs_closeClick() {
+                (function () {
+                    //CustomEvent Polyfill
+                    if (typeof window.CustomEvent === "function") {
+                        return false;
+                    }
+                    function CustomEvent(event, params) {
+                        params = params || { bubbles: false, cancelable: false, detail: undefined };
+                        var evt = document.createEvent('CustomEvent');
+                        evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+                        return evt;
+                    }
+                    CustomEvent.prototype = window.Event.prototype;
+                    window.CustomEvent = CustomEvent;
+                })();
+                var element = document.getElementById("ccs-mobileHamburgerButton");
+                var getToggleEvent = function getToggleEvent(newState) {
+                    var eventOptions = { open: newState };
+                    return new CustomEvent("togglemobilemenu", {
+                        detail: eventOptions,
+                        bubbles: true,
+                        cancelable: false
+                    });
+                };
+                if (element instanceof HTMLElement) {
+                    element.addEventListener('click', function (e) {
+                        var newState = element.getAttribute('aria-expanded') === "false";
+                        element.setAttribute('aria-expanded', newState);
+                        element.dispatchEvent ? element.dispatchEvent(getToggleEvent(newState)) : element.fireEvent(getToggleEvent(newState));
+                    });
+                    document.addEventListener('click', function (e) {
+                        if (e.target.id === 'mobile-menu') {
+                            element.setAttribute('aria-expanded', false);
+                        }
+                    }, true);
+                }
+            })()</script></div><div aria-label="Mobile menu" class="MobileMenu" id="mobile-menu"><div class="mobile-menu-container" id="mobile-menu-container"><div class="mobilemenu-content"><div><div class="primary-mobile-menu"><ul class="JournalsAndBooks els-header-navigation" role="navigation"><li class="els-header-navigation-section"><a class="link-inherit els-header-navigation-item" href="/science/journals">Journals</a></li><li class="els-header-navigation-section"><a class="link-inherit els-header-navigation-item" href="/science/bookbshsrw">Books</a></li></ul></div><div class="secondary-mobile-menu"><li class="els-header-icons-item els-header-user"><a aria-controls="mobileccs-profilePopup" aria-expanded="false" id="mobileccs-ProfilePopupLink" class="els-header-user-link"><span class="signIn_User" tabindex="0"><span class="els-header-user-sign-in">Sign in</span><span class="icon svg-sdfe-arrow-down els-header-user-icon-signin"></span></span></a></li><li class="Help els-header-icons-item"><a class="link-inherit els-header-help" href="/science?_ob=HelpURL&amp;_file=browse_open_doc.htm&amp;_btn=Y" title="Help" target="_blank"><span aria-label="Help" class="icon svg-help"><span class="svg-text">Help</span></span></a></li></div></div></div></div><script src="//cdnjs.cloudflare.com/ajax/libs/classlist/2014.01.31/classList.min.js"></script><script>(function mobileMenuToggles() {
+                //clientside code
+                var bodyClass = document.body.classList;
+                var mobileMenu = document.getElementById('mobile-menu');
+                var elementClass = mobileMenu.classList;
+                var element2Class = document.getElementById('hamburger-button').classList;
+                var openMenu = function openMenu() {
+                    bodyClass.add('mobile-menu-open');
+                    elementClass.add('mobile-menu-open');
+                    element2Class.add('button-pressed');
+                    document.getElementById('hamburger-button').blur();
+                };
+                var closeMenu = function closeMenu() {
+                    bodyClass.remove('mobile-menu-open');
+                    elementClass.remove('mobile-menu-open');
+                    element2Class.remove('button-pressed');
+                    document.getElementById('hamburger-button').blur();
+                };
+                document.addEventListener('togglemobilemenu', function (e) {
+                    if (e.detail && e.detail.open) {
+                        openMenu();
+                    } else {
+                        closeMenu();
+                    }
+                });
+                mobileMenu.addEventListener('click', function (e) {
+                    if (e.target.id === 'mobile-menu') {
+                        closeMenu();
+                    }
+                }, true);
+            })()</script></div><div class="SignInOut"><div class="ccs-signin-popup ccs-mobile-signin-popup" role="dialog" id="mobileccs-profilePopup"><div class="ccs-signin-popup-body-border"><div class="ccs-signin-body ccs-signin-popup-body"><form class="SignInForm ccs-signin-local" action="https://www.sciencedirect.com/science/MiamiLoginURL" method="POST"><div class="ccs-sign-in-close"><a class="icon svg-delete link-inherit" id="ccs-closeSignInPopup" aria-label="Close sign in popup" aria-controls="mobileccs-profilePopup" role="button" title="Close"><span class="svg-text">close</span></a><script>(function popupToggle() {
+                //clientside code
+                var popup = document.getElementById('mobileccs-profilePopup');
+                var closeLink = document.getElementById('ccs-closeSignInPopup');
+                closeLink.addEventListener("click", function () {
+                    popup.classList.remove("is-visible");
+                });
+            })()</script></div><input type="hidden" value="login" name="login"/><input type="hidden" value="MiamiLogonURL" name="_ob"/><input type="hidden" value="http://www.sciencedirect.com/science/article/pii/S0304397510002689" name="returnURL"/><input type="hidden" value="http://www.sciencedirect.com/science/article/pii/S0304397510002689" name="return-url"/><input type="hidden" value="http://www.sciencedirect.com/science/article/pii/S0304397510002689" name="targetURL"/><input type="hidden" value="https://www.sciencedirect.com/science/MiamiLoginURL" name="invalidLoginURL"/><div><h3>Sign in using your ScienceDirect credentials</h3><div class="ccs-signin-form"><div><label class="ccs-signin-form-left">Username</label><span class="ccs-signin-form-right"><input class="ccs-signin-username" name="userid" id="mobileccs-signin-username-input" title="Please enter your username here" type="text"/></span></div><div><label class="ccs-signin-form-left">Password</label><span class="ccs-signin-form-right"><input class="ccs-signin-password" name="password" title="Please enter your password here" type="password"/></span></div><div><label class="ccs-signin-form-left"></label><span class="ccs-signin-form-right"><input class="" name="rememberid" title="Checking this option will log you in automatically next time you visit ScienceDirect" type="checkbox" checked=""/><label>Remember me</label></span></div><div><label class="ccs-signin-form-left"></label><span class="ccs-signin-form-right"><input class="ccs-signin-submit" value="Sign in" title="Sign in to ScienceDirect" type="submit"/><a class="ccs-signin-not-registered link-inherit" href="https://www.sciencedirect.com/science/register-new-user" target="_top">Register now</a></span></div><div><label class="ccs-signin-form-left"></label><span class="ccs-signin-form-right"><a class="link-inherit" href="/science?_ob=ReminderURL&amp;_method=display&amp;md5=4a97631c25ac81c09ad2f961106e9da2" target="passwd" title="Click here for help in recovering your ScienceDirect access">Forgotten username or password?</a></span></div></div></div></form><div class="InstitutionalLogin ccs-signin-remote"><h3>Sign in via your institution</h3><ul class="ccs-signin-institution"><li class="ccs-signin-open-athens"><a class="link-inherit" href="https://auth.elsevier.com/ShibAuth/institutionLogin?entityID=https%3A%2F%2Fidp.eduserv.org.uk%2Fopenathens&amp;appReturnURL=http%3A%2F%2Fwww.sciencedirect.com%2Fscience%2Farticle%2Fpii%2FS0304397510002689" title="Log in using OpenAthens">OpenAthens login</a></li><li class="ccs-signin-external"><a class="link-inherit" href="/science/externallogin" title="Other institution login">Other institution login</a></li></ul></div></div></div></div></div></div></div><script>(function ccs_profilePopup() {
+                var profilePopUpLink = document.getElementById('ccs-profilePopupLink');
+                var element = document.getElementById('ccs-profilePopup');
+                var userSignIn = document.getElementById('ccs-signin-username-input');
+                if (profilePopUpLink instanceof HTMLElement && element instanceof HTMLElement) {
+                    profilePopUpLink.addEventListener('click', function (event) {
+                        if (element.className.indexOf('is-visible') < 0) {
+                            element.className += ' is-visible';
+                            if (userSignIn instanceof HTMLElement) {
+                                userSignIn.focus();
+                            }
+                            event.stopPropagation();
+                        }
+                    });
+                    element.addEventListener('click', function (event) {
+                        event.stopPropagation();
+                    });
+                    document.addEventListener('click', function (e) {
+                        element.className = element.className.replace('is-visible', '');
+                    });
+                }
+            })();(function ccs_mobileProfilePopup() {
+                var mobilePopUpLink = document.getElementById('mobileccs-ProfilePopupLink');
+                var element = document.getElementById('mobileccs-profilePopup');
+                var userSignIn = document.getElementById('mobileccs-signin-username-input');
+                if (mobilePopUpLink instanceof HTMLElement && element instanceof HTMLElement) {
+                    mobilePopUpLink.addEventListener('click', function (event) {
+                        if (element.className.indexOf('is-visible') < 0) {
+                            element.className += ' is-visible';
+                            if (userSignIn instanceof HTMLElement) {
+                                userSignIn.focus();
+                            }
+                            event.stopPropagation();
+                        }
+                    });
+                    element.addEventListener('click', function (event) {
+                        event.stopPropagation();
+                    });
+                    document.addEventListener('click', function (e) {
+                        element.className = element.className.replace('is-visible', '');
+                    });
+                }
+            })();</script></div>
+    </div>
+
+    <div id="content" class="body-container">
+        
+<div class="page-utility-container article-utility-panel" data-pii="S0304397510002689" data-isGuest="false">
+    <div class="page-utility-inner-container">
+
+        <div class="article-utility-section article-utility-pdf article-utility-download">
+    <div id="article-download" class="article-download">
+        <a class="pdf-link track-usage usage-pdf-link article-download-switch pdf-download-link"
+           href="//www.sciencedirect.com/science/article/pii/S0304397510002689/pdf?md5=a6bf467a8e79c2a2fba035c0b3f9bec9&pid=1-s2.0-S0304397510002689-main.pdf"
+           data-isembed="y"
+           data-origin="article"
+           data-enabled-origin="true"
+           data-zone="toolbar"
+           rel="nofollow"
+           target="_blank"
+           title="Download PDF Opens in a new window. Recommended articles will be shown in a dialog on return to ScienceDirect.">
+            <i class="pdf-link-icon"></i>Download full text in PDF
+        </a>
+
+            <div class="article-download-link-menu">
+                <div id="download-article-dropdown" class="download-article-dropdown" aria-label="download options" role="region" aria-live="polite" aria-expanded="false">
+                    <span class="up-arrow"></span>
+                    <ul class="list list--stacked">
+                        <li>
+                            <div class="download-article-option first-option">
+                                <span class="download-pdf-link-icon"></span>
+                                <a class="download-article-link track-usage usage-pdf-link pdf-download-link"
+                                   href="//www.sciencedirect.com/science/article/pii/S0304397510002689/pdf?md5=a6bf467a8e79c2a2fba035c0b3f9bec9&pid=1-s2.0-S0304397510002689-main.pdf"
+                                   data-isembed="y"
+                                   data-origin="sdlMenu"
+                                   data-enabled-origin="true"
+                                   data-zone="toolbar"
+                                   rel="nofollow"
+                                   target="_blank"
+                                   title="Download PDF Opens in a new window. Recommended articles will be shown in a dialog on return to ScienceDirect.">
+                                    Article
+                                </a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="download-article-option">
+                                <span class="download-pdf-link-icon"></span>
+                                <a class="download-article-issue"
+                                   href="#"
+                                   data-isembed="y"
+                                   data-issn="0304-3975"
+                                   data-volume="412"
+                                   data-issue="7"
+                                   data-supplement=""
+                                   rel="nofollow"
+                                   title="Download PDF Opens in a new window. Recommended articles will be shown in a dialog on return to ScienceDirect.">
+                                    Article + other articles in this issue
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+    </div>
+    <!-- Download Issue Service content-->
+    <div id="DIS-article-download-loading">
+        <div class="spinner">Loading...</div>
+    </div>
+    <div id="DIS-article-download-injected-content"></div>
+        </div>
+
+        <div class="article-utility-section article-utility-export">
+<div id="article-export" class="article-export">
+    <a href="#" class="article-utility-button utility-button article-export-switch js-export-switch" aria-controls="export-article-window" aria-expanded="false" title="Export citation">
+        <i class="article-export-label-icon"></i>
+        <span class="article-export-switch-label">Export</span>
+        <i class="article-export-switch-icon"></i>
+    </a>
+    <div class="export-article-window-content">
+        <div id="export-article-window" class="export-article-window" aria-label="Overlay" role="region" aria-live="polite" aria-expanded="false">
+            <div class="export-text">
+                <p class="export-selected-text">You have selected 1 citation for export.</p>
+                <a class="export-link-help" href="http://help.sciencedirect.com/flare/sdhelp_Left.htm#CSHID=art_export.htm|StartTopic=Content%2Fart_export.htm|SkinName=svs_SD" title="Help (Opens new window)" target="_blank">Help</a>
+            </div>
+            <h3 class="export-heading">Direct export</h3>
+            <p class="export-row-direct">
+                <a 
+                    class="export-link export-link--mendeley utility-button track-usage"
+                    id="export-to-mendeley"
+                    href="#">
+                    Save to Mendeley
+                </a>
+            </p>
+            <p class="export-row-direct">
+                <a class="export-link export-link--refworks utility-button" id="export-to-refworks" href="/sdfe/export/S0304397510002689/refworks-tagged-format" target="RefWorksMain">Save to RefWorks</a>
+            </p>
+            <form id="export-form" class="export-form" method="get" action="/sdfe/export/S0304397510002689/format">
+                <h3 class="export-heading">Export file</h3>
+                <h4 class="export-subheading">Format</h4>
+                <div id="export-formats">
+                    <p class="export-row">
+                        <input type="radio" checked name="export-format" id="export-format-ris" value="RIS">
+                        <label for="export-format-ris" class="export-format-label">RIS (for EndNote, ReferenceManager, ProCite)</label>
+                    </p>
+                    <p class="export-row">
+                        <input type="radio" name="export-format" id="export-format-bibtex" value="BIBTEX">
+                        <label for="export-format-bibtex" class="export-format-label">BibTeX</label>
+                    </p>
+                    <p class="export-row">
+                        <input type="radio" name="export-format" id="export-format-text" value="ASCII">
+                        <label for="export-format-text" class="export-format-label">Text</label>
+                    </p>
+                </div>
+                <h4 class="export-subheading">Content</h4>
+                <div id="export-content">
+                    <p class="export-row">
+                        <input type="radio" name="export-content" id="export-content-citation" value="cite">
+                        <label for="export-content-citation" class="export-format-label">Citation Only</label>
+                    </p>
+                    <p class="export-row">
+                        <input type="radio" checked name="export-content" id="export-content-abstract" value="cite-abs">
+                        <label for="export-content-abstract" class="export-format-label">Citation and Abstract</label>
+                    </p>
+                </div>
+                <p><button id="export-submit">Export</button></p>
+            </form>
+        </div>
+    </div>
+</div>
+
+        </div>
+
+        <div class="article-utility-section article-utility-search">
+
+<form id="qkSrch" class="utility-search-form" name="qkSrch" method="get" target="_top" action="//www.sciencedirect.com/science" role="search" aria-label="ScienceDirect">
+    <input type="hidden" name="_ob" value="QuickSearchURL">
+    <input type="hidden" name="_method" value="submitForm">
+    <input type="hidden" name="_acct" value="C000017318">
+    <input type="hidden" name="searchtype" value="a">
+    <input type="hidden" name="_origin" value="article">
+    <input type="hidden" name="_zone" value="qSearch">
+    <input type="hidden" name="md5" value="1e0a1a1d73edfa7b195d2e7b052e27f1">
+
+<input class="quick-search-value" placeholder="Search ScienceDirect" title="Search ScienceDirect"
+       type="text" name="qs_all" id="qs_all" value="" size="35" maxlength="450">
+
+    <input class="quick-search-submit" id="submit_search" type="submit"
+           alt="Submit Quick Search" title="Submit Quick Search" name="sdSearch">
+
+    <a class="advanced-search-link" href="//www.sciencedirect.com/science/search">Advanced search</a>
+</form>
+        </div>
+
+    </div>
+</div>
+
+<div class="article-layout-container">
+    <div class="article-column-left-outer-fixed-container">
+        <div class="article-column-left-inner-fixed-offset">
+            <div class="article-column-left" role="navigation" aria-label="article outline">
+                <a href="#" class="article-column-left-switch js-toggle" data-element=".article-layout-container" data-class="article-column-left-landscape-tablet-visible"></a>
+                <div class="article-column-left-outline-container">
+                    <a class="article-outline-close js-toggle" aria-label="close overlay" role="button" data-element=".article-layout-container" data-class="article-column-left-landscape-tablet-visible">Close</a>
+                    <!-- no outline -->
+                    <div class="article-column-left-no-outline">
+                        This document does not have an outline.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="article-column-middle">
+        <div class="article-content" role="main" aria-label="Article">
+            <noscript>
+                <div class="alert-message-container" role="alert">
+                    <div class="alert-message-body">
+                       JavaScript is disabled on your browser. Please enable JavaScript to use all the features on this page.
+                    </div>
+                </div>
+            </noscript>
+
+
+            <div class="journal-banner">
+        <div class="journal-brand">
+                <span class="elsevier-logo"></span>
+        </div>
+
+    <div class="journal-title-details">
+            <p class="journal-title">
+                <a class="track-usage" title="Go to Theoretical Computer Science on ScienceDirect"
+                   href="//www.sciencedirect.com/science/journal/03043975">Theoretical Computer Science</a>
+            </p>
+        <p class="journal-volume"><a title="Go to table of contents for this volume/issue" href="http://www.sciencedirect.com/science/journal/03043975/412/7">Volume 412, Issue 7</a>, 25 February 2011, Pages 573-582</p>
+        <p class="journal-special-issue"><p class="article-journal-special-issue-title">Selected papers from WAOA 2007: Fifth Workshop on Approximation and Online Algorithms</p></p>
+    </div>
+
+    <div class="journal-cover">
+        <a href="http://www.sciencedirect.com/science/journal/03043975/412/7">
+                <img src="http://ars.els-cdn.com/content/image/1-s2.0-S0304397511X00038-cov150h.gif" alt="Cover image" class="track-usage publication-cover-image">
+        </a>
+
+    </div>
+</div>
+
+
+
+            <h1 class="article-title">On min–max <a class="mathText" title="View the MathML source" href="http://www.sciencedirect.com/science?_ob=MathURL&amp;_method=retrieve&amp;_eid=1-s2.0-S0304397510002689&amp;_mathId=si1.gif&amp;_user=111111111&amp;_pii=S0304397510002689&amp;_rdoc=1&amp;_issn=03043975&amp;md5=3985461b8a07bb8d1c87115fbe8c0ec6">r</a>-gatherings <sup><a href="#fnp000005" id="bfnp000005" class="footnote-ref" title="article footnote" aria-describedby="explainFootnote">☆</a></sup></h1>
+
+
+            
+
+<div id="article-author-list" class="article-author-list">
+    <span class="accessible-text" id="explainFootnote">Author links open the overlay panel. Numbers correspond to the affiliation list which can be exposed by using the show more link.</span>
+    <div class="author-group">
+            <div class="list list--inline list--article list--author">
+<span class="author"><span class="author-name">            <span class="hidden" id="textOverlay-0" style="display: none;">Opens overlay</span>
+            <a aria-labeledby="author-0 textOverlay-0"
+                class="author-name-link"
+                data-related-url="/science/article/pii/S0304397510002689/part/related-articles?position=1&last-name=Armon&first-name=Amitai"
+                aria-describedby="explainOverlay"
+                href="#"
+                id="author-0">
+Amitai Armon</a></span>            <a class="author-email" href="mailto:amitai.armon@cs.tau.ac.il" title="author email">amitai.armon@cs.tau.ac.il</a></span>
+            </div>
+            <div class="affiliations show-more__section">
+<span class="affiliation" id="af000005"><span class="affiliation__text">School of Computer Science, Tel-Aviv University, Tel-Aviv 69978, Israel</span></span></div>    </div>
+</div>
+
+
+                <div id="article-history" class="article-history show-more__section">
+                    <p class="article-history-dates">Available online 30 April 2010</p>
+                </div>
+
+
+            <div class="show-more">
+                <a class="show-more__link js-toggle" title="Bibliographic information" aria-expanded="false" href="#" data-element="#content" data-class="show-more--visible" data-text-enabled="Show less" data-text-disabled="Show more">Show more</a>
+            </div>
+
+
+
+            <div class="article-doi-rights">
+                    <p class="article-doi">
+                        <a href="http://dx.doi.org/10.1016/j.tcs.2010.04.040" id="doi-value" target="_blank" title="Persistent link using digital object identifier" aria-label="Digital Object Identifier of this article">doi:10.1016/j.tcs.2010.04.040</a>
+                    </p>
+                    <p class="article-rights">
+                        <a class="article-rights-link" href="https://s100.copyright.com/AppDispatchServlet?publisherName=ELS&orderBeanReset=true&contentID=S0304397510002689" id="rights-link" target="_blank"  title="Copyright Clearance Center (new window)">Get rights and content</a>
+                    </p>
+            </div>
+
+
+                <div class="article-open-access">
+                        <p class="article-open-access-license">Under an Elsevier 
+<a target="_blank" href="http://www.elsevier.com/open-access/userlicense/1.0/">user license</a></p>
+                </div>
+
+                <div class="js-async-container" data-href="/science/article/pii/S0304397510002689/part/refers-to"></div>
+                <div class="js-async-container" data-href="/science/article/pii/S0304397510002689/part/referred-to-by"></div>
+
+            <div class="article-content-separator-container">
+                <hr class="article-content-separator" />
+                    <span class="article-content-open-access-archive">Open Archive</span>
+            </div>
+
+
+                <div class="article-author-abstract">
+                    <div class="abstract abstract-type-author"><h2 class="section-heading">Abstract</h2><div id="sp000005">We consider a <em>min–max</em> version of the previously studied <em>r-gathering</em> problem with unit-demands. The problem we consider is a metric facility-location problem, in which each open facility must serve at least <a class="mathText" title="View the MathML source" href="http://www.sciencedirect.com/science?_ob=MathURL&amp;_method=retrieve&amp;_eid=1-s2.0-S0304397510002689&amp;_mathId=si2.gif&amp;_user=111111111&amp;_pii=S0304397510002689&amp;_rdoc=1&amp;_issn=03043975&amp;md5=13006521ec2cf38e71554fb33c918eb5">r</a> customers, and the <em>maximum</em> of all the facility- and connection-costs should be minimized (rather than their <em>sum</em>). This problem is motivated by scenarios in which <a class="mathText" title="View the MathML source" href="http://www.sciencedirect.com/science?_ob=MathURL&amp;_method=retrieve&amp;_eid=1-s2.0-S0304397510002689&amp;_mathId=si3.gif&amp;_user=111111111&amp;_pii=S0304397510002689&amp;_rdoc=1&amp;_issn=03043975&amp;md5=8e3f0b398517da9eb91cef9ae54c9ea4">r</a> customers are required for a facility to be worth opening, and the costs represent the time until the facility/connection will be available (<em>i.e.</em>, we want to have the complete solution ready as soon as possible).</div><div id="sp000010">We present a 3-approximation algorithm for this problem, and prove that it cannot be approximated better (assuming <a class="mathText" title="View the MathML source" href="http://www.sciencedirect.com/science?_ob=MathURL&amp;_method=retrieve&amp;_eid=1-s2.0-S0304397510002689&amp;_mathId=si4.gif&amp;_user=111111111&amp;_pii=S0304397510002689&amp;_rdoc=1&amp;_issn=03043975&amp;md5=7619760745df176a0ccdd681503b755f">P≠NP</a>). Next we consider this problem with the additional natural requirement that each customer will be assigned to a nearest open facility, and present a 9-approximation algorithm. We further consider previously introduced special cases and variants, and obtain improved algorithmic and hardness results.</div></div><hr class="article-content-separator"></hr>
+                </div>
+
+
+    <div class="article-keywords">
+        <h2 class="section-heading">Keywords</h2>
+        <ul class="list list--inline list--article list--keywords">
+                <li class="keyword">Approximation algorithms;</li>
+                <li class="keyword">Facility-location;</li>
+                <li class="keyword">r-gathering</li>
+        </ul>
+    </div>
+
+<div class="embedded-pdf-container">
+        <object id="new-pdf-viewer" class="embedded-pdf" data="//www.sciencedirect.com/science/article/pii/S0304397510002689/pdf?md5=a6bf467a8e79c2a2fba035c0b3f9bec9&pid=1-s2.0-S0304397510002689-main.pdf&_isEmbed=y#view=fit" type="application/pdf"></object>
+</div>
+
+                <div class="second-download-link-container">
+                    <a class="pdf-link track-usage usage-pdf-link pdf-download-link"
+                       href="//www.sciencedirect.com/science/article/pii/S0304397510002689/pdf?md5=a6bf467a8e79c2a2fba035c0b3f9bec9&pid=1-s2.0-S0304397510002689-main.pdf"
+                       data-origin="article"
+                       data-enabled-origin="true"
+                       data-zone="workspace"
+                       data-isembed="y"
+                       rel="nofollow"
+                       target="_blank"
+                       title="Download PDF Opens in a new window. Recommended articles will be shown in a dialog on return to ScienceDirect.">
+                        <i class="pdf-link-icon"></i>
+                    Download full text in PDF
+                    </a>
+                </div>
+
+
+            <script>prs.rt("abs_end");</script>
+
+                <div id="external-articles-mobile" class="external-articles-mobile"></div>
+
+                <div class="article-tail">
+
+    <h2 class="section-heading">References</h2>
+    <ul class="references reference-list">
+        <li class="clearfix reference reference-item " id="br000005">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000005">[1]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-source">G. Aggarwal, T. Feder, K. Kenthapadi, S. Khuller, R. Panigrahy, D. Thomas, A. Zhu, Achieving anonymity via clustering, in: Proceedings of the 25th ACM SIGMOD-SIGACT-SIGART Symposium on Principles of Database Systems, 2006, pp. 153–162.</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item " id="br000010">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000010">[2]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-source">E. Anshelevich, A. Karagiozova, Terminal backup, 3D matching, and covering cubic graphs, in: Proceedings of the 39th Annual ACM Symposium on Theory of Computing, STOC, 2007, pp. 391–400.</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item reference3" id="br000015">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000015">[3]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-author">V. Arya, N. Garg, R. Khandekar, A. Meyerson, K. Munagala, V. Pandit </p>
+                    <p class="reference-title">Local search heuristics for k-median and facility location problems</p>
+                    <p class="reference-host">SIAM J. Comput., 33 (3) (2004), pp. 544–562</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item " id="br000020">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000020">[4]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-source">J. Byrka, An optimal bifactor approximation algorithm for the metric uncapacitated facility location problem, in: Proceedings of the 10th International Workshop on Approximation Algorithms for Combinatorial Optimization Problems, APPROX, 2007, pp. 29–43.</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item " id="br000025">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000025">[5]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-source">E.D. Demaine, M. Hajiaghayi, H. Mahini, A.S. Sayedi-Roshkhar, S. Oveisgharan, M. Zadimoghaddam, Minimizing movement, in: Proceedings of the 18th Annual ACM–SIAM Symposium on Discrete Algorithms, 2007, pp. 731–740.</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item reference6" id="br000030">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000030">[6]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-author">Z. Drezner </p>
+                    <p class="reference-title">Facility Location</p>
+                    <p class="reference-host">Springer-Verlag (1995)</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item " id="br000035">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000035">[7]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-source">F. Ergun, R. Kumar, R. Rubinfeld, Fast approximate PCPs, in: Proceedings of the 31st Annual ACM Symposium on Theory of Computing, 1999, pp. 41–50.</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item reference8" id="br000040">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000040">[8]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-author">M.R. Garey, D.S. Johnson </p>
+                    <p class="reference-title">Computers and Intractability — A Guide to the Theory of NP-Completeness</p>
+                    <p class="reference-host">Freeman Publishing (1979) p. 221</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item reference9" id="br000045">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000045">[9]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-author">T.F. Gonzalez </p>
+                    <p class="reference-title">Clustering to minimize the maximum intercluster distance</p>
+                    <p class="reference-host">Theoret. Comput. Sci., 38 (1985), pp. 293–306</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item " id="br000050">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000050">[10]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-source">J. Gudmundsson, M.J. van Kreveld, G. Narasimhan, Region-restricted clustering for geographic data mining, in: Proceedings of the 14th Annual European Symposium on Algorithms, 2006, pp. 399–410.</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item reference11" id="br000055">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000055">[11]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-author">S. Guha, S. Khuller </p>
+                    <p class="reference-title">Greedy strikes back: improved facility location algorithms</p>
+                    <p class="reference-host">J. Algorithms, 31 (1) (1999), pp. 228–248</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item " id="br000060">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000060">[12]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-source">S. Guha, A. Meyerson, K. Munagala, Hierarchical placement and network design problems, in: Proceedings of the 41st Annual Symposium on Foundations of Computer Science, 2000, pp. 603–612.</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item " id="br000065">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000065">[13]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-source">D.R. Karger, M. Minkoff, Building steiner trees with incomplete global knowledge, in: Proceedings of the 41st Annual Symposium on Foundations of Computer Science, 2000, pp. 613–623.</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item " id="br000070">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000070">[14]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-source">M. Mahdian, Y. Ye, J. Zhang, Approximation algorithm for the soft-capacitated facility location problem, in: Proceedings of the 6th International Workshop on Approximation Algorithms for Combinatorial Optimization Problems, APPROX, 2003, pp. 129–140.</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item reference15" id="br000075">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000075">[15]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-author">B. Schneier </p>
+                    <p class="reference-title">Applied Cryptography</p>
+                    <p class="reference-host">John Wiley and Sons (1996) pp. 71–73</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item " id="br000080">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000080">[16]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-source">M. Sviridenko, An improved approximation algorithm for the metric uncapacitated facility location problem, in: Integer Programming and Combinatorial Optimization, 9th International IPCO Conference, 2002, pp. 240–257.</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item " id="br000085">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000085">[17]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-source">Z. Svitkina, Lower-bounded facility location, in: Proceedings of the 19th Annual ACM–SIAM Symposium on Discrete Algorithms, SODA, 2008, pp. 1154–1163.</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item " id="br000090">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000090">[18]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-source">T.M. Truta, V. Bindu, Privacy protection: p-sensitive k-anonymity property, in: Proceedings of the Workshop on Privacy Data Management, in Conjunction with the 22nd IEEE International Conference of Data Engineering, ICDE, 2006, pp. 94–103.</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item " id="br000095">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000095">[19]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-source">J. Vygen, Approximation algorithms for facility location problems. 
+<a id="ir000005" href="http://www.citeseer.ist.psu.edu/vygen05approximation.html" target="_blank">http://www.citeseer.ist.psu.edu/vygen05approximation.html</a>, 2005.</p>
+            </div>
+        </li>
+        <li class="clearfix reference reference-item " id="br000100">
+                <p class="reference-item-title">
+                    <a class="reference-link track-usage" data-origin="article" href="#br000100">[20]&nbsp;</a>
+                </p>
+            <div class="reference-item-container">
+                    <p class="reference-source">J. Zhang, B. Chen, Y. Ye, Multi-exchange local search algorithm for the capacitated facility location problem, in: Integer Programming and Combinatorial Optimization, 10th International IPCO Conference, 2004, pp. 219–233.</p>
+            </div>
+        </li>
+    </ul>
+
+                </div>
+
+            <div class="article-footnotes">
+                <p class="accessible-text" id="explainOverlay">open in overlay</p>
+                <dl id="fnp000005" class="article-footnote"><dt class="label">☆</dt><dd id="np000005">A preliminary version of this paper appeared in the proceedings of WAOA’07.</dd></dl>
+            </div>
+
+            <p class="article-copyright" id="copyright-line">
+                Copyright © 2010 Elsevier B.V. All rights reserved.
+            </p>
+        </div>
+    <link rel="stylesheet" href="//sdfestaticassets-us-east-1.sciencedirectassets.com/prod/dc43fc43104671aa10ee63a6cc48a673e09a5fc9/style.css" type="text/css">
+    <div class="ccs-component">
+        <div class="Footer" role="contentinfo"><div class="els-footer"><div class="els-footer-body"><a class="els-footer-elsevier" href="http://www.elsevier.com/" rel="nofollow" target="_blank"><span class="icon svg-wordmark-elsevier" aria-label="Elsevier"><span class="svg-text">Elsevier</span></span></a><div class="els-footer-content"><div class="els-footer-links"><a class="link-inherit" href="http://www.elsevier.com/solutions/sciencedirect" rel="nofollow" target="_blank">About ScienceDirect</a><wbr/><a class="link-inherit" href="/science/activateaccess" rel="nofollow" target="_blank">Remote access</a><wbr/><a class="link-inherit" href="/science?_ob=ShoppingCartURL&amp;_method=display&amp;_zone=TopNavBar&amp;_origin=article&amp;md5=98a3e89aa38c5044516e5e4ca8b64e74" rel="nofollow" target="_blank">Shopping cart</a><wbr/><a class="link-inherit" href="/science/contactus" rel="nofollow" target="_blank">Contact and support</a><wbr/><a class="link-inherit" href="https://www.elsevier.com/legal/elsevier-website-terms-and-conditions" rel="nofollow" target="_blank">Terms and conditions</a><wbr/><a class="link-inherit" href="http://www.elsevier.com/legal/privacy-policy" rel="nofollow" target="_blank">Privacy policy</a></div><div class="els-footer-cookie">Cookies are used by this site. For more information, visit the <a class="link-blue" href="https://www.elsevier.com/solutions/sciencedirect/support/cookies" rel="nofollow" target="_blank">cookies page</a>.</div><div class="els-footer-copyright">Copyright © <span class="copyright-year">2016</span> Elsevier B.V. or its licensors or contributors. ScienceDirect ® is a registered trademark of Elsevier B.V.</div></div></div><div class="els-footer-relx-group"><a class="els-footer-relx" href="http://www.relx.com/" rel="nofollow" target="_blank"><span class="icon svg-wordmark-relx-group" aria-label="RELX Group"><span class="svg-text">RELX Group</span></span></a></div></div></div>
+    </div>
+    <script type="text/javascript" src="//sdfestaticassets-us-east-1.sciencedirectassets.com/prod/dc43fc43104671aa10ee63a6cc48a673e09a5fc9/client.js"></script>
+    </div>
+
+    <div class="article-column-right" role="complementary" aria-label="Related content">
+        <div class="article-column-right-container">
+                <div id="recommended-articles-main" data-zone-enabled="true" data-pdf-enabled="true" class="js-recommended" data-href="/sdfe/article/pii/S0304397510002689/recommendations"></div>
+                <div id="citing-articles-main" data-zone-enabled="true" data-pdf-enabled="false" class="js-citing" data-href="/sdfe/article/pii/S0304397510002689/citedby"></div>
+        </div>
+<div id="author-workspace" class="author-workspace is-hidden" role="region" aria-live="polite">
+    <a href="#" tabindex="1" role="button" aria-label="close overlay" class="workspace-close js-workspace-close"><span class="workspace-close-icon">Close overlay</span></a>
+    <div aria-label="Go to previous and next in sidebar" class="workspace-content">
+        <div class="workspace-navigation js-workspace-navigation"></div>
+        <div class="workspace-scroll-area js-workspace-scroll-area"></div>
+    </div>
+</div>
+    </div>
+</div>
+
+<div id="sdpa"></div>
+
+<div id="mobile-modal-container"></div>
+
+
+    </div>
+</div>
+
+<div class="page-container-overlay"></div>
+
+<div class="modals-container">
+    <div class="modals-offset-container">
+
+<div id="user-actions-window" class="user-actions-window" aria-labelledby="user-actions-heading-user-actions" role="dialog">
+    <a class="user-actions-window-close" aria-label="close overlay" role="button">Close</a>
+    <div class="user-action-sections">
+
+<div class="user-action-section">
+    <h2 id="user-actions-heading-user-actions" class="user-actions-heading">Sign in using your ScienceDirect credentials</h2>
+
+    <form id="sign-in-form-user-actions" class="sign-in-form" action="https://www.sciencedirect.com/science/MiamiLogonURL" method="POST">
+        <input type="hidden" name="login" value="login">
+        <input type="hidden" name="_ob" value="MiamiLogonURL">
+        <input type="hidden" name="arrow" value="Sign+in">
+        <input type="hidden" name="targetURL" value="http://www.sciencedirect.com/science/article/pii/S0304397510002689">
+        <input type="hidden" name="returnURL" value="http://www.sciencedirect.com/science/article/pii/S0304397510002689">
+        <input type="hidden" name="invalidLoginURL" value="http://www.sciencedirect.com/sdfe/user/loginPage">
+
+        <div class="form-row">
+            <label class="form-label-textbox" for="sign-in-userid-user-actions">Username:</label>
+            <input id="sign-in-userid-user-actions" type="text" autofocus title="Please enter your username here" name="userid"
+                   class="form-input-text">
+        </div>
+        <div class="form-row">
+            <label class="form-label-textbox" for="sign-in-password-user-actions">Password:</label>
+            <input id="sign-in-password-user-actions" type="password" maxlength="20"
+                   title="Please enter your password here" name="password" class="form-input-text">
+        </div>
+        <div class="form-row--remember-me">
+            <input id="sign-in-remember-user-actions" type="checkbox" checked name="rememberid" value="Y"
+                   title="Checking this option will log you in automatically next time you visit ScienceDirect">
+            <label for="sign-in-remember-user-actions" class="form-label">Remember me</label>
+        </div>
+        <div class="form-row--sign-in">
+            <input class="form-button" type="submit" name="signin" value="Sign in" title="Sign in to ScienceDirect">
+            <a href="//www.sciencedirect.com/science/register-new-user"
+               class="signin-link-not-registered"
+               title="Register a username and password for using alerts and other personal features"
+               target="_top">Not Registered?</a>
+        </div>
+        <div class="form-row--spaced">
+            <a href="//www.sciencedirect.com/science?_ob=ReminderURL&amp;_method=display&amp;md5=4a97631c25ac81c09ad2f961106e9da2"
+               class="signin-link"
+               target="passwd"
+               onclick="var remindWin;remindWin=window.open('','passwd','scrollbars=yes,resizable=yes,directories=no,toolbar=n,menubar=no,status=no,width=650,height=300');"
+               title="Click here for help in recovering your ScienceDirect access">Forgotten username or
+                password?</a>
+        </div>
+    </form>
+</div>
+
+<div class="user-action-section">
+        <p>
+            <a title="Log in using OpenAthens" href="https://auth.elsevier.com/ShibAuth/institutionLogin?entityID=https%3A%2F%2Fidp.eduserv.org.uk%2Fopenathens&appReturnURL=http%3A%2F%2Fwww.sciencedirect.com%2Fscience%2Farticle%2Fpii%2FS0304397510002689">OpenAthens login</a>
+        </p>
+        <h3 class="user-action-section-heading">Login via your institution</h3>
+        <div id="recent-institutions-section">
+            
+        </div>
+        <p>
+            <a title="Other institution login" href="http://www.sciencedirect.com/science/externallogin">Other institution login</a>
+        </p>
+
+
+    <div class="user-actions-org-name">
+        
+    </div>
+
+
+</div>
+
+    </div>
+</div>
+    </div>
+</div>
+
+<div class="modal-overlay"></div>
+
+<div id="modal-container" class="modal-container">
+    <div id="modal" role="dialog" aria-label="Other users also viewed these articles" class="modal js-modal">
+        <div>
+            <div class="modal__header js-modal-header">
+                <div class="modal__heading js-modal-heading">
+                    <h1 class="modal__heading" style="display:inline-block">Other users also viewed these articles</h1>
+                    <a class="modal__close js-modal-close" href="#" title="Close Article Suggestions" alt="Close Article Suggestions"><img src="http://cdn.els-cdn.com/sd/sci_dir/closeButton.png"></a>
+                </div>
+            </div>
+            <div id="modal-content" class="modal__content js-modal-content">
+                <div class="modal__loading">
+                    <img src="//sdfestaticassets-us-east-1.sciencedirectassets.com/prod/d6839ff586e40d1e8f7cb88be4987c6c5cbaeb89/images/loader.gif" alt="Please wait...">
+                </div>
+            </div>
+            <div class="modal__footer">
+                <a href="#" class="modal__hide-link js-related-articles-hide">Do not show again</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style type="text/css">DIV.body-container { display: block; }</style>
+
+</body>
+<script data-main="//sdfestaticassets-us-east-1.sciencedirectassets.com/prod/d6839ff586e40d1e8f7cb88be4987c6c5cbaeb89/javascripts/init.js" src="//sdfestaticassets-us-east-1.sciencedirectassets.com/prod/d6839ff586e40d1e8f7cb88be4987c6c5cbaeb89/javascripts/vendor/require.js"></script>
+<script id="adobe-dtm" src="//assets.adobedtm.com/376c5346e33126fdb6b2dbac81e307cbacfd7935/satelliteLib-b7cfe8df39a4e5eec5536bba80e13f4b6fa0dd7c.js" type="text/javascript"></script>
+<script id="tag-manager-config" type="text/javascript" id="adobe-dtm" defer>
+    (function() {
+        window.pageData = {
+            page: {
+                businessUnit: 'ELS:RAP:ST',
+                environment: 'PROD' || null,
+                language: 'en',
+                loadTimestamp: '1465328843716' || Date.now(),
+                name: 'product:journal:article',
+                noTracking: false,
+                productName: 'SD'
+            },
+            visitor: {
+                accessType: '' || null,
+                accountId: 'ae:17318',
+                accountName: 'ae:Stony Brook State University of New York',
+                ipAddress: '130.245.70.64' || null,
+                loginStatus: 'anonymous' || null,
+                userId: 'ae:334567'
+            }
+        };
+        try {
+            pageDataTracker.trackPageLoad()
+        } catch (e) {
+            console.warn("There was an error loading or running Adobe DTM:\r\n ", e);
+        }
+    }());
+</script>
+
+
+<script defer src="http://cdn.els-cdn.com/sd/js/pa_1511R1.js"></script>
+
+</html>

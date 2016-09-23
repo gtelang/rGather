@@ -1,0 +1,11 @@
+%!TEX root = r-gather.tex
+
+\pagebreak
+
+\section{Introduction}
+
+Given a set of $n$ points $P = \{p_1, p_2, \dots, p_n\}$ in Euclidean space and a value $r$, the aim of the $r$-gather problem is to cluster the points into groups of at least $r$ points each such that the largest diameter of the clusters is minimized. We have two definitions of the diameter of a cluster: the distance between the furthest pair of points and the diameter of the smallest enclosing circle.
+
+One motivation of this version of clustering is from location privacy in wireless networking. With the ubiquitous use of GPS receivers on mobile devices, it is now common practice that the locations of these mobile devices are recorded and collected. This raised privacy concerns as location information is sensitive and can be used to identify the user of the devices. One common practice in the treatment of these location data is to adopt the $k$-anonymity criterion~\cite{Sweeney02}, which says that the locations are grouped into clusters, each of at least $k$ points. The cluster is used to replace individual locations such that any one user is not differentiated from $k-1$ others. Thus minimizing the diameter of the clusters can lead to location data with best accuracy while not intruding user privacy. 
+
+\pagebreak

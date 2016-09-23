@@ -1,0 +1,50 @@
+\section{Dynamic $r$-Gather}
+
+The natural progression of investigating the $r$-gather problem is to consider clustering when the points are mobile.  The conversion of the $r$-gather problem to a dynamic setting may appear in many forms.  In this section, we detail several versions of the mobile $r$-gather problem.  In each version, we assume that the trajectories of the points are piecewise linear.
+
+In the simplest formulation of $r$-gather in a mobile setting, we are given a set of trajectories over a time period $T$ and we want to cluster the trajectories such that each cluster has at least $r$ trajectories and the largest diamteter of each cluster over the entire time period is minimized.  Here we designate the diameter of a cluster at a single point in time to be the distance between the furthest pair of points.  Points are assigned to a single cluster for the entire length of $T$ and do not switch clusters.  We claim that the 2-approximation strategy for static $r$-gather can also be applied to this problem.  
+%We also claim that 2-inapproximation lower bound from Aggarwal et. al. applies as well \cite{Aggarwal06achievinganonymity}.  
+We use the distance metric defined by Lemma~\ref{lem:distancemetric}.  
+
+\begin{lemma}\label{lem:distancemetric}
+The distance function $d_t(p,q)$ between two trajectories $p$ and $q$ over a time period $T$ is defined as the distance between $p$ and $q$ at time $t \in T$.  Then $d(p,q) = \max_{t \in T}d_t(p,q)$.  The function $d(p,q)$ is a metric.
+\end{lemma}
+
+\begin{proof}
+The function by definition is symmetric, follows the identity condition, and is always non-negative.  To show that the metric follows the triangle equality, we first assume that there is a pair of trajectories $x$ and $z$ where $d(x,z) > d(x,y) + d(y,z)$ for some $y$.  There is some time $t \in T$, where $d_t(x,z) = d(x,z)$.  By triangle inequality,
+$$d_t(x,z) \leq d_t(x,y) + d_t(y,z).$$
+This contradicts our assumption and concludes our proof.
+\end{proof}
+
+%\begin{theorem}
+%For the definition of dynamic $r$-gather where all trajectories are clustered once, it is NP-hard to approximate better than a factor of 2 for $r > 6$.
+%\end{theorem}
+
+%\begin{proof}
+%We construct a reduction from the problem 3-SAT where each variable is restricted to 3 clauses.  Our proof is similar to the lower bound proof in \cite{Aggarwal06achievinganonymity}.  Given a boolean formula in 3-CNF form with $m$ clauses $C_j$, $1 \leq j \leq m$, composed of $n$ variables $x_i$, $1 \leq i \leq n$, where $i$ and $j$ are integers, we construct a set of trajectories over a time period $T$.  For every variable $x_i$ and its complement $\bar{x_i}$, we have two points $v_i^T$ and $v_i^F$ and an additional $(r-2)$ points $u_i^k$ for integer $k$, $1 \leq k \leq r-2$.  We will construct trajectories where $d(v_i^T, v_i^F) = d(v_i^T, u_i^k) = d(v_i^F, u_i^k) = 1$, for $1 \leq i \leq n$ and $1 \leq k \leq r-2$ .  In addition, for every cluster $C_j$, we construct another point $w_j$.  We construct trajectories such that the distance between $w_j$ and the points that represent the literals in the clause $C_j$ is 1.  All other distances are 2.
+
+%Constructing the trajectories that obey these distance constraints is simple.  Place all points at the origin on a number line.  For every point $p$, we have one timestep that establishes the distance between it and all other points.  In that timestep, $p$ moves to 2 on the number line.  At the same time, all other points that must have a distance of 1 to $p$ move to 1 on the number line.  This procedure is repeated for every point.
+
+%We claim, that if there is an $r$-gather clustering of maximum radius 1, then the 3-SAT formula can be satisfied.  Here, for every variable, we have two possibilities for the center of a cluster of radius 1, $v_i^T$ and $v_i^F$.  There are not enough points close to $v_i^T$ and $v_i^F$ to have both as the center of two clusters.  Any cluster with $u_i^k$ as the center will have fewer than $r$ points within a distance of 1 and therefore cannot be a cluster center with radius 1.  Finally, every point $w_j$ has only three other points within a distance of 1.  Therefore, in any $r$-gather clustering with maximum radius 1, there is one cluster for every variable with a center of either $v_i^T$ or $v_i^F$.  This clustering must be done in such a way that for every point $w_j$, at least one of the points that represents a literal in $C_j$ must be chosen as a cluster center.  Thus if an optimal $r$-gather clustering of our trajectories can be found, then we can determine if the corresponding 3-SAT formula is satisfiable.
+%\end{proof}
+
+The next step in expanding dynamic $r$-gather is by allowing the clusters to change throughout $T$.  We amend our problem formulation to allow $k$ regroupings.  Each regrouping allows all clusters to be modified or changed completely.  The lower bounds for the earlier version of $r$-gather applies here too for the same reasons.  We claim that with the assumption that the trajectories are piecewise linear, we can construct a 2-approximation solution using dynamic programming.
+
+Let $|T|$ be the number of timesteps in the time period $T$.  Each trajectory is a piecewise linear function that only changes directions at a timestep in $T$.  Let $C_{ij}$ denote the max diameter of the 2-approximation clustering at time $i$ over the time period $[i,j]$, $i<j$.  We can create a $|T| \times |T|$ table $\mathcal{T}$ where entry $\mathcal{T}(i, j) = C_{ij}$.  One clustering takes $O(\frac{1}{\epsilon}kn^2)$ and there are $|T|$ clusterings in total.  However, for each clustering, the max diamter is recalculated for each timestep.  The cost of recalculating the max diameter of a clustering is $O(n/r)$.  The total number of times a clustering is recalculated is $O(n|T|/r)$.  The total time it takes to compute the table $\mathcal{T}$ is $O(n|T|^2/r + \frac{1}{\epsilon}k|T|n^2)$.
+
+We formulate a subproblem $S(t,i)$, where $0 \leq t \leq |T|$ and $i \leq k$, for our dynamic program to find the optimal clustering of the points in the time period $[0, t]$ where there are exactly $i$ reclusterings.  Let $l(t,i)$ denote the last timestep a reclustering occured for the optimal solution of $S(t,i)$.
+
+The subproblem of our dynamic program is:
+
+$$S(t,i) = \min( \max_{j<t}(S(j, i), C_{l(t,i)t}), \max_{j<t}(S(j, i-1), C_{tt}) )$$ 
+
+The entry $S(t,i)$ checks $2t$ previous entries and $2t$ entries in the table $\mathcal{T}$.  The entire table takes $k|T|^2$ to execute with the additional preprocessing of the table $\mathcal{T}$.
+
+Our lower bound proofs for static $r$-gather apply here as well.  The points arranged in any of the lower bound proofs can be static points for the duration of $T$ or may move in a fashion where the 
+distances between points do not increase.  Then the arguments for static $r$-gather translate to this simple version of dynamic $r$-gather directly.
+
+\begin{theorem}
+The lower bound results for static $r$-gather apply to any definition of dynamic $r$-gather.  Further, we can approximate mobile $r$-gather, when $k$ clustergings are allowed, within a factor of 2.
+\end{theorem}
+
+Another variation allows unlimited regroupings in a continuous dynamic setting.  We know that in this setting, the optimal clustering may change many times, as much as $O(n^3)$ times.  Consider this example: $n/2$ points lie on a line where the points are spaced apart by 1 and 3 points are overlapping on the ends.  In this example, $r = 3$.  The optimal clustering of the points on the line is to have three points in a row be in one cluster with a diameter of $2$.  There are three different such clusterings which differ in the parity of the clusterings.  In each clustering, there are $O(n)$ clusters.  If another point travels along the line, when it is within the boundaries of a cluster, it will just join that cluster.  However, when it reaches the boundary of a cluster and exits it, the optimal clustering would be to shift the parity of the clustering.  This results in a change in all of the clusters along the line.  The clustering change every time the point travels a distance of 2.  Therefore, as the point travels along the line, the number of times the entire clustering changes is $O(n)$ which results in a total of $O(n^2)$ changes to individial clusters.  Since there are $O(n)$ points that travel along the line, the total number of clusters that change is $O(n^3)$.

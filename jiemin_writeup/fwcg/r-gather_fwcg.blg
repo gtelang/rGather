@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2015)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: r-gather_fwcg.aux
+The style file: abbrv.bst
+Database file #1: r-gather.bib
+You've used 5 entries,
+            2118 wiz_defined-function locations,
+            538 strings with 4486 characters,
+and the built_in function-call counts, 1701 in all, are:
+= -- 174
+> -- 58
+< -- 1
++ -- 23
+- -- 18
+* -- 120
+:= -- 278
+add.period$ -- 15
+call.type$ -- 5
+change.case$ -- 24
+chr.to.int$ -- 0
+cite$ -- 5
+duplicate$ -- 67
+empty$ -- 144
+format.name$ -- 18
+if$ -- 357
+int.to.chr$ -- 0
+int.to.str$ -- 5
+missing$ -- 5
+newline$ -- 28
+num.names$ -- 10
+pop$ -- 19
+preamble$ -- 1
+purify$ -- 19
+quote$ -- 0
+skip$ -- 50
+stack$ -- 0
+substring$ -- 138
+swap$ -- 15
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 20
+warning$ -- 0
+while$ -- 20
+width$ -- 6
+write$ -- 57

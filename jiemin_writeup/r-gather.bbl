@@ -1,0 +1,48 @@
+\begin{thebibliography}{1}
+
+\bibitem{Aggarwal06achievinganonymity}
+G.~Aggarwal, S.~Khuller, and T.~Feder.
+\newblock Achieving anonymity via clustering.
+\newblock In {\em In PODS}, pages 153--162, 2006.
+
+\bibitem{DBLP:conf/stoc/AnshelevichK07}
+E.~Anshelevich and A.~Karagiozova.
+\newblock Terminal backup, 3d matching, and covering cubic graphs.
+\newblock In {\em Proceedings of the 39th Annual {ACM} Symposium on Theory of
+  Computing, San Diego, California, USA, June 11-13, 2007}, pages 391--400,
+  2007.
+
+\bibitem{Armon}
+A.~Armon.
+\newblock On min-max r-gatherings.
+\newblock In C.~Kaklamanis and M.~Skutella, editors, {\em Approximation and
+  Online Algorithms}, volume 4927 of {\em Lecture Notes in Computer Science},
+  pages 128--141. Springer Berlin Heidelberg, 2008.
+
+\bibitem{Guha:2000:HPN:892551}
+S.~Guha, A.~Meyerson, and K.~Munagala.
+\newblock Hierarchical placement and network design problems.
+\newblock Technical report, Stanford, CA, USA, 2000.
+
+\bibitem{Karget:2000:BST:795666.796578}
+D.~R. Karget and M.~Minkoff.
+\newblock Building steiner trees with incomplete global knowledge.
+\newblock In {\em Proceedings of the 41st Annual Symposium on Foundations of
+  Computer Science}, FOCS '00, pages 613--, Washington, DC, USA, 2000. IEEE
+  Computer Society.
+
+\bibitem{Shalita:2009:EAP:1496770.1496781}
+A.~Shalita and U.~Zwick.
+\newblock Efficient algorithms for the 2-gathering problem.
+\newblock In {\em Proceedings of the Twentieth Annual ACM-SIAM Symposium on
+  Discrete Algorithms}, SODA '09, pages 96--105, Philadelphia, PA, USA, 2009.
+  Society for Industrial and Applied Mathematics.
+
+\bibitem{Svitkina:2008:LFL:1347082.1347208}
+Z.~Svitkina.
+\newblock Lower-bounded facility location.
+\newblock In {\em Proceedings of the Nineteenth Annual ACM-SIAM Symposium on
+  Discrete Algorithms}, SODA '08, pages 1154--1163, Philadelphia, PA, USA,
+  2008. Society for Industrial and Applied Mathematics.
+
+\end{thebibliography}

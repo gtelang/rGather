@@ -1,0 +1,132 @@
+\begin{thebibliography}{10}
+
+\bibitem{abraham04LLS}
+I.~Abraham, D.~Dolev, and D.~Malkhi.
+\newblock {LLS}: a locality aware location service for mobile ad hoc networks.
+\newblock In {\em DIALM-POMC '04: Proceedings of the 2004 joint workshop on
+  Foundations of mobile computing}, pages 75--84, 2004.
+
+\bibitem{Aggarwal06achievinganonymity}
+G.~Aggarwal, S.~Khuller, and T.~Feder.
+\newblock Achieving anonymity via clustering.
+\newblock In {\em In PODS}, pages 153--162, 2006.
+
+\bibitem{alon1986fast}
+N.~Alon, L.~Babai, and A.~Itai.
+\newblock A fast and simple randomized parallel algorithm for the maximal
+  independent set problem.
+\newblock {\em Journal of algorithms}, 7(4):567--583, 1986.
+
+\bibitem{anshelevich2011terminal}
+E.~Anshelevich and A.~Karagiozova.
+\newblock Terminal backup, {3D} matching, and covering cubic graphs.
+\newblock {\em SIAM Journal on Computing}, 40(3):678--708, 2011.
+
+\bibitem{armon2011min}
+A.~Armon.
+\newblock On min--max $r$-gatherings.
+\newblock {\em Theoretical Computer Science}, 412(7):573--582, 2011.
+
+\bibitem{Basagni99distributed}
+S.~Basagni.
+\newblock Distributed clustering for ad hoc networks.
+\newblock In {\em Proc. 99' International Symp. on Parallel Architectures,
+  Algorithms, and Networks (I-SPAN'99)}, pages 310--315, June 1999.
+
+\bibitem{basu01mobility}
+P.~Basu, N.~Khan, , and T.~D. Little.
+\newblock A mobility based metric for clustering in mobile ad hoc networks.
+\newblock In {\em Proc. of IEEE ICDCS 2001 Workshop on Wireless Networks and
+  Mobile Computing}, April 2001.
+
+\bibitem{blumberg2009}
+A.~J. Blumberg and P.~Eckersley.
+\newblock On locational privacy, and how to avoid losing it forever.
+\newblock EFF whitepaper, https://www.eff.org/files/eff-locational-privacy.pdf,
+  2009.
+
+\bibitem{593002}
+M.~Chatterjee, S.~K. Das, and D.~Turgut.
+\newblock {WCA}: A weighted clustering algorithm for mobile ad hoc networks.
+\newblock {\em Cluster Computing}, 5(2):193--204, 2002.
+
+\bibitem{chen99clustering}
+G.~Chen and I.~Stojmenovic.
+\newblock Clustering and routing in mobile wireless networks.
+\newblock Technical Report TR-99-05, SITE, June 1999.
+
+\bibitem{Chow:2007:EPC:1784462.1784477}
+C.-Y. Chow and M.~F. Mokbel.
+\newblock Enabling private continuous queries for revealed user locations.
+\newblock In {\em Proceedings of the 10th International Conference on Advances
+  in Spatial and Temporal Databases}, SSTD'07, pages 258--273, Berlin,
+  Heidelberg, 2007. Springer-Verlag.
+
+\bibitem{Chow:2011:TPL:2031331.2031335}
+C.-Y. Chow and M.~F. Mokbel.
+\newblock Trajectory privacy in location-based services and data publication.
+\newblock {\em SIGKDD Explor. Newsl.}, 13(1):19--29, Aug. 2011.
+
+\bibitem{gghzz-dmc-03}
+J.~Gao, L.~Guibas, J.~Hershberger, L.~Zhang, and A.~Zhu.
+\newblock Discrete mobile centers.
+\newblock {\em Discrete and Computational Geometry}, 30(1):45--65, 2003.
+
+\bibitem{Gruteser:2003:AUL:1066116.1189037}
+M.~Gruteser and D.~Grunwald.
+\newblock Anonymous usage of location-based services through spatial and
+  temporal cloaking.
+\newblock In {\em Proceedings of the 1st International Conference on Mobile
+  Systems, Applications and Services}, MobiSys '03, pages 31--42, New York, NY,
+  USA, 2003. ACM.
+
+\bibitem{lin97adaptive}
+C.~R. Lin and M.~Gerla.
+\newblock Adaptive clustering for mobile wireless networks.
+\newblock {\em IEEE Journal of Selected Areas in Communications},
+  15(7):1265--1275, 1997.
+
+\bibitem{Mokbel:2006:NCQ:1182635.1164193}
+M.~F. Mokbel, C.-Y. Chow, and W.~G. Aref.
+\newblock The new casper: Query processing for location services without
+  compromising privacy.
+\newblock In {\em Proceedings of the 32Nd International Conference on Very
+  Large Data Bases}, VLDB '06, pages 763--774. VLDB Endowment, 2006.
+
+\bibitem{Sarkar:2010:forms}
+R.~Sarkar and J.~Gao.
+\newblock Differential forms for target tracking and aggregate queries in
+  distributed networks.
+\newblock In {\em ACM MobiCom '10}.
+
+\bibitem{shalita2010efficient}
+A.~Shalita and U.~Zwick.
+\newblock Efficient algorithms for the 2-gathering problem.
+\newblock {\em ACM Transactions on Algorithms (TALG)}, 6(2):34, 2010.
+
+\bibitem{6155874}
+K.~Shin, X.~Ju, Z.~Chen, and X.~Hu.
+\newblock Privacy protection for users of location-based services.
+\newblock {\em Wireless Communications, IEEE}, 19(1):30--39, February 2012.
+
+\bibitem{Sweeney02}
+L.~Sweeney.
+\newblock $k$-anonymity: a model for protecting privacy.
+\newblock {\em Int. J. Uncertain. Fuzziness Knowl.-Based Syst.}, 10:557--570,
+  Oct. 2002.
+
+\bibitem{Xu:2007:LAC:1341012.1341062}
+T.~Xu and Y.~Cai.
+\newblock Location anonymity in continuous location-based services.
+\newblock In {\em Proceedings of the 15th Annual ACM International Symposium on
+  Advances in Geographic Information Systems}, GIS '07, pages 39:1--39:8, New
+  York, NY, USA, 2007. ACM.
+
+\bibitem{4509698}
+T.~Xu and Y.~Cai.
+\newblock Exploring historical location data for anonymity preservation in
+  location-based services.
+\newblock In {\em INFOCOM 2008. The 27th Conference on Computer Communications.
+  IEEE}, pages~--, April 2008.
+
+\end{thebibliography}

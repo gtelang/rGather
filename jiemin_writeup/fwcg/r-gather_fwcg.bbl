@@ -1,0 +1,29 @@
+\begin{thebibliography}{1}
+
+\bibitem{Aggarwal06achievinganonymity}
+G.~Aggarwal, S.~Khuller, and T.~Feder.
+\newblock Achieving anonymity via clustering.
+\newblock In {\em In PODS}, pages 153--162, 2006.
+
+\bibitem{anshelevich2011terminal}
+E.~Anshelevich and A.~Karagiozova.
+\newblock Terminal backup, {3D} matching, and covering cubic graphs.
+\newblock {\em SIAM Journal on Computing}, 40(3):678--708, 2011.
+
+\bibitem{armon2011min}
+A.~Armon.
+\newblock On min--max $r$-gatherings.
+\newblock {\em Theoretical Computer Science}, 412(7):573--582, 2011.
+
+\bibitem{shalita2010efficient}
+A.~Shalita and U.~Zwick.
+\newblock Efficient algorithms for the 2-gathering problem.
+\newblock {\em ACM Transactions on Algorithms (TALG)}, 6(2):34, 2010.
+
+\bibitem{Sweeney02}
+L.~Sweeney.
+\newblock $k$-anonymity: a model for protecting privacy.
+\newblock {\em Int. J. Uncertain. Fuzziness Knowl.-Based Syst.}, 10:557--570,
+  Oct. 2002.
+
+\end{thebibliography}

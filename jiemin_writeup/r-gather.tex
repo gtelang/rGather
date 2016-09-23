@@ -1,0 +1,153 @@
+\documentclass[11pt]{article}
+\usepackage{mystyle}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{xspace}
+\usepackage{times}
+\usepackage{graphicx}
+\def\eps{\varepsilon}
+
+\setlength{\textwidth}{6.5in} \setlength{\evensidemargin}{0.0in}
+\setlength{\oddsidemargin}{0.0in} \setlength{\textheight}{8.5in}
+\setlength{\topmargin}{0.0in}
+%\setlength{\parskip}{2mm}
+\setlength{\baselineskip}{1.7\baselineskip}
+
+\usepackage{fullpage}
+
+\newcommand{\denselist}{\itemsep 0pt\parsep=1pt\partopsep 0pt}
+\newcommand{\bitem}{\begin{itemize}\denselist}
+\newcommand{\eitem}{\end{itemize}}
+\newcommand{\benum}{\begin{enumerate}\denselist}
+\newcommand{\eenum}{\end{enumerate}}
+
+%\def\section{\@startsection {section}{1}{\z@}{1.0ex plus
+%1ex minus .2ex}{.2ex plus .2ex}{\large\bf}}
+
+\usepackage{sectsty}
+%\allsectionsfont{\large\usefont{U}{ptm}{eb}{n}\selectfont}
+\allsectionsfont{\large}
+\paragraphfont{\normalsize}
+%\def\section{\@startsection{section}{1}{.25in}%
+%                                   {1.3ex \@plus .5ex \@minus .2ex}%
+%                                   {-.5em \@plus -.1em}%
+%                                   {\reset@font\large\bfseries}}
+
+\title{The r-Gather Problem}
+\author{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+\section{Introduction}
+Given a set of $n$ points $P = \{p_1, p_2, \dots, p_n\}$ in Euclidean space and a value $r$, the aim of the $r$-gather problem is to cluster the points into groups of $r$ such that the largest diameter of the clusters is minimized. We have two definitions of the diameter of a cluster: the distance between the furthest pair of points and the diameter of the smallest disk that covers all points.
+
+\section{Related Work}
+We know that this problem is NP-hard to approximate at a ratio better than 2 when the points are in a general metric and when $r > 6$ \cite{Aggarwal06achievinganonymity}.  Aggarwal et. al. also has a 2-approximation algorithm.  The approximation algorithm first guesses the optimal diameter and greedily selects clusters with twice the diameter.  Then a flow algorithm is constructed to assign at least r points to each cluster.  This procedure is repeated until a good guess is found.  Note that this solution only selects input points as cluster centers.
+
+Armon \cite{Armon} extended the result of Aggarwal et. al. by proving it is NP-hard to approximate the general metric case when $r > 2$ at a ratio better than 2.  He also specifies a generalization of the r-gather clustering problem named the r-gathering problem which also considers a set of potential cluster centers (refered to as potential facility locations in Armon's paper) and their opening costs in the final optimization function. They provide a 3-approximation to the min-max r-gathering problem and prove it is NP-hard to have a better approximation factor.  They also provide various approximation algorithms for the min-max r-gathering problem with the proximity requirement, a requirement for all points to be assigned to their nearest cluster center.
+
+For the case where $r = 2$, both \cite{DBLP:conf/stoc/AnshelevichK07} and \cite{Shalita:2009:EAP:1496770.1496781} provide polynomial time algorithms.  Shalita and Urizwick \cite{Shalita:2009:EAP:1496770.1496781} provide an $O(mn)$ time algorithm.
+
+\cite{Guha:2000:HPN:892551, Karget:2000:BST:795666.796578,Svitkina:2008:LFL:1347082.1347208} focus on the min-sum version of a similar facility location problem.
+
+\section{Current Results}
+
+For the case where the diameter of a cluster is the diameter of the smallest covering disk, we show it is NP-hard to approximate better than $\sqrt{13}/2 \approx 1.802$ when $r=3$ and ${\sqrt{35}+\sqrt{3} \over 4} \approx 1.912$ when $r \geq 4$.
+
+For the case where the diameter of a cluster is the distance between the furthest pair of points, then it is NP-hard to approximate better than $\sqrt{2+\sqrt{3}} \approx 1.931$ when $r=3$ or $4$ and $2$ when $r\geq5$.
+
+We also show that the lower bound for the static setting translates to all versions of the dynamic setting.  
+%When we allow no reclusterings, we are able to strengthen the lower bound by showing that its is NP-hard to approximate better than 2.  
+We provide 2-approximation algorithms when we allow no or $k$ reclusterings.  Finally, for the dynamic variation where an unlimited number of reclusterings are allowed, we present an example where clusters change $O(n^3)$ times.
+
+%For the dual objective of maximizing $r$ given a fixed disk size, we can show the problem is NP-hard to approximate better than $2/3$, using instances in which the optimal $r$ value is 3. Can this be strengthened using instances whose optimal $r$ values are greater?
+
+\section{Static $r$-Gather}
+
+\begin{theorem}\label{thm:hardness1}
+The r-gather problem for the case where the diameter of a cluster is measured by the furthest distance between two points is NP-hard to approximate better than a factor of $2$ when $r\geq5$.
+\end{theorem}
+\begin{proof}
+Our reduction is from the NP-hard problem, planar 3SAT.  Given a formula in 3CNF composed of variables $x_i, i = 1,\dots,n$ and their complements $\overline{x_i}$, we construct an instance of r-gather on the plane.  Figure~\ref{fig:3satconstruction} illustrates a clause gadget of the clause $C = x_i \vee x_j \vee x_k$ and part of a variable gadget for $x_i$.  In the figure, each point represents multiple points in the same location, the number of which is noted in parenthesis.  All distances between groups of points connected by a line are distance 1 apart.  Note that all clusters shown in the figure have a diameter of 1.  If all clusters have a diameter of 1, then we can signify the parity of a variable by whether solid or dashed clusters are chosen.  Here the solid clusters signify a positive value for $x_i$ that satisfies the clause since the center point of the clause gadget is successfully assigned to a cluster.  Note that the variable gadget in Figure~\ref{fig:3satconstruction} swaps the parity of the signal sent away from the gadget.  We also include a negation gadget shown in Figure~\ref{fig:negation} that swaps the parity of the signal and can be used when connecting parts of the variable gadget together.  If an optimal solution to this r-gather construction can be found, the diameter of all clusters is 1.
+
+%For the case where $r=3$ or $r = 4$, any clustering that has a cluster with diameter greater than 1 must have a cluster with diameter greater than or equal to $\sqrt{3}$.  A cluster with diameter $\sqrt{3}$ can be found in the clause gadget containing a point from each variable gadget and the center point.  There are no possible clusterings with a diameter greater than 1 or less than $\sqrt{3}$.  Therefore, it is NP-hard to approximate 3-gather and 4-gather better than a factor of $\sqrt{3}$.
+
+%For the case where $r\geq5$, the center point of the clause gadget must be assigned to a cluster that contains all $r$ points of one of the variable clusters or else a cluster of diameter 2 is forced.
+The center point of the clause gadget must be assigned to a cluster that contains all $r$ points of one of the variable clusters or else a cluster of diameter 2 is forced.  WLOG, let the center point be clustered with the $r$ points of the $x_i$ gadget.  What results is the solid clusters in figure~\ref{fig:3satconstruction} are selected above the triangle splitter and the dashed clusters are selected below the splitter.  The group of points at the top of the triangle splitter is unassigned to a cluster.  It must merge with one of the neighboring clusters which results in a cluster of diameter 2.  Therefore, it is NP-hard to approximate $r$-gather below a factor of 2 for $r\geq5$.
+\end{proof}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=.6]{figs/hardness}
+\caption{clause and splitter gadget}
+\label{fig:3satconstruction}
+\end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=.8]{figs/negation}
+\caption{signal negation gadget}
+\label{fig:negation}
+\end{center}
+\end{figure}
+
+\begin{theorem}
+The r-gather problem for the case where the diameter of a cluster is measured by the diameter of the smallest covering disk is NP-hard to approximate better than a factor of ${\sqrt{35}+\sqrt{3} \over 4} \approx 1.912$ when $r\geq4$.
+\end{theorem}
+\begin{proof}
+The reduction is very simlar to the proof of Theorem~\ref{thm:hardness1}.  The only difference is the splitter which is illustrated in Figure~\ref{fig:splitter}.
+\end{proof}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=.9]{figs/splitter}
+\caption{close up of the splitter}
+\label{fig:splitter}
+\end{center}
+\end{figure}
+
+\begin{theorem}
+The r-gather problem for the case where the diamter of a cluster is measured by the diameter of the smallest covering disk is NP-hard to approximate better than a factor of $\sqrt{13}/2 \approx 1.802$ when $r=3$.
+\end{theorem}
+\begin{proof}
+We reduce from the NP-hard problem planar circuit SAT.  We are given a planar boolean circuit with a single output.  Similar to the previous proofs, a wire gadget consists of a line of points that alternate between a single point and a group of $r-1$ points at the same location.  The parity of the clusters chosen signify a true signal or a false signal.  When the clusters combine a group of $r-1$ points followed by a single point, the signal of the wire is true.  It is simple to enforce the output to be a true signal by ending the output wire with a single point.  The beginning of the input wires have a group of $r$ points so that the inputs can be either true or false.  Figure~\ref{fig:nandgadget} illustrates the NAND gadget, a universal gate.  The solid clusters illustrate two true inputs into the gate and a false output.  If either or both of the inputs is false, then two groups of points in the triangle (or all three) will become a cluster and the output will be true.  Figure~\ref{fig:splittercircuit} ilustrates the splitter circuit where the solid clusters indicate a true signal and the dashed clusters indicate a false signal.  As before, if the optimal solution to the $r$-gather construction can be found, then cluster diameter will be 1.  Otherwise, three groups will form a cluster, two from the triangle and one adjacent to the triangle.  The diameter of such a cluster is $\sqrt{13}/2 \approx 1.802$ when $r=3$.  Finally, note that in order to connect the wires, they must be able to turn somehow.   We can bend the wire such that no three groups of points can form a cluster that has diameter smaller than $\sqrt{13}/2$.  Thus concludes our proof.
+\end{proof}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=.6]{figs/nandgadget}
+\caption{NAND gadget}
+\label{fig:nandgadget}
+\end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=.6]{figs/splittergadget}
+\caption{splitter gadget}
+\label{fig:splittercircuit}
+\end{center}
+\end{figure}
+
+\begin{theorem}
+The r-gather problem for the case where the diameter of a cluster is the distance between the furthest pair of points is NP-hard to approximate better than $\sqrt{2+\sqrt{3}} \approx 1.931$ when $r=3$ or $4$.
+\end{theorem}
+
+\input{r-gather_dynamic}
+
+\input{r-gather_distributed}
+
+\section{Acknowledgements}
+This project was supported by NSF grant CCF-1017539.
+
+\begin{small}
+\bibliographystyle{abbrv}
+\bibliography{r-gather}
+\end{small}
+\end{document}

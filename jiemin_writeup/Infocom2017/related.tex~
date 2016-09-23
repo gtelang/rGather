@@ -1,0 +1,11 @@
+%!TEX root = r-gather.tex
+
+\section{Related works}
+
+The $r$-gather problem is shown to be NP-hard to approximate at a ratio better than 2 when $r > 6$ and the points are in a general metric by Aggarwal et al.\cite{Aggarwal06achievinganonymity}.  They also provide a 2-approximation algorithm.  The approximation algorithm first guesses the optimal diameter and greedily selects clusters with twice the diameter.  Then, a flow algorithm is constructed to assign at least $r$ points to each cluster.  This procedure is repeated until a good guess is found.  Note that this solution only selects input points as cluster centers.
+
+Armon \cite{armon2011min} extended the result of Aggarwal et al. by proving it is NP-hard to approximate at a ratio better than 2 for the general metric case when $r > 2$.  He also specifies a generalization of the $r$-gather clustering problem named the $r$-gathering problem which also considers a set of potential cluster centers (refered to as potential facility locations in Armon's paper) and their opening costs in the final optimization function. They provide a 3-approximation to the min-max $r$-gathering problem and prove it is NP-hard to have a better approximation factor.  They also provide various approximation algorithms for the min-max $r$-gathering problem with the proximity requirement; a requirement for all points to be assigned to their nearest cluster center.
+
+For the case where $r = 2$, both \cite{anshelevich2011terminal} and \cite{shalita2010efficient} provide polynomial time exact algorithms.  Shalita and Zwick's \cite{shalita2010efficient} algorithm runs in $O(mn)$ time, for a graph with $n$ nodes and $m$ edges.
+
+\pagebreak

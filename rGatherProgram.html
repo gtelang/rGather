@@ -1,0 +1,1408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>r-Gather Programs</title>
+<!-- 2016-07-30 Sat 16:23 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Gaurish" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<style>pre.src {background-color: #0d0d0d; color: #e5e5e5;} </style>
+<link rel="stylesheet" type="text/css" href="/home/gaurish/Dropbox/MyWiki/codes/Haskell/LiterateHaskell/org-style.css"/>
+
+<script type="text/javascript" src="/home/gaurish/Dropbox/MyWiki/codes/Haskell/LiterateHaskell/org-info.js">
+/**
+ *
+ * @source: /home/gaurish/Dropbox/MyWiki/codes/Haskell/LiterateHaskell/org-info.js
+ *
+ * @licstart  The following is the entire license notice for the
+ *  JavaScript code in /home/gaurish/Dropbox/MyWiki/codes/Haskell/LiterateHaskell/org-info.js.
+ *
+ * Copyright (C) 2012-2013 Free Software Foundation, Inc.
+ *
+ *
+ * The JavaScript code in this tag is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU
+ * General Public License (GNU GPL) as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option)
+ * any later version.  The code is distributed WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+ *
+ * As additional permission under GNU GPL version 3 section 7, you
+ * may distribute non-source (e.g., minimized or compacted) forms of
+ * that code without the copy of the GNU GPL normally required by
+ * section 4, provided you include this license notice and a URL
+ * through which recipients can access the Corresponding Source.
+ *
+ * @licend  The above is the entire license notice
+ * for the JavaScript code in /home/gaurish/Dropbox/MyWiki/codes/Haskell/LiterateHaskell/org-info.js.
+ *
+ */
+</script>
+
+<script type="text/javascript">
+
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+
+<!--/*--><![CDATA[/*><!--*/
+org_html_manager.set("TOC_DEPTH", "3");
+org_html_manager.set("LINK_HOME", "");
+org_html_manager.set("LINK_UP", "");
+org_html_manager.set("LOCAL_TOC", "1");
+org_html_manager.set("VIEW_BUTTONS", "0");
+org_html_manager.set("MOUSE_HINT", "underline");
+org_html_manager.set("FIXED_TOC", "0");
+org_html_manager.set("TOC", "0");
+org_html_manager.set("VIEW", "info");
+org_html_manager.setup();  // activate after the parameters are set
+/*]]>*///-->
+</script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">r-Gather Programs</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Introduction</a></li>
+<li><a href="#sec-2">2. About the Test Data</a></li>
+<li><a href="#sec-3">3. The Implementations</a>
+<ul>
+<li><a href="#sec-3-1">3.1. The Main module file rGather.py</a></li>
+<li><a href="#sec-3-2">3.2. Decentralized Static \(r\)-Gather (4-Approx)</a>
+<ul>
+<li><a href="#sec-3-2-1">3.2.1. Setup and Cleanup</a></li>
+<li><a href="#sec-3-2-2">3.2.2. Generate Clusters</a></li>
+<li><a href="#sec-3-2-3">3.2.3. Plot Clusters</a></li>
+<li><a href="#sec-3-2-4">3.2.4. Plot Statistics</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-3">3.3. Aggarwal's Static \(r\)-Gather (2-Approx)</a>
+<ul>
+<li><a href="#sec-3-3-1">3.3.1. Generate Clusters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-4">4. Scrap notes</a>
+<ul>
+<li><a href="#sec-4-1">4.1. Animation in Python</a>
+<ul>
+<li><a href="#sec-4-1-1">4.1.1. animation.FuncAnimation (&#x2026;)</a></li>
+<li><a href="#sec-4-1-2">4.1.2. Data structures</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-5">5. Types and Typeclasses</a></li>
+<li><a href="#sec-6">6. SCRap</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+The \(r\)-Gather problem was originally posed as a sub-problem in a <a href="http://people.csail.mit.edu/karger/Papers/maybecast.pdf">FOCS 2000</a> paper about constructing Steiner trees in 
+the face of uncertainty. It was explored in detail by <a href="http://static.googleusercontent.com/media/research.google.com/en//pubs/archive/41225.pdf">Aggarwal et al. </a>who gave various hardness results and 
+approximation algorithms in the setting of metric spaces. It is natural to study this problem and its variants 
+in \(\mathbb{R}^2\) by exploiting the extra structure available. 
+</p>
+
+<p>
+In the main paper, we give approximation algorithms for the following problems:
+</p>
+
+<p>
+<b>DYNAMIC \(r\)-GATHER:</b>      If the \((x,y)\) co-ordinates of the data-set are live and moving, how do we update 
+\(OPT\) efficiently? 
+</p>
+
+<p>
+<b>DECENTRALIZED \(r\)-GATHER:</b> Say the data-set is spread among several data-banks. How do we compute \(OPT\) 
+with minimal co-ordination? 
+</p>
+
+<p>
+<b>DECENTRALIZED DYNAMIC \(r\)-GATHER:</b>  What if the data is live, <span class="underline"><i><b>and</b></i></span> the computation 
+is required to be as decentralized as possible?  
+</p>
+
+<p>
+The sections that follow give literate Python implementations of these algorithms <sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup> 
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> About the Test Data</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<a href="./shenzhen_trajectory_data.png" align="left" width="550px"><img src="./InputOutput/shenzhen_trajectory_data.png" alt="shenzhen_trajectory_data.png" align="left" width="550px" /></a>
+Figure 1 on the left depicts trajectories of 9386 cars, fitted with GPS sensors, driving 
+around Shenzhen, China for a single day. <a href="shenzen_normalized_data_animation_for_small_subset_of_cars.mp4">Here</a> is a video of a small subset of them evolving in time.  
+</p>
+
+<p>
+The GPS co-ordinates from the raw data set (consisting of latitude and longitude given in degrees) 
+have been "normalized"; so we can assume the cars have been sampled in lock-step, every 5 minutes.
+</p>
+
+<p>
+The goal of the \(r\)-Gather problem and its variants is &#x2013; broadly speaking &#x2013; to fuzz these trajectories for anonymity, 
+yet still preserve enough structure to make useful inferences. 
+</p>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> The Implementations</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+I will be implementing each of the five algorithms as classes in <b><code>rGather.py</code></b>. These classes will behave as 
+namespaces for different runs of the algorithms. <b>There will be no dependence between the classes</b>. That will 
+allow us to unit-test them individually.  
+</p>
+
+<p>
+Each class comes with its own <font color = "red"> main.py </font>  
+file to customizing the needed logic. But the module file remains the same. I will not be documenting the 
+logic of the <b>main.py</b> files in this literate document, for they are self-explanatory. 
+</p>
+
+<p>
+The statistics of the clustering, on the other hand will be visualized by the <b>plotStatistics</b> method 
+It will get its own axes artist object(s) on which to plot these statistics. 
+</p>
+
+<p>
+I intend to use the classes as described below:
+</p>
+
+<dl class="org-dl">
+<dt> <span class="underline">Test the performance of various algorithms on a stored data-set</span> </dt><dd><ul class="org-ul">
+<li>Initialize <b>(but not necessarily start!)</b> one or more \(r\)-Gather routines with the input-data.
+</li>
+<li>Every class has a method called <b><code>generateState({config})</code></b> which runs the actual
+algorithm on the provided input. The computed clusterings and statistics of the 
+run are stored as member variables or maybe as a dictionary. 
+</li>
+<li>Each class also has one or more functions for visualizing the clusterings or 
+run-time statistics so gathered. 
+</li>
+<li>The dynamic algorithms also come with one or more animation functions  
+interacting with the <b><code>generateState()</code></b> via the <b><code>yield</code></b> statement and the 
+<b><code>animation.FuncAnimation(..)</code></b> HOF.  
+</li>
+<li>Every method itself will have routines local to its scope to help abstracting away its logic. 
+Strive to make these local routines pure. Moreover, make all the needed module imports local.  
+That will help us via property checkers or other unit-testing mechanisms. 
+</li>
+</ul>
+</dd>
+</dl>
+
+
+<dl class="org-dl">
+<dt> <span class="underline">Stress test an algorithm adversarially via the little GUI</span> </dt><dd><ul class="org-ul">
+<li>The user enters the points by double-clicking on the canvas. 
+</li>
+
+<li>To set the \(r\)-parameter he will 
+<ul class="org-ul">
+<li>Press <b>r</b> or <b>R</b> key
+</li>
+<li>Then enter the decimal digits of this parameter. 
+</li>
+<li>After finishing, press enter, to execute the algorithm.
+</li>
+</ul>
+</li>
+
+<li>To clear the canvas and reset the algorithm class which is 
+holding the state press <b>c</b> or <b>C</b> key. 
+</li>
+
+<li>Start inputting a new cloud of points to have a new run of the 
+algorithm. 
+</li>
+</ul>
+</dd>
+</dl>
+
+<hr  />
+
+<p>
+Finally, every run will need to record the statistics inside a YAML or an XML file. 
+XML might be simpler if you will be using Beautiful soup. Besides the documents 
+are far easier to view in the browser. YAML cannot be folded up unfortunately.
+I will absolutely need the latter for viewing small-data-sets. 
+</p>
+
+<p>
+There must be a function which produces this output! The following list should 
+be produced for each point-cloud data-set. Note that the results from different 
+clustering algorithms will be stored in the same file.   
+</p>
+
+<dl class="org-dl">
+<dt> <span class="underline">Static RGather</span> </dt><dd><ul class="org-ul">
+<li>Comment String. Allowed to be arbitrarily long. 
+</li>
+<li>The number of points 
+</li>
+<li>(x,y) coods of the points
+</li>
+<li>List of clusterings computed different algorithms. 
+\(\forall\) clustering
+<ul class="org-ul">
+<li>Algorithm Used
+</li>
+<li>\(r\) parameter
+</li>
+<li>Number of clusters computed. 
+</li>
+<li>Now the actual clusters! 
+\(\forall\) clusters
+<ul class="org-ul">
+<li>The number of points in the cluster
+</li>
+<li>The diameter of the cluster
+</li>
+<li>The actual points of the cluster. 
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+
+<p>
+We could stuff everything ever into one 
+data-file but that would be too complicated! 
+</p>
+</div>
+
+
+
+
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> The Main module file rGather.py</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Here a bird's eye view of <b>rGather.py</b> after tangling.  
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">!/usr/bin/python</span>
+<span style="color: #8ac6f2; font-weight: bold;">import</span> matplotlib <span style="color: #8ac6f2; font-weight: bold;">as</span> mpl, numpy <span style="color: #8ac6f2; font-weight: bold;">as</span> np, scipy <span style="color: #8ac6f2; font-weight: bold;">as</span> sp, sys, math, colorsys 
+<span style="color: #8ac6f2; font-weight: bold;">from</span> matplotlib <span style="color: #8ac6f2; font-weight: bold;">import</span> pyplot <span style="color: #8ac6f2; font-weight: bold;">as</span> plt, animation 
+<span style="color: #8ac6f2; font-weight: bold;">import</span> networkx <span style="color: #8ac6f2; font-weight: bold;">as</span> nx, sklearn <span style="color: #8ac6f2; font-weight: bold;">as</span> sk
+<span style="color: #8ac6f2; font-weight: bold;">from</span> abc <span style="color: #8ac6f2; font-weight: bold;">import</span> ABCMeta, abstractmethod
+<span style="color: #8ac6f2; font-weight: bold;">from</span> haversine <span style="color: #8ac6f2; font-weight: bold;">import</span> haversine <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">https://pypi.python.org/pypi/haversine</span>
+
+&lt;&lt;ALGO_JIEMIN_DECENTRALIZED_STATIC&gt;&gt;
+
+&lt;&lt;ALGO_AGGARWAL_STATIC&gt;&gt;
+&lt;&lt;ALGO_AGGARWAL_STATIC_R2L2&gt;&gt; 
+
+&lt;&lt;ALGO_JIEMIN_DYNAMIC&gt;&gt;
+
+<span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">getRandomColor</span><span style="color: #8c8c8c;">()</span>:
+    <span style="color: #ff9966;">""" Ripped from http://goo.gl/SMlEaU"""</span>
+
+    <span style="color: #cae682;">golden_ratio_conjugate</span> = <span style="color: #e5786d;">0</span>.<span style="color: #e5786d;">618033988749895</span>
+
+    <span style="color: #cae682;">h</span> = np.random.rand<span style="color: #8c8c8c;">()</span> 
+    <span style="color: #cae682;">h</span> += golden_ratio_conjugate
+    <span style="color: #cae682;">h</span> %= <span style="color: #e5786d;">1</span>.<span style="color: #e5786d;">0</span>
+    <span style="color: #8ac6f2; font-weight: bold;">return</span> colorsys.hsv_to_rgb<span style="color: #8c8c8c;">(</span>h, <span style="color: #e5786d;">0</span>.<span style="color: #e5786d;">7</span>, <span style="color: #e5786d;">0</span>.<span style="color: #e5786d;">9</span><span style="color: #8c8c8c;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> Decentralized Static \(r\)-Gather (4-Approx)</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+This algorithm is implemented as a class as described in the previous sections. Each instantiation 
+is an "environment" in which the algorithm runs. To construct the class, we pass 
+the cluster parameter \(r\) and the co-ordinates of the point-cloud. Some of the class variables stores 
+various statistics gathered while executing the algorithm on the given point cloud.
+</p>
+
+<p>
+In the coming subsections, I'll describe each of the noweb references of the code-block below. 
+These references are just the methods of this class grouped logically.  
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #8ac6f2; font-weight: bold;">class</span> <span style="color: #92a65e; font-weight: bold;">AlgoJieminDecentralizedStatic</span>:
+    &lt;&lt;SETUP_AND_CLEANUP&gt;&gt;
+    &lt;&lt;GENERATE_CLUSTERS&gt;&gt; 
+    &lt;&lt;PLOT_CLUSTERS&gt;&gt;  
+    &lt;&lt;PLOT_STATISTICS&gt;&gt;
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2-1" class="outline-4">
+<h4 id="sec-3-2-1"><span class="section-number-4">3.2.1</span> Setup and Cleanup</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+This chunk is  self-explanatory. The constructor initializes state variables needed as input
+along with data variables needed for a post-hoc analysis. These latter will be computed during the 
+algorithm's run.  
+</p>
+
+<p>
+Note that the final result of the clustering algorithm is stored in <b>self.computedClusterings</b>,  
+of type <b><code>[[Int]]</code></b>, i.e. a list of list of indices. These indices correspond to the row-numbers 
+of the <span class="underline">input</span> numpy array <b>pointCloud</b>: each row in pointCloud corresponds to a point in \(\mathbb{R}^2\). 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">__init__</span><span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span>, r, pointCloud<span style="color: #8c8c8c;">)</span>:
+  <span style="color: #ff9966;">"""  r          : Cluster parameter</span>
+<span style="color: #ff9966;">       pointCloud : An n x 2 numpy array where n is the number </span>
+<span style="color: #ff9966;">                    of points in the cloud and each row contains </span>
+<span style="color: #ff9966;">                    the (x,y) coordinates of a point."""</span>
+
+  <span style="color: #8ac6f2; font-weight: bold;">self</span>.r                    = r     
+  <span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud           = pointCloud  
+  <span style="color: #8ac6f2; font-weight: bold;">self</span>.computedClusterings  = <span style="color: #8c8c8c;">[]</span>  
+  <span style="color: #8ac6f2; font-weight: bold;">self</span>.algoName             = <span style="color: #ff9966;">'Decentralized Static r-Gather'</span>
+
+<span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">clearAllStates</span><span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span><span style="color: #8c8c8c;">)</span>:
+  <span style="color: #8ac6f2; font-weight: bold;">self</span>.r                   = <span style="color: #e5786d;">None</span>
+  <span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud          = <span style="color: #8c8c8c;">[]</span> 
+  <span style="color: #8ac6f2; font-weight: bold;">self</span>.computedClusterings = <span style="color: #8c8c8c;">[]</span>
+
+
+<span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">clearComputedClusteringsAndR</span><span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span><span style="color: #8c8c8c;">)</span>:
+  <span style="color: #8ac6f2; font-weight: bold;">self</span>.r                   = <span style="color: #e5786d;">None</span>
+  <span style="color: #8ac6f2; font-weight: bold;">self</span>.computedClusterings = <span style="color: #8c8c8c;">[]</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2-2" class="outline-4">
+<h4 id="sec-3-2-2"><span class="section-number-4">3.2.2</span> Generate Clusters</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<p>
+The algorithm. Finally! Note that this method is NOT called by the constructor when initializing 
+the class. This is by design to gain extra flexibility during experimental analyses. 
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">generateClusters</span><span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span>, config=<span style="color: #93a8c6;">{</span><span style="color: #ff9966;">'mis_algorithm'</span>: <span style="color: #ff9966;">'networkx_random_choose_20_iter_best'</span><span style="color: #93a8c6;">}</span><span style="color: #8c8c8c;">)</span>:
+  <span style="color: #ff9966;">""" config : Configuration parameters which might be needed </span>
+<span style="color: #ff9966;">               for the run. </span>
+<span style="color: #ff9966;">  Options recognized are (ALL LOWER-CASE)</span>
+<span style="color: #ff9966;">  1. mis_algorithm: 1. 'networkx_random_choose_20_iter_best', default </span>
+<span style="color: #ff9966;">                    2. 'riksuggestion'</span>
+<span style="color: #ff9966;">  """</span>
+
+
+  <span style="color: #8ac6f2; font-weight: bold;">import</span> itertools
+  <span style="color: #8ac6f2; font-weight: bold;">import</span> numpy <span style="color: #8ac6f2; font-weight: bold;">as</span> np
+  <span style="color: #8ac6f2; font-weight: bold;">import</span> pprint <span style="color: #8ac6f2; font-weight: bold;">as</span> pp
+  <span style="color: #8ac6f2; font-weight: bold;">import</span> copy
+  &lt;&lt;FIND_NEAREST_NEIGHBOURS&gt;&gt;
+  &lt;&lt;FIND_MAXIMAL_INDEPENDENT_SET_NEIGHBOURHOODS&gt;&gt;
+  &lt;&lt;EXTRACT_UNIQUE_ELMENTS_FROM_LIST&gt;&gt;
+
+  <span style="color: #cae682;">NrDistances</span>, <span style="color: #cae682;">Nr</span> = findNearestNeighbours<span style="color: #8c8c8c;">(</span> <span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud, 
+                                           <span style="color: #8ac6f2; font-weight: bold;">self</span>.r <span style="color: #8c8c8c;">)</span>
+  <span style="color: #cae682;">S</span>               = findMaximalIndependentOfNeighbourhoods<span style="color: #8c8c8c;">(</span> Nr.tolist<span style="color: #93a8c6;">(</span> <span style="color: #93a8c6;">)</span>, 
+                                                            config<span style="color: #93a8c6;">[</span> <span style="color: #ff9966;">'mis_algorithm'</span> <span style="color: #93a8c6;">]</span> <span style="color: #8c8c8c;">)</span>
+
+  <span style="color: #cae682;">indicesOfPointsCoveredByS</span> = <span style="color: #e5786d;">set</span><span style="color: #8c8c8c;">(</span><span style="color: #e5786d;">list</span><span style="color: #93a8c6;">(</span>itertools.chain.from_iterable<span style="color: #b0b1a3;">(</span>S<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+  <span style="color: #cae682;">indicesOfPointsMissedByS</span>  = <span style="color: #e5786d;">set</span><span style="color: #8c8c8c;">(</span><span style="color: #e5786d;">range</span><span style="color: #93a8c6;">(</span><span style="color: #e5786d;">len</span><span style="color: #b0b1a3;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>.difference<span style="color: #8c8c8c;">(</span>indicesOfPointsCoveredByS<span style="color: #8c8c8c;">)</span>
+
+  <span style="color: #8ac6f2; font-weight: bold;">assert</span><span style="color: #8c8c8c;">(</span>indicesOfPointsCoveredByS.union<span style="color: #93a8c6;">(</span>indicesOfPointsMissedByS <span style="color: #93a8c6;">)</span> == <span style="color: #e5786d;">set</span><span style="color: #93a8c6;">(</span><span style="color: #e5786d;">range</span><span style="color: #b0b1a3;">(</span><span style="color: #e5786d;">len</span><span style="color: #97b098;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud<span style="color: #97b098;">)</span><span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span> <span style="color: #8c8c8c;">)</span>
+
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">For each point missed by S, find which elements of its r-neighbourhood lies inside a member of S. </span>
+  <span style="color: #cae682;">pNrS</span> = <span style="color: #8c8c8c;">{}</span> <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">A dictionary which maintains this information.  </span>
+  <span style="color: #8ac6f2; font-weight: bold;">for</span> index <span style="color: #8ac6f2; font-weight: bold;">in</span> indicesOfPointsMissedByS:
+
+     <span style="color: #cae682;">pNrS</span><span style="color: #8c8c8c;">[</span>index<span style="color: #8c8c8c;">]</span> = <span style="color: #8c8c8c;">[]</span> 
+
+     <span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">Coordinates of the point whose index is 'index'</span>
+     <span style="color: #cae682;">ptIndex</span>     = np.array<span style="color: #8c8c8c;">(</span> <span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud<span style="color: #93a8c6;">[</span>index<span style="color: #93a8c6;">]</span> <span style="color: #8c8c8c;">)</span>
+
+     <span style="color: #cae682;">neighborIndices</span> = Nr<span style="color: #8c8c8c;">[</span>index<span style="color: #8c8c8c;">][</span><span style="color: #e5786d;">1</span>:<span style="color: #8c8c8c;">]</span> 
+
+     <span style="color: #8ac6f2; font-weight: bold;">for</span> nbIndex <span style="color: #8ac6f2; font-weight: bold;">in</span> neighborIndices:
+       <span style="color: #8ac6f2; font-weight: bold;">for</span> s <span style="color: #8ac6f2; font-weight: bold;">in</span> S:
+         <span style="color: #8ac6f2; font-weight: bold;">if</span> nbIndex <span style="color: #8ac6f2; font-weight: bold;">in</span> s:
+
+           <span style="color: #cae682;">ptnbIndex</span> = np.array<span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud<span style="color: #93a8c6;">[</span>nbIndex<span style="color: #93a8c6;">]</span><span style="color: #8c8c8c;">)</span>
+
+           <span style="color: #cae682;">dist</span> = np.linalg.norm<span style="color: #8c8c8c;">(</span> ptIndex - ptnbIndex  <span style="color: #8c8c8c;">)</span> <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Euclidean distance between the points</span>
+           pNrS<span style="color: #8c8c8c;">[</span>index<span style="color: #8c8c8c;">]</span>.append<span style="color: #8c8c8c;">(</span>  <span style="color: #93a8c6;">(</span>s, dist<span style="color: #93a8c6;">)</span>    <span style="color: #8c8c8c;">)</span>
+           <span style="color: #8ac6f2; font-weight: bold;">break</span> <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">since members of S are disjoint there is no reason to continue to iterate over members of S to check containment of nbindex</span>
+                 <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Move onto the next member of neighbourIndices. </span>
+
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">print "\nNr   = "     , Nr</span>
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">print "\nS    = "     , S</span>
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">print "\npointsMissed", indicesOfPointsMissedByS</span>
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">print "\npNrS = "     ; pp.pprint(pNrS, width=20 )</span>
+
+
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Now for each point select the member of S that is closest using this dictionary. </span>
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Edit this dictionary in place, by keeping only the closest neighbourhood. </span>
+  <span style="color: #cae682;">pNrS_trimmed</span> = <span style="color: #8c8c8c;">{}</span>
+  <span style="color: #8ac6f2; font-weight: bold;">for</span> <span style="color: #8c8c8c;">(</span>key, value<span style="color: #8c8c8c;">)</span> <span style="color: #8ac6f2; font-weight: bold;">in</span> pNrS.iteritems<span style="color: #8c8c8c;">()</span>:
+      <span style="color: #cae682;">distmin</span> = <span style="color: #e5786d;">float</span><span style="color: #8c8c8c;">(</span><span style="color: #ff9966;">"inf"</span><span style="color: #8c8c8c;">)</span> <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Positive infinity</span>
+
+      <span style="color: #8ac6f2; font-weight: bold;">for</span> <span style="color: #8c8c8c;">(</span>s, dist<span style="color: #8c8c8c;">)</span> <span style="color: #8ac6f2; font-weight: bold;">in</span> value:
+        <span style="color: #8ac6f2; font-weight: bold;">if</span> dist&lt;distmin:
+            <span style="color: #cae682;">smin</span>    = s
+            <span style="color: #cae682;">distmin</span> = dist
+
+
+      <span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">pNrS_trimmed[key] = (smin,distmin) # For debugging purposes. </span>
+      <span style="color: #cae682;">pNrS_trimmed</span><span style="color: #8c8c8c;">[</span>key<span style="color: #8c8c8c;">]</span> = smin
+
+  <span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">print "\npNrS_trimmed = "; pp.pprint(pNrS_trimmed, width=1) </span>
+
+
+
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">With pNrS_trimmed we obtain the final clustering. Yay!</span>
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">by "inverting" this key-value mapping</span>
+  <span style="color: #cae682;">augmentedSets</span> = <span style="color: #8c8c8c;">[</span>s <span style="color: #8ac6f2; font-weight: bold;">for</span> s <span style="color: #8ac6f2; font-weight: bold;">in</span> S <span style="color: #8ac6f2; font-weight: bold;">if</span> s <span style="color: #8ac6f2; font-weight: bold;">not</span> <span style="color: #8ac6f2; font-weight: bold;">in</span> pNrS_trimmed.values<span style="color: #93a8c6;">()</span><span style="color: #8c8c8c;">]</span> <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">The sets just included are not augmented at all. </span>
+
+  <span style="color: #cae682;">pNrS_codomain</span> = extractUniqueElementsFromList<span style="color: #8c8c8c;">(</span>pNrS_trimmed.values<span style="color: #93a8c6;">()</span><span style="color: #8c8c8c;">)</span>
+
+  <span style="color: #8ac6f2; font-weight: bold;">for</span> s <span style="color: #8ac6f2; font-weight: bold;">in</span> pNrS_codomain:
+    <span style="color: #cae682;">smodified</span> = copy.copy<span style="color: #8c8c8c;">(</span>s<span style="color: #8c8c8c;">)</span> <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">This copying step is SUPER-CRUCIAL!!! if you just use =, you will just be binding object pointed to by s to smod. Modifying smod, will then modify s, which will trip up your future iterations! I initially implemented it like this and got tripped up </span>
+    <span style="color: #8ac6f2; font-weight: bold;">for</span> key, value <span style="color: #8ac6f2; font-weight: bold;">in</span> pNrS_trimmed.iteritems<span style="color: #8c8c8c;">()</span>:
+      <span style="color: #8ac6f2; font-weight: bold;">if</span> s == value:
+        smodified.append<span style="color: #8c8c8c;">(</span>key<span style="color: #8c8c8c;">)</span> <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">augmentation step</span>
+
+    augmentedSets.append<span style="color: #8c8c8c;">(</span>smodified<span style="color: #8c8c8c;">)</span>
+
+
+  <span style="color: #8ac6f2; font-weight: bold;">self</span>.computedClusterings = augmentedSets
+
+  <span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">print "\nself.computedClusterings = "; pp.pprint(self.computedClusterings,width=1)</span>
+  <span style="color: #8ac6f2; font-weight: bold;">print</span>   <span style="color: #ff9966;">"Numpoints = "</span>                   , <span style="color: #e5786d;">len</span><span style="color: #8c8c8c;">(</span> <span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud <span style="color: #8c8c8c;">)</span>       ,  \
+          <span style="color: #ff9966;">" r = "</span>                          , <span style="color: #8ac6f2; font-weight: bold;">self</span>.r                       ,  \
+          <span style="color: #ff9966;">" Number of Clusters Computed = "</span>, <span style="color: #e5786d;">len</span><span style="color: #8c8c8c;">(</span> <span style="color: #8ac6f2; font-weight: bold;">self</span>.computedClusterings <span style="color: #8c8c8c;">)</span>, \
+          <span style="color: #ff9966;">" Algorithm used: "</span>              , <span style="color: #8ac6f2; font-weight: bold;">self</span>.algoName
+  sys.stdout.flush<span style="color: #8c8c8c;">()</span>
+</pre>
+</div>
+
+
+
+<p>
+The noweb references above are helper functions which I'll describe next. 
+</p>
+
+<p>
+<b><span class="underline">FIND NEAREST NEIGHBOURS</span></b>
+</p>
+
+<p>
+Given a point-cloud, the following function computes the \(k\)-nearest neighbours of each 
+point and their corresponding distances as required by <b>generateClusters</b>. 
+</p>
+
+
+<p>
+ <b><span class="underline">WARNING!</span></b> The neighbour list as computed here consist of the 0th, 1st, 2nd, &#x2026;., 
+(k-1)th nearest neighbours. The 0th neighbour is a hack, which allows us to identify 
+the point about whose neighbour list we are talking about. 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">findNearestNeighbours</span><span style="color: #8c8c8c;">(</span>pointCloud, k<span style="color: #8c8c8c;">)</span>:
+  <span style="color: #ff9966;">"""  pointCloud : 2-d numpy array. Each row is a point</span>
+<span style="color: #ff9966;">       k          : The length of the neighbour list to compute. </span>
+<span style="color: #ff9966;">  """</span>
+  <span style="color: #8ac6f2; font-weight: bold;">from</span> sklearn.neighbors <span style="color: #8ac6f2; font-weight: bold;">import</span> NearestNeighbors
+  <span style="color: #8ac6f2; font-weight: bold;">import</span> numpy <span style="color: #8ac6f2; font-weight: bold;">as</span> np
+  <span style="color: #8ac6f2; font-weight: bold;">import</span> sys
+
+  <span style="color: #cae682;">X</span>    = np.array<span style="color: #8c8c8c;">(</span>pointCloud<span style="color: #8c8c8c;">)</span>
+  <span style="color: #cae682;">nbrs</span> = NearestNeighbors<span style="color: #8c8c8c;">(</span>n_neighbors=k, algorithm=<span style="color: #ff9966;">'ball_tree'</span><span style="color: #8c8c8c;">)</span>.fit<span style="color: #8c8c8c;">(</span>X<span style="color: #8c8c8c;">)</span>
+  <span style="color: #cae682;">distances</span>, <span style="color: #cae682;">indices</span> = nbrs.kneighbors<span style="color: #8c8c8c;">(</span>X<span style="color: #8c8c8c;">)</span>
+
+  <span style="color: #8ac6f2; font-weight: bold;">return</span> distances, indices
+</pre>
+</div>
+
+<p>
+The output variable is a list of neighbour-lists reported by sklearn: \(N[i]\) denotes the <b>index-list</b> of the 
+\(k\)-nearest neighbours of point \(i\). The indices are specified in increasing order of distance of the corresponding 
+points from point i. 
+</p>
+
+<p>
+\(NDistances[i]\) is the corresponding list of distances of the \(k\)-nearest neighbours of point \(i\). 
+</p>
+
+<p>
+In particular, \(N[i][j]\) and \(NDistances[i][j]\) <span class="underline"><b>respectively</b></span> denote the index of <span class="underline">and</span> distance between the \(j\) th nearest 
+neighbour of \(i\). 
+</p>
+
+
+<p>
+<span class="underline"><b>FINDING A MAXIMAL INDEPENDENT SET OF NEIGHBOURHOODS</b></span>
+</p>
+
+
+<p>
+Given a collection of point-sets in the plane, we can use networkX to extract a large maximally independent &#x2013; wrt intersection&#x2013;
+subcollection. 
+</p>
+
+<p>
+For that, I construct a graph where 
+</p>
+<ol class="org-ol">
+<li>Each point-set corresponds to a vertex in the graph and vice-versa
+</li>
+<li>There exists an edge between two vertices in the graph if and only if, 
+the corresponding point-sets have a non-empty intersection.  
+</li>
+</ol>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">findMaximalIndependentOfNeighbourhoods</span><span style="color: #8c8c8c;">(</span>  nbds , mis_algorithm  <span style="color: #8c8c8c;">)</span>:
+  <span style="color: #8ac6f2; font-weight: bold;">import</span> networkx <span style="color: #8ac6f2; font-weight: bold;">as</span> nx
+  <span style="color: #cae682;">G</span> = nx.Graph<span style="color: #8c8c8c;">()</span>
+  G.add_nodes_from<span style="color: #8c8c8c;">(</span><span style="color: #e5786d;">range</span><span style="color: #93a8c6;">(</span><span style="color: #e5786d;">len</span><span style="color: #b0b1a3;">(</span>nbds<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">If two neighbourhoods intersect, draw </span>
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">a corresponding edge in the graph. </span>
+  <span style="color: #8ac6f2; font-weight: bold;">for</span> i <span style="color: #8ac6f2; font-weight: bold;">in</span> <span style="color: #e5786d;">range</span><span style="color: #8c8c8c;">(</span><span style="color: #e5786d;">len</span><span style="color: #93a8c6;">(</span>nbds<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>:
+    <span style="color: #8ac6f2; font-weight: bold;">for</span> j <span style="color: #8ac6f2; font-weight: bold;">in</span> <span style="color: #e5786d;">range</span><span style="color: #8c8c8c;">(</span>i+<span style="color: #e5786d;">1</span>,<span style="color: #e5786d;">len</span><span style="color: #93a8c6;">(</span>nbds<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>:
+      <span style="color: #cae682;">intersection_of_nbds_ij</span> = <span style="color: #8c8c8c;">[</span>  val  <span style="color: #8ac6f2; font-weight: bold;">for</span> val <span style="color: #8ac6f2; font-weight: bold;">in</span> nbds<span style="color: #93a8c6;">[</span>i<span style="color: #93a8c6;">]</span> <span style="color: #8ac6f2; font-weight: bold;">if</span> val <span style="color: #8ac6f2; font-weight: bold;">in</span> nbds<span style="color: #93a8c6;">[</span>j<span style="color: #93a8c6;">]</span>    <span style="color: #8c8c8c;">]</span> 
+      <span style="color: #8ac6f2; font-weight: bold;">if</span> <span style="color: #e5786d;">len</span><span style="color: #8c8c8c;">(</span>intersection_of_nbds_ij<span style="color: #8c8c8c;">)</span> &gt;= <span style="color: #e5786d;">1</span>:
+        G.add_edge<span style="color: #8c8c8c;">(</span>i,j<span style="color: #8c8c8c;">)</span>
+
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Having constructed the neighbourhood, we proceed to find a good MIS</span>
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">The quality of the solution is affected by the size of the MIS</span>
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">The larger the maximal independent set, the better it is</span>
+  <span style="color: #8ac6f2; font-weight: bold;">if</span> mis_algorithm == <span style="color: #ff9966;">'networkx_random_choose_20_iter_best'</span>: 
+    <span style="color: #cae682;">candidateSindices</span> = <span style="color: #8c8c8c;">[</span> nx.maximal_independent_set<span style="color: #93a8c6;">(</span>G<span style="color: #93a8c6;">)</span> <span style="color: #8ac6f2; font-weight: bold;">for</span> i <span style="color: #8ac6f2; font-weight: bold;">in</span> <span style="color: #e5786d;">range</span><span style="color: #93a8c6;">(</span><span style="color: #e5786d;">20</span><span style="color: #93a8c6;">)</span>  <span style="color: #8c8c8c;">]</span>
+
+    <span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">for candidate in candidateSindices: # for debugging</span>
+    <span style="color: #808080; font-style: italic;">#  </span><span style="color: #808080; font-style: italic;">print candidate</span>
+
+    <span style="color: #cae682;">sIndices</span> = <span style="color: #8c8c8c;">[]</span> <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Start value for finding the maximum</span>
+    <span style="color: #8ac6f2; font-weight: bold;">for</span> candidate <span style="color: #8ac6f2; font-weight: bold;">in</span> candidateSindices: <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Pick the largest independent set over 10 iterations</span>
+      <span style="color: #8ac6f2; font-weight: bold;">if</span> <span style="color: #e5786d;">len</span><span style="color: #8c8c8c;">(</span>candidate<span style="color: #8c8c8c;">)</span> &gt; <span style="color: #e5786d;">len</span><span style="color: #8c8c8c;">(</span>sIndices<span style="color: #8c8c8c;">)</span>: <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Yay! Found a larger independent set!</span>
+        <span style="color: #8ac6f2; font-weight: bold;">print</span> <span style="color: #ff9966;">"Larger set!"</span>
+        <span style="color: #cae682;">sIndices</span> = candidate
+
+
+  <span style="color: #8ac6f2; font-weight: bold;">elif</span> mis_algorithm == <span style="color: #ff9966;">'riksuggestion'</span>:
+
+    <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Give cluster centers a special attribute marking it as a center. </span>
+    <span style="color: #cae682;">distanceFromRthNearestNeighbourDict</span> = <span style="color: #8c8c8c;">{}</span>
+
+    <span style="color: #8ac6f2; font-weight: bold;">for</span> nbd, i <span style="color: #8ac6f2; font-weight: bold;">in</span> <span style="color: #e5786d;">zip</span><span style="color: #8c8c8c;">(</span> nbds, <span style="color: #e5786d;">range</span><span style="color: #93a8c6;">(</span> <span style="color: #e5786d;">len</span><span style="color: #b0b1a3;">(</span>nbds<span style="color: #b0b1a3;">)</span> <span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>: <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Note that each neighbourhood's 0th element is the center, and that the nbd indices are sorted by distance from this zeroth element. So -1 makes sense</span>
+        <span style="color: #cae682;">nbdCenterCoords</span>                      = <span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud<span style="color: #8c8c8c;">[</span> nbd<span style="color: #93a8c6;">[</span><span style="color: #e5786d;">0</span><span style="color: #93a8c6;">]</span> <span style="color: #8c8c8c;">]</span> 
+        <span style="color: #cae682;">nbdFarthestNeighbourCoords</span>           = <span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud<span style="color: #8c8c8c;">[</span> nbd<span style="color: #93a8c6;">[</span>-<span style="color: #e5786d;">1</span><span style="color: #93a8c6;">]</span> <span style="color: #8c8c8c;">]</span>
+        <span style="color: #cae682;">distanceFromRthNearestNeighbourDict</span><span style="color: #8c8c8c;">[</span>i<span style="color: #8c8c8c;">]</span> = np.linalg.norm<span style="color: #8c8c8c;">(</span> <span style="color: #93a8c6;">[</span> nbdCenterCoords<span style="color: #b0b1a3;">[</span><span style="color: #e5786d;">0</span><span style="color: #b0b1a3;">]</span> - nbdFarthestNeighbourCoords<span style="color: #b0b1a3;">[</span><span style="color: #e5786d;">0</span><span style="color: #b0b1a3;">]</span> ,
+                                                                   nbdCenterCoords<span style="color: #b0b1a3;">[</span><span style="color: #e5786d;">1</span><span style="color: #b0b1a3;">]</span> - nbdFarthestNeighbourCoords<span style="color: #b0b1a3;">[</span><span style="color: #e5786d;">1</span><span style="color: #b0b1a3;">]</span> <span style="color: #93a8c6;">]</span>  <span style="color: #8c8c8c;">)</span><span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Abstract this away with the distance function later. </span>
+
+    nx.set_node_attributes<span style="color: #8c8c8c;">(</span> G, <span style="color: #ff9966;">'distanceFromRthNearestNeighbour'</span>, distanceFromRthNearestNeighbourDict <span style="color: #8c8c8c;">)</span>
+
+    <span style="color: #8ac6f2; font-weight: bold;">import</span> collections
+    <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Generate the order to remove the vertices</span>
+    <span style="color: #cae682;">orderOfVerticesToDelete</span> = collections.deque<span style="color: #8c8c8c;">(</span><span style="color: #e5786d;">sorted</span><span style="color: #93a8c6;">(</span>  <span style="color: #e5786d;">range</span><span style="color: #b0b1a3;">(</span><span style="color: #e5786d;">len</span><span style="color: #97b098;">(</span>nbds<span style="color: #97b098;">)</span><span style="color: #b0b1a3;">)</span> , key = <span style="color: #8ac6f2; font-weight: bold;">lambda</span> x: G.node<span style="color: #b0b1a3;">[</span>x<span style="color: #b0b1a3;">][</span> <span style="color: #ff9966;">'distanceFromRthNearestNeighbour'</span> <span style="color: #b0b1a3;">]</span>    <span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+
+    <span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">print orderOfVerticesToDelete</span>
+    <span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">for i in orderOfVerticesToDelete:</span>
+    <span style="color: #808080; font-style: italic;">#  </span><span style="color: #808080; font-style: italic;">print G.node[i]['distanceFromRthNearestNeighbour']</span>
+    <span style="color: #cae682;">sIndices</span> = <span style="color: #8c8c8c;">[</span> <span style="color: #8c8c8c;">]</span>
+
+
+    <span style="color: #8ac6f2; font-weight: bold;">for</span> i <span style="color: #8ac6f2; font-weight: bold;">in</span> orderOfVerticesToDelete:
+
+      <span style="color: #8ac6f2; font-weight: bold;">try</span>:
+         <span style="color: #cae682;">node</span> = orderOfVerticesToDelete<span style="color: #8c8c8c;">[</span>i<span style="color: #8c8c8c;">]</span>
+
+         <span style="color: #cae682;">nlist</span> = G.neighbors<span style="color: #8c8c8c;">(</span> node <span style="color: #8c8c8c;">)</span>
+
+         <span style="color: #8ac6f2; font-weight: bold;">for</span> n <span style="color: #8ac6f2; font-weight: bold;">in</span> nlist:
+           <span style="color: #8ac6f2; font-weight: bold;">try</span>:
+             G.remove_edge<span style="color: #8c8c8c;">(</span> node, n <span style="color: #8c8c8c;">)</span> <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Remove all edges emanating</span>
+           <span style="color: #8ac6f2; font-weight: bold;">except</span> nx.NetworkXError:
+             <span style="color: #8ac6f2; font-weight: bold;">continue</span>
+
+         G.remove_node<span style="color: #8c8c8c;">(</span> node <span style="color: #8c8c8c;">)</span> <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Remove the node itself</span>
+
+
+         <span style="color: #8ac6f2; font-weight: bold;">for</span> n <span style="color: #8ac6f2; font-weight: bold;">in</span> nlist:
+           <span style="color: #8ac6f2; font-weight: bold;">try</span>:
+             G.remove_node<span style="color: #8c8c8c;">(</span> n <span style="color: #8c8c8c;">)</span> <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Remove all the neighbours.</span>
+           <span style="color: #8ac6f2; font-weight: bold;">except</span> nx.NetworkXError:
+             <span style="color: #8ac6f2; font-weight: bold;">continue</span>
+
+         sIndices.append<span style="color: #8c8c8c;">(</span> node <span style="color: #8c8c8c;">)</span> 
+
+      <span style="color: #8ac6f2; font-weight: bold;">except</span> nx.NetworkXError:
+          <span style="color: #8ac6f2; font-weight: bold;">continue</span>
+
+
+    <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">while( len( orderOfVerticesToDelete ) &gt;= 1 ): # This list changes during the iteration. </span>
+
+    <span style="color: #808080; font-style: italic;">#     </span><span style="color: #808080; font-style: italic;">try:</span>
+    <span style="color: #808080; font-style: italic;">#       </span><span style="color: #808080; font-style: italic;">node  = orderOfVerticesToDelete[0]</span>
+
+    <span style="color: #808080; font-style: italic;">#     </span><span style="color: #808080; font-style: italic;">except nx.NetworkXError:</span>
+    <span style="color: #808080; font-style: italic;">#         </span><span style="color: #808080; font-style: italic;">print "Removing carcass"</span>
+    <span style="color: #808080; font-style: italic;">#         </span><span style="color: #808080; font-style: italic;">orderOfVerticesToDelete.popleft()</span>
+
+    <span style="color: #808080; font-style: italic;">#     </span><span style="color: #808080; font-style: italic;">else:</span>
+    <span style="color: #808080; font-style: italic;">#       </span><span style="color: #808080; font-style: italic;">sIndices.append( node ) # The very fact no exception was thrown means that you can freely add it to the independent set</span>
+    <span style="color: #808080; font-style: italic;">#       </span><span style="color: #808080; font-style: italic;">nlist = G.neighbors( node )</span>
+
+    <span style="color: #808080; font-style: italic;">#       </span><span style="color: #808080; font-style: italic;"># Delete all the edges emanating from  elements of nlist. </span>
+    <span style="color: #808080; font-style: italic;">#       </span><span style="color: #808080; font-style: italic;"># The fact that this did not throw an exception means 'node' still exists in the graph G</span>
+    <span style="color: #808080; font-style: italic;">#       </span><span style="color: #808080; font-style: italic;">for n in nlist:</span>
+    <span style="color: #808080; font-style: italic;">#          </span><span style="color: #808080; font-style: italic;">G.remove_edge( node, n ) # Remove all edges emanating</span>
+
+    <span style="color: #808080; font-style: italic;">#       </span><span style="color: #808080; font-style: italic;">G.remove_node( node ) # Remove the node itself</span>
+
+    <span style="color: #808080; font-style: italic;">#       </span><span style="color: #808080; font-style: italic;">for n in nlist:</span>
+    <span style="color: #808080; font-style: italic;">#         </span><span style="color: #808080; font-style: italic;">G.remove_node( n ) # Remove all the neighbours.</span>
+
+    <span style="color: #808080; font-style: italic;">#       </span><span style="color: #808080; font-style: italic;">orderOfVerticesToDelete.popleft()</span>
+
+  <span style="color: #8ac6f2; font-weight: bold;">else</span>:
+    <span style="color: #8ac6f2; font-weight: bold;">import</span> sys
+    <span style="color: #8ac6f2; font-weight: bold;">print</span> <span style="color: #ff9966;">"Maximum independent Set Algorithm option not recognized!"</span>
+    sys.<span style="color: #e5786d;">exit</span><span style="color: #8c8c8c;">()</span>
+
+
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">If two neighbourhoods intersect, draw </span>
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">a corresponding edge in the graph. </span>
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">print sIndices</span>
+  <span style="color: #8ac6f2; font-weight: bold;">for</span> i <span style="color: #8ac6f2; font-weight: bold;">in</span> sIndices:
+     <span style="color: #8ac6f2; font-weight: bold;">for</span> j <span style="color: #8ac6f2; font-weight: bold;">in</span> sIndices:
+       <span style="color: #8ac6f2; font-weight: bold;">if</span> j &gt; i:
+         <span style="color: #cae682;">intersection_of_nbds_ij</span> = <span style="color: #8c8c8c;">[</span>val <span style="color: #8ac6f2; font-weight: bold;">for</span> val <span style="color: #8ac6f2; font-weight: bold;">in</span> nbds<span style="color: #93a8c6;">[</span>i<span style="color: #93a8c6;">]</span> <span style="color: #8ac6f2; font-weight: bold;">if</span> val <span style="color: #8ac6f2; font-weight: bold;">in</span> nbds<span style="color: #93a8c6;">[</span>j<span style="color: #93a8c6;">]</span> <span style="color: #8c8c8c;">]</span>
+         <span style="color: #8ac6f2; font-weight: bold;">if</span> <span style="color: #e5786d;">len</span><span style="color: #8c8c8c;">(</span>intersection_of_nbds_ij<span style="color: #8c8c8c;">)</span> &gt;= <span style="color: #e5786d;">1</span>:
+               <span style="color: #8ac6f2; font-weight: bold;">print</span> <span style="color: #ff9966;">"Neighbourhoods intersect!"</span>
+
+
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">print "Exiting!"</span>
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">import sys</span>
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">sys.exit()</span>
+
+  <span style="color: #8ac6f2; font-weight: bold;">return</span> <span style="color: #8c8c8c;">[</span> nbds<span style="color: #93a8c6;">[</span>s<span style="color: #93a8c6;">]</span> <span style="color: #8ac6f2; font-weight: bold;">for</span> s <span style="color: #8ac6f2; font-weight: bold;">in</span> sIndices <span style="color: #8c8c8c;">]</span>
+</pre>
+</div>
+
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">extractUniqueElementsFromList</span><span style="color: #8c8c8c;">(</span> L <span style="color: #8c8c8c;">)</span>:
+
+    <span style="color: #cae682;">uniqueElements</span> = <span style="color: #8c8c8c;">[]</span>
+    <span style="color: #8ac6f2; font-weight: bold;">for</span> elt <span style="color: #8ac6f2; font-weight: bold;">in</span> L:
+        <span style="color: #8ac6f2; font-weight: bold;">if</span> elt <span style="color: #8ac6f2; font-weight: bold;">not</span> <span style="color: #8ac6f2; font-weight: bold;">in</span> uniqueElements: <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Just discovered a brand new element!!</span>
+            uniqueElements.append<span style="color: #8c8c8c;">(</span>elt<span style="color: #8c8c8c;">)</span>
+
+    <span style="color: #8ac6f2; font-weight: bold;">return</span> uniqueElements
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-3-2-3" class="outline-4">
+<h4 id="sec-3-2-3"><span class="section-number-4">3.2.3</span> Plot Clusters</h4>
+<div class="outline-text-4" id="text-3-2-3">
+<p>
+Once the clustering has been constructed we can now visualize it.This function in particular will continue to be in flux: 
+so I'll let the code do the talking here. Just note that the algorithm object does not store a reference to the axes object 
+on which the clusterings will be plotted. Hence we have to explicitly pass the axes object when calling this method. 
+<font color = "red">.   This is a conscious design goal! </font> 'Twill help us in visually comparing the 
+cluters outputted by the different approximation algorithms for the same problem. Depending on the algorithms to be compared 
+construct a fig object with multiple axes objects. Then each visualization routine of an algorithm gets an axes-object 
+reference from this figure. 
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">plotClusters</span><span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span>,  ax    , 
+               pointSize=<span style="color: #e5786d;">200</span>, 
+               marker=<span style="color: #ff9966;">'o'</span>   , 
+               pointCloudInfo=<span style="color: #ff9966;">''</span>,
+               annotatePoints=<span style="color: #e5786d;">True</span><span style="color: #8c8c8c;">)</span>:
+
+
+      <span style="color: #8ac6f2; font-weight: bold;">from</span> scipy <span style="color: #8ac6f2; font-weight: bold;">import</span> spatial
+      <span style="color: #8ac6f2; font-weight: bold;">import</span> numpy <span style="color: #8ac6f2; font-weight: bold;">as</span> np, matplotlib <span style="color: #8ac6f2; font-weight: bold;">as</span> mpl
+      <span style="color: #8ac6f2; font-weight: bold;">import</span> matplotlib.pyplot <span style="color: #8ac6f2; font-weight: bold;">as</span> plt
+
+      <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Plot point-cloud </span>
+      <span style="color: #cae682;">xs</span> = <span style="color: #8c8c8c;">[</span>x <span style="color: #8ac6f2; font-weight: bold;">for</span> <span style="color: #93a8c6;">(</span>x,y<span style="color: #93a8c6;">)</span> <span style="color: #8ac6f2; font-weight: bold;">in</span> <span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud<span style="color: #8c8c8c;">]</span>
+      <span style="color: #cae682;">ys</span> = <span style="color: #8c8c8c;">[</span>y <span style="color: #8ac6f2; font-weight: bold;">for</span> <span style="color: #93a8c6;">(</span>x,y<span style="color: #93a8c6;">)</span> <span style="color: #8ac6f2; font-weight: bold;">in</span> <span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud<span style="color: #8c8c8c;">]</span>
+      ax.plot<span style="color: #8c8c8c;">(</span>xs,ys,<span style="color: #ff9966;">'bo'</span>, markersize=<span style="color: #e5786d;">3</span><span style="color: #8c8c8c;">)</span> 
+      ax.set_aspect<span style="color: #8c8c8c;">(</span><span style="color: #e5786d;">1</span>.<span style="color: #e5786d;">0</span><span style="color: #8c8c8c;">)</span>    
+
+      <span style="color: #8ac6f2; font-weight: bold;">if</span> annotatePoints==<span style="color: #e5786d;">True</span>:
+            <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Annotate each point with a corresponding number. </span>
+            <span style="color: #cae682;">numPoints</span> = <span style="color: #e5786d;">len</span><span style="color: #8c8c8c;">(</span>xs<span style="color: #8c8c8c;">)</span>
+            <span style="color: #cae682;">labels</span> = <span style="color: #8c8c8c;">[</span><span style="color: #ff9966;">'{0}'</span>.<span style="color: #e5786d;">format</span><span style="color: #93a8c6;">(</span>i<span style="color: #93a8c6;">)</span> <span style="color: #8ac6f2; font-weight: bold;">for</span> i <span style="color: #8ac6f2; font-weight: bold;">in</span> <span style="color: #e5786d;">range</span><span style="color: #93a8c6;">(</span>numPoints<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">]</span>
+
+            <span style="color: #8ac6f2; font-weight: bold;">for</span> label, x, y <span style="color: #8ac6f2; font-weight: bold;">in</span> <span style="color: #e5786d;">zip</span><span style="color: #8c8c8c;">(</span>labels, xs, ys<span style="color: #8c8c8c;">)</span>:
+                  ax.annotate<span style="color: #8c8c8c;">(</span>  label                       , 
+                                xy         = <span style="color: #93a8c6;">(</span>x, y<span style="color: #93a8c6;">)</span>         , 
+                                xytext     = <span style="color: #93a8c6;">(</span>-<span style="color: #e5786d;">3</span>, <span style="color: #e5786d;">0</span><span style="color: #93a8c6;">)</span>      ,
+                                textcoords = <span style="color: #ff9966;">'offset points'</span>, 
+                                ha         = <span style="color: #ff9966;">'right'</span>        , 
+                                va         = <span style="color: #ff9966;">'bottom'</span><span style="color: #8c8c8c;">)</span>
+
+
+      <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Overlay with cluster-groups.</span>
+      <span style="color: #8ac6f2; font-weight: bold;">for</span> s <span style="color: #8ac6f2; font-weight: bold;">in</span> <span style="color: #8ac6f2; font-weight: bold;">self</span>.computedClusterings:
+
+        <span style="color: #cae682;">clusterColor</span> = getRandomColor<span style="color: #8c8c8c;">()</span>
+        <span style="color: #cae682;">xc</span> = <span style="color: #8c8c8c;">[</span> xs<span style="color: #93a8c6;">[</span>i<span style="color: #93a8c6;">]</span>  <span style="color: #8ac6f2; font-weight: bold;">for</span> i <span style="color: #8ac6f2; font-weight: bold;">in</span> s   <span style="color: #8c8c8c;">]</span>
+        <span style="color: #cae682;">yc</span> = <span style="color: #8c8c8c;">[</span> ys<span style="color: #93a8c6;">[</span>i<span style="color: #93a8c6;">]</span>  <span style="color: #8ac6f2; font-weight: bold;">for</span> i <span style="color: #8ac6f2; font-weight: bold;">in</span> s   <span style="color: #8c8c8c;">]</span>
+
+        <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Mark all members of a cluster with a nice fat dot around it. </span>
+        <span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">ax.scatter(xc, yc, c=clusterColor, </span>
+        <span style="color: #808080; font-style: italic;">#           </span><span style="color: #808080; font-style: italic;">marker=marker, </span>
+        <span style="color: #808080; font-style: italic;">#           </span><span style="color: #808080; font-style: italic;">s=pointSize) </span>
+
+        <span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">ax.plot(xc,yc, alpha=0.5, markersize=1 , markerfacecolor=clusterColor , linewidth=0)</span>
+        <span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">ax.set_aspect(1.0)</span>
+
+        <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">For some stupid reason sp.spatial.ConvexHull requires at least three points for computing the convex hull. </span>
+
+        <span style="color: #8ac6f2; font-weight: bold;">if</span> <span style="color: #e5786d;">len</span><span style="color: #8c8c8c;">(</span>xc<span style="color: #8c8c8c;">)</span> &gt;= <span style="color: #e5786d;">3</span> : 
+              <span style="color: #cae682;">hull</span> = spatial.ConvexHull<span style="color: #8c8c8c;">(</span>  np.array<span style="color: #93a8c6;">(</span><span style="color: #e5786d;">zip</span><span style="color: #b0b1a3;">(</span>xc,yc<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span> , qhull_options=<span style="color: #ff9966;">"QJn"</span> <span style="color: #8c8c8c;">)</span> <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Last option because of this http://stackoverflow.com/q/30132124/505306</span>
+              <span style="color: #cae682;">hullPoints</span> = np.array<span style="color: #8c8c8c;">(</span> <span style="color: #e5786d;">zip</span><span style="color: #93a8c6;">(</span> <span style="color: #b0b1a3;">[</span> xc<span style="color: #97b098;">[</span>i<span style="color: #97b098;">]</span> <span style="color: #8ac6f2; font-weight: bold;">for</span> i <span style="color: #8ac6f2; font-weight: bold;">in</span> hull.vertices <span style="color: #b0b1a3;">]</span>,  
+                                          <span style="color: #b0b1a3;">[</span> yc<span style="color: #97b098;">[</span>i<span style="color: #97b098;">]</span> <span style="color: #8ac6f2; font-weight: bold;">for</span> i <span style="color: #8ac6f2; font-weight: bold;">in</span> hull.vertices <span style="color: #b0b1a3;">]</span> <span style="color: #93a8c6;">)</span> <span style="color: #8c8c8c;">)</span>
+              ax.add_patch<span style="color: #8c8c8c;">(</span> mpl.patches.Polygon<span style="color: #93a8c6;">(</span>hullPoints, alpha=<span style="color: #e5786d;">0</span>.<span style="color: #e5786d;">5</span>, 
+                                                facecolor=clusterColor<span style="color: #93a8c6;">)</span> <span style="color: #8c8c8c;">)</span>
+
+
+        <span style="color: #8ac6f2; font-weight: bold;">elif</span> <span style="color: #e5786d;">len</span><span style="color: #8c8c8c;">(</span>xc<span style="color: #8c8c8c;">)</span> == <span style="color: #e5786d;">2</span>:
+               ax.plot<span style="color: #8c8c8c;">(</span> xc,yc, color=clusterColor <span style="color: #8c8c8c;">)</span>
+
+
+        ax.set_aspect<span style="color: #8c8c8c;">(</span><span style="color: #e5786d;">1</span>.<span style="color: #e5786d;">0</span><span style="color: #8c8c8c;">)</span>
+        ax.set_title<span style="color: #8c8c8c;">(</span> <span style="color: #8ac6f2; font-weight: bold;">self</span>.algoName + <span style="color: #ff9966;">'\n r='</span> + <span style="color: #e5786d;">str</span><span style="color: #93a8c6;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span>.r<span style="color: #93a8c6;">)</span>, fontdict=<span style="color: #93a8c6;">{</span><span style="color: #ff9966;">'fontsize'</span>:<span style="color: #e5786d;">5</span><span style="color: #93a8c6;">}</span><span style="color: #8c8c8c;">)</span>
+        ax.set_xlabel<span style="color: #8c8c8c;">(</span><span style="color: #ff9966;">'Latitude'</span>, fontdict=<span style="color: #93a8c6;">{</span><span style="color: #ff9966;">'fontsize'</span>:<span style="color: #e5786d;">5</span><span style="color: #93a8c6;">}</span><span style="color: #8c8c8c;">)</span>
+        ax.set_ylabel<span style="color: #8c8c8c;">(</span><span style="color: #ff9966;">'Longitude'</span>,fontdict=<span style="color: #93a8c6;">{</span><span style="color: #ff9966;">'fontsize'</span>:<span style="color: #e5786d;">5</span><span style="color: #93a8c6;">}</span><span style="color: #8c8c8c;">)</span>
+
+        <span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">ax.get_xaxis().set_ticks( [] ,  fontdict={'fontsize':10})</span>
+        <span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">ax.get_yaxis().set_ticks( [],  fontdict={'fontsize':10} ) </span>
+
+        ax.grid<span style="color: #8c8c8c;">(</span>b=<span style="color: #e5786d;">True</span><span style="color: #8c8c8c;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+
+
+
+<div id="outline-container-sec-3-2-4" class="outline-4">
+<h4 id="sec-3-2-4"><span class="section-number-4">3.2.4</span> Plot Statistics</h4>
+<div class="outline-text-4" id="text-3-2-4">
+<p>
+Axes artist objects are Hashable! We use this to get a lot of flexibility 
+during plotting! I verified this using this answer <a href="http://stackoverflow.com/a/3460747/505306">http://stackoverflow.com/a/3460747/505306</a> 
+</p>
+
+<p>
+The nice thing about these statistics, are that they along with cluster sizes, can be rendered 
+online as we keep filling in more and more points by appropriate bindings to button press events. 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">plotStatistics</span><span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span>, axStatsDict <span style="color: #8c8c8c;">)</span>:
+   <span style="color: #ff9966;">""" axStatsDict, specifies the mapping of axes objects to the statistic</span>
+<span style="color: #ff9966;">       being plotted."""</span> 
+
+   <span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">plotConvexHullDiameters</span><span style="color: #8c8c8c;">(</span>ax<span style="color: #8c8c8c;">)</span>:
+      <span style="color: #8ac6f2; font-weight: bold;">pass</span>
+
+   <span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">plotMinBoundingCircleDiameters</span><span style="color: #8c8c8c;">(</span>ax<span style="color: #8c8c8c;">)</span>:
+      <span style="color: #8ac6f2; font-weight: bold;">pass</span>
+
+   <span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">plotClusterPopulationSizes</span><span style="color: #8c8c8c;">(</span>ax<span style="color: #8c8c8c;">)</span>:
+      <span style="color: #cae682;">barHeights</span> = <span style="color: #e5786d;">map</span><span style="color: #8c8c8c;">(</span><span style="color: #e5786d;">len</span>, <span style="color: #8ac6f2; font-weight: bold;">self</span>.computedClusterings <span style="color: #8c8c8c;">)</span>
+      <span style="color: #cae682;">numBars</span>    = <span style="color: #e5786d;">len</span><span style="color: #8c8c8c;">(</span>barHeights<span style="color: #8c8c8c;">)</span>
+
+      ax.bar<span style="color: #8c8c8c;">(</span> <span style="color: #e5786d;">range</span><span style="color: #93a8c6;">(</span>numBars<span style="color: #93a8c6;">)</span> ,barHeights, width=<span style="color: #e5786d;">1</span>.<span style="color: #e5786d;">0</span>, align=<span style="color: #ff9966;">'center'</span><span style="color: #8c8c8c;">)</span>
+      ax.set_title<span style="color: #8c8c8c;">(</span><span style="color: #ff9966;">'Number of points per Cluster'</span>, fontdict=<span style="color: #93a8c6;">{</span><span style="color: #ff9966;">'fontsize'</span>:<span style="color: #e5786d;">30</span><span style="color: #93a8c6;">}</span><span style="color: #8c8c8c;">)</span>
+
+      ax.set_aspect<span style="color: #8c8c8c;">(</span><span style="color: #e5786d;">1</span>.<span style="color: #e5786d;">0</span><span style="color: #8c8c8c;">)</span>
+      ax.grid<span style="color: #8c8c8c;">(</span>b=<span style="color: #e5786d;">True</span><span style="color: #8c8c8c;">)</span>
+
+   <span style="color: #8ac6f2; font-weight: bold;">for</span> ax, statistic <span style="color: #8ac6f2; font-weight: bold;">in</span> axStatsDict.iteritems<span style="color: #8c8c8c;">()</span>:
+
+        <span style="color: #8ac6f2; font-weight: bold;">if</span> statistic == <span style="color: #ff9966;">'convexHullDiameters'</span>: 
+           plotConvexHullDiameters<span style="color: #8c8c8c;">(</span>ax<span style="color: #8c8c8c;">)</span> 
+
+        <span style="color: #8ac6f2; font-weight: bold;">elif</span> statistic == <span style="color: #ff9966;">'minBoundingCircleDiameters'</span>:
+           plotMinBoundingCircleDiameters<span style="color: #8c8c8c;">(</span>ax<span style="color: #8c8c8c;">)</span>
+
+        <span style="color: #8ac6f2; font-weight: bold;">elif</span> statistic == <span style="color: #ff9966;">'clusterPopulationSizes'</span>:
+           plotClusterPopulationSizes<span style="color: #8c8c8c;">(</span>ax<span style="color: #8c8c8c;">)</span>
+
+        <span style="color: #8ac6f2; font-weight: bold;">else</span>:
+           <span style="color: #8ac6f2; font-weight: bold;">pass</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> Aggarwal's Static \(r\)-Gather (2-Approx)</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+Since the algorithm can work for any metric space, I'll implement it as an abstract 
+base class called <b><code>AlgoAggarwalStatic</code></b>. For a specific metric-space, it will run as a 
+method in a subclass of this ABC. This sub-class will implement the distance 
+function and other visualization routines and possibly faster neighbour search routines
+than the default one provided in the base class viz. that of the brute force quadratic
+search. You might even want to consider making this neighbour search an abstract method 
+when dealing with trajectory data. 
+</p>
+
+<p>
+The following code block are birds-eye views of <b><code>AlgoAggarwalStatic</code></b> and <b><code>AlgoAggarwalR2L2</code></b>. 
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #8ac6f2; font-weight: bold;">class</span> <span style="color: #92a65e; font-weight: bold;">AlgoAggarwalStatic</span>:
+  <span style="color: #cae682;">__metaclass__</span> = ABCMeta
+
+  <span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">__init__</span><span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span>,r,pointCloud<span style="color: #8c8c8c;">)</span>:
+    <span style="color: #ff9966;">""" Even though this is an abstract class, a subclass is </span>
+<span style="color: #ff9966;">        allowed to call the constructor via super. </span>
+<span style="color: #ff9966;">        However, a user cannot instantiate a class with this </span>
+<span style="color: #ff9966;">        method from his code."""</span>
+    <span style="color: #8ac6f2; font-weight: bold;">pass</span> 
+
+
+  <span style="color: #92a65e; font-weight: bold;">@abstractmethod</span>
+  <span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">dist</span><span style="color: #8c8c8c;">(</span>p,q<span style="color: #8c8c8c;">)</span>:
+    <span style="color: #ff9966;">""" A distance function of a metric space.</span>
+<span style="color: #ff9966;">        distance between points p and q. Implemented </span>
+<span style="color: #ff9966;">        by the subclass. """</span>
+    <span style="color: #8ac6f2; font-weight: bold;">pass</span>
+
+  <span style="color: #92a65e; font-weight: bold;">@abstractmethod</span>
+  <span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">rangeSearch</span><span style="color: #8c8c8c;">(</span> pointCloud, radius<span style="color: #8c8c8c;">)</span>:
+    <span style="color: #ff9966;">""" Given a set of points in the metric space, and a radius value</span>
+<span style="color: #ff9966;">        find all the neighbours for a point in 'pointCloud' in a ball of radius, </span>
+<span style="color: #ff9966;">        'radius', for all points in 'points'. Depending on the metric space </span>
+<span style="color: #ff9966;">        an efficient neighbour search routine will use different tricks """</span> 
+    <span style="color: #8ac6f2; font-weight: bold;">pass</span> 
+
+  &lt;&lt;GENERATE_CLUSTERS_AGGARWAL&gt;&gt;
+</pre>
+</div>
+
+<p>
+The following concrete class inheriting from <b><code>AlgoAggarwalStatic</code></b> is implemented for the \(L^2\) metric
+in \(\mathbb{R}^2\)
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #8ac6f2; font-weight: bold;">class</span> <span style="color: #92a65e; font-weight: bold;">AlgoAggarwalStaticR2L2</span><span style="color: #8c8c8c;">(</span> AlgoAggarwalStatic <span style="color: #8c8c8c;">)</span>:
+
+   <span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">__init__</span><span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span>, r, pointCloud<span style="color: #8c8c8c;">)</span>:
+
+      <span style="color: #8ac6f2; font-weight: bold;">self</span>.r                    = r     
+      <span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud           = pointCloud 
+      <span style="color: #8ac6f2; font-weight: bold;">self</span>.computedClusterings  = <span style="color: #8c8c8c;">[]</span>  
+      <span style="color: #8ac6f2; font-weight: bold;">self</span>.algoName             = <span style="color: #ff9966;">'Metric Space Static r-Gather applied to R2L2'</span>
+
+      <span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">super(  AlgoAggarwalStaticR2L2, self ).__init__( self.r, self.pointCloud  )</span>
+
+   <span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">clearAllStates</span><span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span><span style="color: #8c8c8c;">)</span>:
+         <span style="color: #8ac6f2; font-weight: bold;">self</span>.r                   = <span style="color: #e5786d;">None</span>
+         <span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud          = <span style="color: #8c8c8c;">[]</span> 
+         <span style="color: #8ac6f2; font-weight: bold;">self</span>.computedClusterings = <span style="color: #8c8c8c;">[]</span>
+
+   <span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">clearComputedClusteringsAndR</span><span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span><span style="color: #8c8c8c;">)</span>:
+            <span style="color: #8ac6f2; font-weight: bold;">self</span>.r                   = <span style="color: #e5786d;">None</span>
+            <span style="color: #8ac6f2; font-weight: bold;">self</span>.computedClusterings = <span style="color: #8c8c8c;">[]</span>
+
+   <span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">dist</span><span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span>, p,q<span style="color: #8c8c8c;">)</span>:
+      <span style="color: #ff9966;">""" Euclidean distance between points p and q in R^2 """</span>
+      <span style="color: #8ac6f2; font-weight: bold;">return</span> np.linalg.norm<span style="color: #8c8c8c;">(</span> <span style="color: #93a8c6;">[</span> p<span style="color: #b0b1a3;">[</span><span style="color: #e5786d;">0</span><span style="color: #b0b1a3;">]</span>-q<span style="color: #b0b1a3;">[</span><span style="color: #e5786d;">0</span><span style="color: #b0b1a3;">]</span> , 
+                               p<span style="color: #b0b1a3;">[</span><span style="color: #e5786d;">1</span><span style="color: #b0b1a3;">]</span>-q<span style="color: #b0b1a3;">[</span><span style="color: #e5786d;">1</span><span style="color: #b0b1a3;">]</span> <span style="color: #93a8c6;">]</span>  <span style="color: #8c8c8c;">)</span>
+
+
+   <span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">findNearestNeighbours</span><span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span>,pointCloud, k<span style="color: #8c8c8c;">)</span>:
+      <span style="color: #ff9966;">"""  pointCloud : 2-d numpy array. Each row is a point</span>
+<span style="color: #ff9966;">      k          : The length of the neighbour list to compute. </span>
+<span style="color: #ff9966;">      """</span>
+      <span style="color: #8ac6f2; font-weight: bold;">from</span> sklearn.neighbors <span style="color: #8ac6f2; font-weight: bold;">import</span> NearestNeighbors
+      <span style="color: #8ac6f2; font-weight: bold;">import</span> numpy <span style="color: #8ac6f2; font-weight: bold;">as</span> np
+      <span style="color: #8ac6f2; font-weight: bold;">import</span> sys
+
+      <span style="color: #cae682;">X</span>    = np.array<span style="color: #8c8c8c;">(</span>pointCloud<span style="color: #8c8c8c;">)</span>
+      <span style="color: #cae682;">nbrs</span> = NearestNeighbors<span style="color: #8c8c8c;">(</span>n_neighbors=k, algorithm=<span style="color: #ff9966;">'ball_tree'</span><span style="color: #8c8c8c;">)</span>.fit<span style="color: #8c8c8c;">(</span>X<span style="color: #8c8c8c;">)</span>
+      <span style="color: #cae682;">distances</span>, <span style="color: #cae682;">indices</span> = nbrs.kneighbors<span style="color: #8c8c8c;">(</span>X<span style="color: #8c8c8c;">)</span>
+
+      <span style="color: #8ac6f2; font-weight: bold;">return</span> distances, indices
+
+
+   <span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">rangeSearch</span><span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span>, pointCloud, radius<span style="color: #8c8c8c;">)</span>:
+      <span style="color: #ff9966;">""" A wrapper for a good neighbour search routine provided by Scipy.</span>
+<span style="color: #ff9966;">          Given a point-cloud, return the neighbours within a distance of 'radius'</span>
+<span style="color: #ff9966;">          for every element of the pointcloud. return the neighbour indices , sorted </span>
+<span style="color: #ff9966;">          according to distance. """</span>
+      <span style="color: #8ac6f2; font-weight: bold;">import</span> numpy <span style="color: #8ac6f2; font-weight: bold;">as</span> np
+      <span style="color: #8ac6f2; font-weight: bold;">import</span> sys
+      <span style="color: #8ac6f2; font-weight: bold;">from</span> scipy <span style="color: #8ac6f2; font-weight: bold;">import</span> spatial
+
+      <span style="color: #cae682;">X</span>        = np.array<span style="color: #8c8c8c;">(</span> pointCloud <span style="color: #8c8c8c;">)</span>
+      <span style="color: #cae682;">mykdtree</span> = spatial.KDTree<span style="color: #8c8c8c;">(</span> X <span style="color: #8c8c8c;">)</span>
+      <span style="color: #cae682;">nbrlists</span> = <span style="color: #e5786d;">list</span><span style="color: #8c8c8c;">(</span> mykdtree.query_ball_point<span style="color: #93a8c6;">(</span> X, radius<span style="color: #93a8c6;">)</span> <span style="color: #8c8c8c;">)</span>
+
+
+      <span style="color: #cae682;">distances</span> = <span style="color: #8c8c8c;">[]</span>
+      <span style="color: #8ac6f2; font-weight: bold;">for</span> index  <span style="color: #8ac6f2; font-weight: bold;">in</span>  <span style="color: #e5786d;">range</span><span style="color: #8c8c8c;">(</span><span style="color: #e5786d;">len</span><span style="color: #93a8c6;">(</span>nbrlists<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>:
+
+         <span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">fn_index</span><span style="color: #8c8c8c;">(</span> i <span style="color: #8c8c8c;">)</span>: <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Distance function local to this iteration of the loop</span>
+            <span style="color: #8ac6f2; font-weight: bold;">return</span> np.linalg.norm<span style="color: #8c8c8c;">(</span>  <span style="color: #93a8c6;">[</span>  X<span style="color: #b0b1a3;">[</span>i<span style="color: #b0b1a3;">][</span><span style="color: #e5786d;">0</span><span style="color: #b0b1a3;">]</span> - X<span style="color: #b0b1a3;">[</span>index<span style="color: #b0b1a3;">][</span><span style="color: #e5786d;">0</span><span style="color: #b0b1a3;">]</span>   , 
+                                       X<span style="color: #b0b1a3;">[</span>i<span style="color: #b0b1a3;">][</span><span style="color: #e5786d;">1</span><span style="color: #b0b1a3;">]</span> - X<span style="color: #b0b1a3;">[</span>index<span style="color: #b0b1a3;">][</span><span style="color: #e5786d;">1</span><span style="color: #b0b1a3;">]</span>    <span style="color: #93a8c6;">]</span>    <span style="color: #8c8c8c;">)</span>
+
+         <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Replace the unsorted array with the sorted one. </span>
+         <span style="color: #cae682;">nbrlists</span><span style="color: #8c8c8c;">[</span>index<span style="color: #8c8c8c;">]</span>  = <span style="color: #e5786d;">sorted</span><span style="color: #8c8c8c;">(</span> nbrlists<span style="color: #93a8c6;">[</span>index<span style="color: #93a8c6;">]</span>, key = fn_index  <span style="color: #8c8c8c;">)</span> 
+
+         <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Get corresponding distances, which will now naturally be in sorted order. </span>
+         distances.append<span style="color: #8c8c8c;">(</span> <span style="color: #e5786d;">map</span><span style="color: #93a8c6;">(</span> fn_index, nbrlists<span style="color: #b0b1a3;">[</span> index <span style="color: #b0b1a3;">]</span> <span style="color: #93a8c6;">)</span> <span style="color: #8c8c8c;">)</span> 
+
+
+      <span style="color: #cae682;">indices</span> = nbrlists <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Just a hack, too lazy to change nbrlists to the name indices above. </span>
+
+      <span style="color: #8ac6f2; font-weight: bold;">return</span> distances, indices 
+
+
+   &lt;&lt;PLOT_CLUSTERS&gt;&gt;
+   &lt;&lt;PLOT_STATISTICS&gt;&gt;
+</pre>
+</div>
+
+<p>
+<b>IMPORTANT NOTE!</b>
+The same exact methods for plotting the clusters and various other statistics from AlgoJieminDecentralizedDynamic
+will apply here, so I'll just use a noweb-ref to insert them verbatim. In fact, they SHOULD be exactly the same 
+for comparing AlgoJiemin and AlgoAggarwal. The noweb-references ensure we don't need to manually make the 
+same changes in both classes. 
+</p>
+</div>
+
+
+<div id="outline-container-sec-3-3-1" class="outline-4">
+<h4 id="sec-3-3-1"><span class="section-number-4">3.3.1</span> Generate Clusters</h4>
+<div class="outline-text-4" id="text-3-3-1">
+<p>
+<code>&lt;&lt;GENERATE_CLUSTERS_AGGARWAL&gt;&gt;</code> expands to the <b><code>generateClusters</code></b> method which implements the actual algorithm.  
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">generateClusters</span><span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span><span style="color: #8c8c8c;">)</span>:
+  <span style="color: #8ac6f2; font-weight: bold;">from</span>   colorama <span style="color: #8ac6f2; font-weight: bold;">import</span> Fore, Style 
+  <span style="color: #8ac6f2; font-weight: bold;">import</span> pprint <span style="color: #8ac6f2; font-weight: bold;">as</span> pp 
+  <span style="color: #8ac6f2; font-weight: bold;">import</span> networkx <span style="color: #8ac6f2; font-weight: bold;">as</span> nx, numpy <span style="color: #8ac6f2; font-weight: bold;">as</span> np, random, time 
+  <span style="color: #8ac6f2; font-weight: bold;">import</span> scipy <span style="color: #8ac6f2; font-weight: bold;">as</span> sp
+  <span style="color: #8ac6f2; font-weight: bold;">import</span> matplotlib.pyplot <span style="color: #8ac6f2; font-weight: bold;">as</span> plt
+  <span style="color: #8ac6f2; font-weight: bold;">import</span> sys
+  <span style="color: #cae682;">points</span>    = <span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">a conveninent alias </span>
+  <span style="color: #cae682;">numPoints</span> = <span style="color: #e5786d;">len</span><span style="color: #8c8c8c;">(</span> <span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud <span style="color: #8c8c8c;">)</span>
+
+  &lt;&lt;FIRST_CONDITION_PREDICATE&gt;&gt;
+  &lt;&lt;MAKE_CLUSTER_CENTERS&gt;&gt; 
+  &lt;&lt;MAKE_FLOW_NETWORK&gt;&gt;
+  &lt;&lt;MAKE_AGGARWAL_CLUSTERS&gt;&gt;
+
+  <span style="color: #8ac6f2; font-weight: bold;">print</span> <span style="color: #ff9966;">"Started filtering!"</span>
+
+  <span style="color: #cae682;">dijHalfs</span> = <span style="color: #8c8c8c;">[</span><span style="color: #e5786d;">0</span>.<span style="color: #e5786d;">5</span> * <span style="color: #8ac6f2; font-weight: bold;">self</span>.dist<span style="color: #93a8c6;">(</span> points<span style="color: #b0b1a3;">[</span> i <span style="color: #b0b1a3;">]</span>, points<span style="color: #b0b1a3;">[</span> j <span style="color: #b0b1a3;">]</span> <span style="color: #93a8c6;">)</span> 
+                    <span style="color: #8ac6f2; font-weight: bold;">for</span> i <span style="color: #8ac6f2; font-weight: bold;">in</span> <span style="color: #e5786d;">range</span><span style="color: #93a8c6;">(</span> numPoints <span style="color: #93a8c6;">)</span> 
+                    <span style="color: #8ac6f2; font-weight: bold;">for</span> j <span style="color: #8ac6f2; font-weight: bold;">in</span> <span style="color: #e5786d;">range</span><span style="color: #93a8c6;">(</span> i+<span style="color: #e5786d;">1</span>, numPoints <span style="color: #93a8c6;">)</span> <span style="color: #8c8c8c;">]</span>
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Find all dijs satisfying condition 1 on page 4</span>
+
+  <span style="color: #8ac6f2; font-weight: bold;">print</span> <span style="color: #ff9966;">"dijhalfs computed"</span>, <span style="color: #e5786d;">len</span><span style="color: #8c8c8c;">(</span>dijHalfs<span style="color: #8c8c8c;">)</span>
+  <span style="color: #cae682;">dijHalfsFiltered</span> =  <span style="color: #e5786d;">filter</span><span style="color: #8c8c8c;">(</span> firstConditionPredicate, dijHalfs <span style="color: #8c8c8c;">)</span>  <span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">smallest to highest</span>
+  <span style="color: #8ac6f2; font-weight: bold;">print</span> <span style="color: #ff9966;">"dijHalfsFiltered done!"</span>
+
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">'FOR' Loop to find the minimum 'R' from these filtered dijs satisfying </span>
+  <span style="color: #808080; font-style: italic;">#  </span><span style="color: #808080; font-style: italic;">condition 2 on page 4 of the paper. </span>
+  <span style="color: #cae682;">bestR</span>, <span style="color: #cae682;">bestRflowNetwork</span>, <span style="color: #cae682;">bestRflowDict</span> = <span style="color: #e5786d;">float</span><span style="color: #8c8c8c;">(</span> <span style="color: #ff9966;">'inf'</span> <span style="color: #8c8c8c;">)</span>, nx.DiGraph<span style="color: #8c8c8c;">()</span>, <span style="color: #8c8c8c;">{}</span> 
+  <span style="color: #cae682;">bestRCenters</span> = <span style="color: #8c8c8c;">[]</span>
+
+  <span style="color: #8ac6f2; font-weight: bold;">for</span> R <span style="color: #8ac6f2; font-weight: bold;">in</span> dijHalfsFiltered : <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">The first R that goes through the else block is the required R</span>
+
+    <span style="color: #cae682;">clusterCenters</span> = makeClusterCenters<span style="color: #8c8c8c;">(</span> R <span style="color: #8c8c8c;">)</span>
+    <span style="color: #cae682;">flowNetwork</span>    = makeFlowNetwork<span style="color: #8c8c8c;">(</span> R, clusterCenters <span style="color: #8c8c8c;">)</span>
+
+    <span style="color: #8ac6f2; font-weight: bold;">try</span>: <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Check if a feasible flow exists in the constructed network.  </span>
+          <span style="color: #cae682;">flowDict</span> = nx.min_cost_flow<span style="color: #8c8c8c;">(</span> flowNetwork <span style="color: #8c8c8c;">)</span>
+
+    <span style="color: #8ac6f2; font-weight: bold;">except</span> nx.NetworkXUnfeasible:<span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">If not, try the next R</span>
+          <span style="color: #8ac6f2; font-weight: bold;">print</span> Fore.RED, <span style="color: #ff9966;">"Unfeasible R detected: R= "</span>, R, Style.RESET_ALL
+          <span style="color: #8ac6f2; font-weight: bold;">continue</span> 
+    <span style="color: #8ac6f2; font-weight: bold;">else</span>: <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Found a feasible R.  </span>
+        <span style="color: #8ac6f2; font-weight: bold;">print</span> <span style="color: #ff9966;">"Found a feasible R! R= "</span>, R
+        <span style="color: #8ac6f2; font-weight: bold;">if</span> R &lt; bestR: <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Yippee a smaller and feasible R! Update bestR. </span>
+            <span style="color: #8ac6f2; font-weight: bold;">print</span> Fore.RED, <span style="color: #ff9966;">" In fact, it is the best thus far "</span>, Style.RESET_ALL 
+            <span style="color: #cae682;">bestR</span>            = R
+            <span style="color: #cae682;">bestRflowNetwork</span> = flowNetwork
+            <span style="color: #cae682;">bestRflowDict</span>    = flowDict
+            <span style="color: #cae682;">bestRCenters</span>     = clusterCenters
+
+
+  <span style="color: #808080; font-style: italic;">#</span><span style="color: #808080; font-style: italic;">Use the best network to construct the needed clusters. </span>
+  <span style="color: #8ac6f2; font-weight: bold;">self</span>.computedClusterings = makeClusters<span style="color: #8c8c8c;">(</span> bestRflowDict, bestRCenters, bestRflowNetwork, R<span style="color: #8c8c8c;">)</span>
+
+  <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">Sanity check on the computed clusters. They should all be of size r and should cover the full point set</span>
+  <span style="color: #8ac6f2; font-weight: bold;">assert</span><span style="color: #8c8c8c;">(</span> <span style="color: #e5786d;">all</span><span style="color: #93a8c6;">(</span> <span style="color: #b0b1a3;">[</span> <span style="color: #e5786d;">len</span><span style="color: #97b098;">(</span>cluster<span style="color: #97b098;">)</span> &gt;= <span style="color: #8ac6f2; font-weight: bold;">self</span>.r <span style="color: #8ac6f2; font-weight: bold;">for</span> cluster <span style="color: #8ac6f2; font-weight: bold;">in</span> <span style="color: #8ac6f2; font-weight: bold;">self</span>.computedClusterings <span style="color: #b0b1a3;">]</span> <span style="color: #93a8c6;">)</span> <span style="color: #8c8c8c;">)</span>
+  <span style="color: #8ac6f2; font-weight: bold;">assert</span><span style="color: #8c8c8c;">(</span> <span style="color: #e5786d;">len</span><span style="color: #93a8c6;">(</span> <span style="color: #b0b1a3;">{</span> i <span style="color: #8ac6f2; font-weight: bold;">for</span> cluster <span style="color: #8ac6f2; font-weight: bold;">in</span> <span style="color: #8ac6f2; font-weight: bold;">self</span>.computedClusterings <span style="color: #8ac6f2; font-weight: bold;">for</span> i <span style="color: #8ac6f2; font-weight: bold;">in</span> cluster <span style="color: #b0b1a3;">}</span> <span style="color: #93a8c6;">)</span> == numPoints   <span style="color: #8c8c8c;">)</span>
+  <span style="color: #8ac6f2; font-weight: bold;">print</span> Fore.YELLOW, <span style="color: #ff9966;">"Yay All points Covered!!"</span>, Style.RESET_ALL
+
+  <span style="color: #8ac6f2; font-weight: bold;">print</span> <span style="color: #ff9966;">"BestRCenters are "</span>, bestRCenters 
+  <span style="color: #8ac6f2; font-weight: bold;">return</span>  bestRCenters
+</pre>
+</div>
+
+
+
+<p>
+The noweb-reference makeClusterCenters expands to the function definition given below. Neighbours of a point within
+the distance \(2R\) are chosen naively simply by iterating over the point cloud. I don't know how to do subquadratic 
+time neighbour searches in general metric spaces. 
+</p>
+
+<p>
+<i><b>NOTE</b> :: It is not immediately clear why the <code>while</code> loop below <b>must</b> terminate. Aggarwal et al.  do not prove this statement.  Possible 
+ issue to be raised with Prof. Gao and Rik? But I suppose it might work for low values&#x2026;.\(r = 2,3\)&#x2026;Not sure.Will need to check this out properly.</i>
+<i>Possible hacks: if the loop looks like it is infinite, terminate it, and figure out how to treat these points.</i>
+</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Scrap notes</h2>
+<div class="outline-text-2" id="text-4">
+<ul class="org-ul">
+<li>Selecting an arbitrary submatrix of numpy. 
+</li>
+</ul>
+</div>
+
+<div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> Animation in Python</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+For pulleys I did not use the animation module. Here we do since we need to understand the decision the algorithm
+makes as the cars move along the trajectories.m 
+</p>
+</div>
+
+
+<div id="outline-container-sec-4-1-1" class="outline-4">
+<h4 id="sec-4-1-1"><span class="section-number-4">4.1.1</span> animation.FuncAnimation (&#x2026;)</h4>
+<div class="outline-text-4" id="text-4-1-1">
+<p>
+Generate the ith frame of an animation sequence. Thus you could say, its signature is <code>Int -&gt; IO Frame</code> where 
+Frame is the final picture returned.  
+</p>
+
+<p>
+MAtplotlib can save video as an html5 video!! Basically all you need to do is provide an .mp4 or .ogg video
+in the h264 encoding HTML5 format. It spits out a long hexadecimal like string.  
+Then every browser (major ones atleast) will be able to play that video 
+with their own media player which comes inbult. This means you don't need to distribute copies of vlc to other
+people, neither upload that video to youtube and then emebed it. Yay!! 
+See this video to customize the embedding: <a href="https://www.youtube.com/watch?v=9pN7UT5S64I">https://www.youtube.com/watch?v=9pN7UT5S64I</a>
+</p>
+
+
+<p>
+Essentially you surround the video link in the video tag, with some extra attributes. See here for a classic example! 
+See the browser support table in the middle of this page: <a href="http://www.w3schools.com/html/html5_video.asp">http://www.w3schools.com/html/html5_video.asp</a> 
+Plays on iPhone/iPad devices too!
+</p>
+
+<p>
+See this for more on MATPLOTLIB html5 embedding: <a href="http://yt-project.org/doc/cookbook/embedded_webm_animation.html">http://yt-project.org/doc/cookbook/embedded_webm_animation.html</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4-1-2" class="outline-4">
+<h4 id="sec-4-1-2"><span class="section-number-4">4.1.2</span> Data structures</h4>
+<div class="outline-text-4" id="text-4-1-2">
+<p>
+Each trajectory shuld be a class. 
+There should a distance function between two trajectories accepting them
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Types and Typeclasses</h2>
+</div>
+
+
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> SCRap</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p>I'll be using the latest Anaconda installation of Python 2.7. Note that some older versions of Matplotlib give errors 
+when trying to do the animation with generators as documented <a href="https://github.com/matplotlib/matplotlib/pull/2634">here</a>. However, the version of Matplotlib bundled up in Anaconda's latest Python 2.7+ environment does not have these problems</p></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<p class="author">Author: Gaurish</p>
+<p class="date">Created: 2016-07-30 Sat 16:23</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

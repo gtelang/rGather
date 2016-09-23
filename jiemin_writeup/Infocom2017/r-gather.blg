@@ -1,0 +1,123 @@
+This is BibTeX, Version 0.99d (TeX Live 2013)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: r-gather.aux
+The style file: abbrv.bst
+Database file #1: r-gather.bib
+Database file #2: privacy.bib
+Database file #3: jie.bib
+Repeated entry---line 3227 of file jie.bib
+ : @inproceedings{abraham04LLS
+ :                            ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 3363 of file jie.bib
+ : @inproceedings{basagni99distributed
+ :                                    ,
+I'm skipping whatever remains of this entry
+I was expecting a `,' or a `}'---line 6749 of file jie.bib
+ :     
+ :     howpublished="arXiv:0812.0197v1 [cs.CG]",
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+I was expecting a `,' or a `}'---line 8497 of file jie.bib
+ :     
+ :     pages="353--397"
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Repeated entry---line 8878 of file jie.bib
+ : @inproceedings{abraham04LLS
+ :                            ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 8977 of file jie.bib
+ : @article{gghzz-dmc-03
+ :                      
+I'm skipping whatever remains of this entry
+Repeated entry---line 9186 of file jie.bib
+ : @article{gghzz-dmc-03
+ :                      
+I'm skipping whatever remains of this entry
+You're missing a field name---line 11082 of file jie.bib
+ : 
+ : %   Author = {Dennis Overbye},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 11200 of file jie.bib
+ : 
+ : %   Author = {William P. Thurston},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 12167 of file jie.bib
+ : 
+ : %  booktitle = {4th Symposium on Networked Systems Design and Implementation (NSDI 2007)},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 13961 of file jie.bib
+ : 
+ : %   Author = {Dennis Overbye},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 14081 of file jie.bib
+ : 
+ : %   Author = {William P. Thurston},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+I was expecting a `,' or a `}'---line 14961 of file jie.bib
+ : 
+ : volume = {77},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+I was expecting a `,' or a `}'---line 15047 of file jie.bib
+ :     
+ :     author="Yosuke Okayama and Masashi Kiyomi and Ryuhei Uehara",
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Repeated entry---line 16282 of file jie.bib
+ : @article{Sweeney02
+ :                   ,
+I'm skipping whatever remains of this entry
+""" immediately follows a field name---line 20198 of file jie.bib
+ :     journal
+ :            "Diskret Analiz",
+I'm skipping whatever remains of this entry
+Warning--empty year in Sarkar:2010:forms
+You've used 22 entries,
+            2118 wiz_defined-function locations,
+            671 strings with 8256 characters,
+and the built_in function-call counts, 8059 in all, are:
+= -- 818
+> -- 328
+< -- 9
++ -- 131
+- -- 106
+* -- 550
+:= -- 1273
+add.period$ -- 70
+call.type$ -- 22
+change.case$ -- 119
+chr.to.int$ -- 0
+cite$ -- 23
+duplicate$ -- 330
+empty$ -- 664
+format.name$ -- 106
+if$ -- 1745
+int.to.chr$ -- 0
+int.to.str$ -- 22
+missing$ -- 20
+newline$ -- 113
+num.names$ -- 44
+pop$ -- 124
+preamble$ -- 1
+purify$ -- 97
+quote$ -- 0
+skip$ -- 250
+stack$ -- 0
+substring$ -- 544
+swap$ -- 93
+text.length$ -- 9
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 88
+warning$ -- 1
+while$ -- 84
+width$ -- 24
+write$ -- 251
+(There were 16 error messages)

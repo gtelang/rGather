@@ -1,0 +1,141 @@
+%!TEX root = r-gather.tex
+
+\section{Hardness of Approximation}
+
+For mobile networks and location-based services, the Euclidean plane is a reasonable model for the underlying metric space. In this section, we consider the $r$-gather problem in the Euclidean plane and show lower bounds on approximation even in this special case.  Recall that, in general metric spaces, it is known that it is NP-hard to approximate better than a factor $2$. 
+
+For minimizing the largest diameter of the clusters, we show that it is NP-hard to approximate better than a factor $2$ when $r\geq5$, and that it is NP-hard to approximate better than a factor $\sqrt{2+\sqrt{3}} \approx 1.931$ when $r=3$ or $4$.  (Recall that the diameter of a set is the maximum distance between a pair of points in the set.)
+
+For minimizing the largest of the minimum enclosing balls (MEB) of the clusters, we show that it is NP-hard to approximate better than a factor ${\sqrt{35}+\sqrt{3} \over 4} \approx 1.912$ when $r \geq 4$, and that it is NP-hard to approximate better than a factor $\sqrt{13}/2 \approx 1.802$ when $r=3$.
+
+
+%For the dual objective of maximizing $r$ given a fixed disk size, we can show the problem is NP-hard to approximate better than $2/3$, using instances in which the optimal $r$ value is 3. Can this be strengthened using instances whose optimal $r$ values are greater?
+
+\begin{theorem}\label{thm:hardness1}
+The $r$-gather problem for minimizing the maximum diameter, it is NP-hard to approximate better than a factor of $2$ when $r\geq5$.
+\end{theorem}
+\begin{proof}
+Our reduction is from the NP-hard problem, planar 3SAT.  Given a formula in 3CNF composed of variables $x_i, i = 1,\dots,n$ and their complements $\overline{x_i}$, we construct an instance of $r$-gather on the plane.  Figure~\ref{fig:3satconstruction} illustrates a clause gadget of the clause $C = x_i \vee x_j \vee x_k$ and part of a variable gadget for $x_i$.  In the figure, each point represents multiple points in the same location, the number of which is noted in parenthesis.  All distances between groups of points connected by a line are distance $1$ apart.  Note that all clusters shown in the figure have a diameter of $1$.  If all clusters have a diameter of $1$, then we can signify the parity of a variable by whether solid or dashed clusters are chosen.  Here the solid clusters signify a positive value for $x_i$ that satisfies the clause since the center point of the clause gadget is successfully assigned to a cluster.  Note that the variable gadget in Figure~\ref{fig:3satconstruction} swaps the parity of the signal sent away from the gadget.  We also include a negation gadget shown in Figure~\ref{fig:negation} that swaps the parity of the signal and can be used when connecting parts of the variable gadget together.  If an optimal solution to this $r$-gather construction can be found, the diameter of all clusters is $1$.
+
+%For the case where $r=3$ or $r = 4$, any clustering that has a cluster with diameter greater than 1 must have a cluster with diameter greater than or equal to $\sqrt{3}$.  A cluster with diameter $\sqrt{3}$ can be found in the clause gadget containing a point from each variable gadget and the center point.  There are no possible clusterings with a diameter greater than 1 or less than $\sqrt{3}$.  Therefore, it is NP-hard to approximate 3-gather and 4-gather better than a factor of $\sqrt{3}$.
+
+%For the case where $r\geq5$, the center point of the clause gadget must be assigned to a cluster that contains all $r$ points of one of the variable clusters or else a cluster of diameter 2 is forced.
+The center point of the clause gadget must be assigned to a cluster that contains all $r$ points of one of the variable clusters or else a cluster of diameter $2$ is forced.  WLOG, let the center point be clustered with the $r$ points of the $x_i$ gadget.  What results is the solid clusters in figure~\ref{fig:3satconstruction} are selected above the triangle splitter and the dashed clusters are selected below the splitter.  The group of points at the top of the triangle splitter is unassigned to a cluster.  It must merge with one of the neighboring clusters which results in a cluster of diameter $2$.  Therefore, it is NP-hard to approximate $r$-gather below a factor of $2$ for $r\geq5$.
+\end{proof}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[height=2.5in]{figs/hardness}
+\caption{clause and splitter gadget}
+\label{fig:3satconstruction}
+\end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=2.5in]{figs/negation}
+\caption{signal negation gadget}
+\label{fig:negation}
+\end{center}
+\end{figure}
+
+\begin{theorem}
+The $r$-gather problem for minimizing the maximum MEB, it is NP-hard to approximate better than a factor of ${\sqrt{35}+\sqrt{3} \over 4} \approx 1.912$ when $r\geq4$.
+\end{theorem}
+\begin{proof}
+The reduction is very simlar to the proof of Theorem~\ref{thm:hardness1}.  The only difference is the splitter which is illustrated in Figure~\ref{fig:splitter}.
+\end{proof}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=1.7in]{figs/splitter}
+\caption{close up of the splitter}
+\label{fig:splitter}
+\end{center}
+\end{figure}
+
+\begin{theorem}
+The $r$-gather problem for minimizing the maximum MEB, it is NP-hard to approximate better than a factor of $\sqrt{13}/2 \approx 1.802$ when $r=3$.
+\end{theorem}
+\begin{proof}
+We reduce from the NP-hard problem planar circuit SAT.  We are given a planar boolean circuit with a single output.  Similar to the previous proofs, a wire gadget consists of a line of points that alternate between a single point and a group of $r-1$ points at the same location.  The parity of the clusters chosen signify a true signal or a false signal.  When the clusters combine a group of $r-1$ points followed by a single point, the signal of the wire is true.  It is simple to enforce the output to be a true signal by ending the output wire with a single point.  The beginning of the input wires have a group of $r$ points so that the inputs can be either true or false.  Figure~\ref{fig:nandgadget} illustrates the NAND gadget, a universal gate.  The solid clusters illustrate two true inputs into the gate and a false output.  If either or both of the inputs is false, then two groups of points in the triangle (or all three) will become a cluster and the output will be true.  Figure~\ref{fig:splittercircuit} ilustrates the splitter circuit where the solid clusters indicate a true signal and the dashed clusters indicate a false signal.  As before, if the optimal solution to the $r$-gather construction can be found, then cluster diameter will be 1.  Otherwise, three groups will form a cluster, two from the triangle and one adjacent to the triangle.  The diameter of such a cluster is $\sqrt{13}/2 \approx 1.802$ when $r=3$.  Finally, note that in order to connect the wires, they must be able to turn somehow.   We can bend the wire such that no three groups of points can form a cluster that has diameter smaller than $\sqrt{13}/2$.  Thus concludes our proof.
+\end{proof}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=2.4in]{figs/nandgadget}
+\caption{NAND gadget}
+\label{fig:nandgadget}
+\end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=1.8in]{figs/splittergadget}
+\caption{splitter gadget}
+\label{fig:splittercircuit}
+\end{center}
+\end{figure}
+
+\begin{theorem}
+The $r$-gather problem for minimizing the maximum diameter, it is NP-hard to approximate better than a factor of $\sqrt{2+\sqrt{3}} \approx 1.931$ when $r=3$ or $4$.
+\end{theorem}
+
+\section{The $r$-Gather Problem in the Mobile Setting}
+
+We continue our investigation of the $r$-gather problem by now considering the dynamic situation in which the points are in motion. There are various models to consider in the mobile setting; in this section, we consider several versions.  In each case, we assume that the trajectories of the mobile agents are piecewise-linear.
+
+\medskip\noindent\textbf{Clustering Trajectories.} In the simplest formulation of $r$-gather in a mobile setting, we are given a set of trajectories over a time period $T$ and we want to cluster the trajectories such that each cluster has at least $r$ trajectories and the largest diameter of each cluster over the entire time period is minimized.  Here we designate the diameter of a cluster at a single point in time to be the distance between the furthest pair of points.  Points are assigned to a single cluster for the entire length of $T$ and do not switch clusters.  We claim that the $2$-approximation strategy in~~\cite{Aggarwal06achievinganonymity} for static $r$-gather in any metric space can also be applied to this problem.  
+%We also claim that 2-inapproximation lower bound from Aggarwal et. al. applies as well \cite{Aggarwal06achievinganonymity}.  
+We use the distance metric defined by Lemma~\ref{lem:distancemetric}.  
+
+\begin{lemma}\label{lem:distancemetric}
+The distance function $d_t(p,q)$ between two trajectories $p$ and $q$ over a time period $T$ is defined as the distance between $p$ and $q$ at time $t \in T$.  Then $d(p,q) = \max_{t \in T}d_t(p,q)$.  The function $d(p,q)$ is a metric.
+\end{lemma}
+\begin{proof}
+The function by definition is symmetric, follows the identity condition, and is always non-negative.  To show that the metric follows the triangle equality, we first assume that there is a pair of trajectories $x$ and $z$ where $d(x,z) > d(x,y) + d(y,z)$ for some $y$.  There is some time $t \in T$, where $d_t(x,z) = d(x,z)$.  By the triangle inequality,
+$$d_t(x,z) \leq d_t(x,y) + d_t(y,z).$$
+In addition, clearly $d_t(x, y) \leq d(x, y)$, and $d_t(y, z)\leq d(y, z)$. 
+This contradicts our assumption and concludes our proof.
+\end{proof}
+
+
+
+
+%\begin{theorem}
+%For the definition of dynamic $r$-gather where all trajectories are clustered once, it is NP-hard to approximate better than a factor of 2 for $r > 6$.
+%\end{theorem}
+
+%\begin{proof}
+%We construct a reduction from the problem 3-SAT where each variable is restricted to 3 clauses.  Our proof is similar to the lower bound proof in \cite{Aggarwal06achievinganonymity}.  Given a boolean formula in 3-CNF form with $m$ clauses $C_j$, $1 \leq j \leq m$, composed of $n$ variables $x_i$, $1 \leq i \leq n$, where $i$ and $j$ are integers, we construct a set of trajectories over a time period $T$.  For every variable $x_i$ and its complement $\bar{x_i}$, we have two points $v_i^T$ and $v_i^F$ and an additional $(r-2)$ points $u_i^k$ for integer $k$, $1 \leq k \leq r-2$.  We will construct trajectories where $d(v_i^T, v_i^F) = d(v_i^T, u_i^k) = d(v_i^F, u_i^k) = 1$, for $1 \leq i \leq n$ and $1 \leq k \leq r-2$ .  In addition, for every cluster $C_j$, we construct another point $w_j$.  We construct trajectories such that the distance between $w_j$ and the points that represent the literals in the clause $C_j$ is 1.  All other distances are 2.
+
+%Constructing the trajectories that obey these distance constraints is simple.  Place all points at the origin on a number line.  For every point $p$, we have one time step that establishes the distance between it and all other points.  In that time step, $p$ moves to 2 on the number line.  At the same time, all other points that must have a distance of 1 to $p$ move to 1 on the number line.  This procedure is repeated for every point.
+
+%We claim, that if there is an $r$-gather clustering of maximum radius 1, then the 3-SAT formula can be satisfied.  Here, for every variable, we have two possibilities for the center of a cluster of radius 1, $v_i^T$ and $v_i^F$.  There are not enough points close to $v_i^T$ and $v_i^F$ to have both as the center of two clusters.  Any cluster with $u_i^k$ as the center will have fewer than $r$ points within a distance of 1 and therefore cannot be a cluster center with radius 1.  Finally, every point $w_j$ has only three other points within a distance of 1.  Therefore, in any $r$-gather clustering with maximum radius 1, there is one cluster for every variable with a center of either $v_i^T$ or $v_i^F$.  This clustering must be done in such a way that for every point $w_j$, at least one of the points that represents a literal in $C_j$ must be chosen as a cluster center.  Thus if an optimal $r$-gather clustering of our trajectories can be found, then we can determine if the corresponding 3-SAT formula is satisfiable.
+%\end{proof}
+
+\medskip\noindent\textbf{Clustering Trajectories with Re-grouping.} Now, we consider the more general setting in which the clusters are allowed to change, via regroupings, during the time period $T$.  We let $k$ be a parameter that specifies the maximum number of regroupings allowed during $T$.  Each regrouping allows all clusters to be modified or changed completely.  The lower bounds for the earlier version of $r$-gather apply here as well, for the same reasons.  We claim that with the assumption that the trajectories are piecewise-linear, we can construct a $2$-approximation solution using dynamic programming.
+
+Let $|T|$ be the number of time steps in the time period $T$.  Each trajectory is a piecewise-linear function that only changes directions at a time step in $T$.  Let $C_{ij}$ denote the max diameter of the $2$-approximation clustering at time $i$ over the time period $[i,j]$, $i<j$.  We can create a $|T| \times |T|$ table $\mathcal{T}$ where entry $\mathcal{T}(i, j) = C_{ij}$.  
+%One clustering takes $O(\frac{1}{\epsilon}kn^2)$ and there are $|T|$ clusterings in total.  However, for each clustering, the max diameter is recalculated for each time step.  The cost of recalculating the max diameter of a clustering is $O(n/r)$.  The total number of times a clustering is recalculated is $O(n|T|/r)$.  The total time it takes to compute the table $\mathcal{T}$ is $O(n|T|^2/r + \frac{1}{\epsilon}k|T|n^2)$.
+
+We formulate a subproblem $S(t,i)$, where $0 \leq t \leq |T|$ and $i \leq k$, for our dynamic program to find the optimal clustering of the points in the time period $[0, t]$ where there are exactly $i$ reclusterings.  Let $l(t,i)$ denote the last time step a reclustering occured for the optimal solution of $S(t,i)$.
+
+The subproblem of our dynamic program is:
+$$S(t,i) = \min( \max_{j<t}(S(j, i), C_{l(t,i)t}), \max_{j<t}(S(j, i-1), C_{tt}) )$$ 
+
+The entry $S(t,i)$ checks $2t$ previous entries and $2t$ entries in the table $\mathcal{T}$.  The entire table takes $k|T|^2$ to execute with the additional preprocessing of the table $\mathcal{T}$.
+
+Our lower bound proofs for static $r$-gather apply here as well.  The points arranged in any of the lower bound proofs can be static points for the duration of $T$ or may move in a fashion where the 
+distances between points do not increase.  Then the arguments for static $r$-gather translate to this simple version of dynamic $r$-gather directly.
+
+\begin{theorem}
+The lower bound results for static $r$-gather apply to any definition of dynamic $r$-gather.  Further, we can approximate mobile $r$-gather, when $k$ clusterings are allowed, within a factor of $2$.
+\end{theorem}
+
+\medskip\noindent\textbf{Number of Changes in Optimal Solution.} Last, we show a lower bound on the number of changes needed if we maintain the \emph{optimal} solution at all times. We show that in this setting, the optimal clustering may change many times, as much as $O(n^3)$ times.  Consider this example: $n/2$ points lie on a line where the points are spaced apart by $1$ and $3$ points are overlapping on the ends.  In this example, $r = 3$.  The optimal clustering of the points on the line is to have three points in a row be in one cluster with a diameter of $2$.  There are three different such clusterings which differ in the parity of the clusterings.  In each clustering, there are $O(n)$ clusters.  If another point travels along the line, when it is within the boundaries of a cluster, it will just join that cluster.  However, when it reaches the boundary of a cluster and exits it, the optimal clustering would be to shift the parity of the clustering.  This results in a change in all of the clusters along the line.  The clustering change every time the point travels a distance of $2$.  Therefore, as the point travels along the line, the number of times the entire clustering changes is $\Omega(n)$ which results in a total of $\Omega(n^2)$ changes to individial clusters.  Since there are $O(n)$ points that travel along the line, the total number of clusters that change is $\Omega(n^3)$.
+
+
+
+
+

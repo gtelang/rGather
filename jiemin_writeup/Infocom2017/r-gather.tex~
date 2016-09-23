@@ -1,0 +1,51 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{mystyle}
+\usepackage{graphicx}
+\usepackage{color}
+
+\title{Distributed r-gather: Cardinality clustering and applications in mobile devices }
+
+\newcommand{\myparagraph}[1]{\vspace*{1mm}\noindent {\bf #1}}
+\newcommand{\rik}[1]{\vspace{2mm}\noindent {\bf \marginpar{***}\noindent Rik's comment:} #1\vspace{2mm}} 
+
+\newcommand{\Frechet}{Fr\'echet }
+\newcommand{\eps}{\varepsilon}
+\newcommand{\dst}{\displaystyle}
+
+
+
+
+%compliles with pdflatex
+\begin{document}
+%\setcopyright{acmcopyright}
+\maketitle
+
+
+\begin{abstract}
+
+Grouping mobile nodes into clusters can ease the management of large number of devices and their information. Since applications and communication in mobile devices are highly location dependent, clustering by location is particularly useful in this context. In this paper, we consider the $r$-gather problem. It requires each cluster to have at least $r$ nodes -- so that the clusters have a meaningful population -- while minimizing the maximum diameter of the clusters, so that the clusters are geographically coherent. 
+
+We show the hardness of approximating the optimal diameter and describe approximation algorithms. Then we develop a distributed algorithm for r-gather clustering, which allows computation to be pushed to the edges of the network. This method produces provably nearly optimal results and further can adapt to dynamics of node motion. The distributed approach naturally comes with advantage of greater resilience. Additionally we show that it satisfies local optimality -- that is, from the point of view of a particular node, the solution is nearly as favorable as possible, irrespective of the global configuration. 
+
+\end{abstract} 
+
+\input{intro.tex}
+\input{related.tex}
+\input{theory.tex}
+\input{algorithm.tex}
+\input{experiment.tex}
+\vspace*{-3mm}
+
+\section{Conclusion}
+
+
+
+
+\begin{small}
+\bibliographystyle{abbrv}
+\bibliography{r-gather}
+\end{small}
+
+
+\end{document}

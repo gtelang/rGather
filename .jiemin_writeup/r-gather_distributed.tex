@@ -1,0 +1,37 @@
+\section{Decentralized $r$-Gather}
+
+In this section, we describe a 4-approximation algorithm for $r$-gather that is less centralized than the 2-approximation in \cite{Aggarwal06achievinganonymity}.  We begin with an algorithm that is not explicitly decentralized and then later detail how to do so.
+
+Let the $r$-neighborhood of a point $p_i$ or $N_r(p_i)$ denote the set containing $p_i$ and the closest $r-1$ points to $p_i$.  Let $N$ be the set of the $r$-neighborhoods of all points in $P$.  For each $r$-neighborhood, we define a distance $R_i^r = \max_{p_j \in N_r(p_i)}||p_i - p_j||$ and we define a distance $R^r = \max_{1 \leq i \leq n}R_i^r$ among all $r$-neighborhoods.  We first find a maximal independent set $S$ of $r$-neighborhoods.  For an $r$-neighborhood $N_r(p_i)$, we name $p_i$ the center of the cluster and all other points in $N_r(p_i)$ are named the cannonical set.  Each point $p_i$ that is not in a set in $S$ must have at least one point in it's $r$-neighborhood that is in a set in $S$ (otherwise $S$ is not maximal).  We assign $p_i$ to the set of one of these points.  Such a point is named an outer member of its set.  We claim that the resulting clustering $S'$ is a 4-approximation $r$-gather clustering.  
+
+\begin{theorem}
+This algorithm is a 4-approximation.
+\end{theorem}
+
+\begin{proof}
+Let $d_{OPT}$ be the diameter of the largest cluster of the optimal $r$-gather clustering.  We claim that any cluster containing a point and $r-1$ other points must have a diameter greater than or equal to $R^r$ and therefore $R^r \leq d_{OPT}$.  Wlog, let $N_r(p_i) \in S$.  We define the corresponding cluster in $S'$ to be $s_i$.  A cluster $s_i$ in $S'$ is made up of the $r$-neighborhood of $p_i$ and points whose $r$-neighborhood intersect with $N_r(p_i)$.  Let $p_j$ be one of the latter points.  The distance between $p_j$ and any point in $N_r(p_j) \cap N_r(p_i)$ is no greater than $R^r$.  By definition, $R^r \geq R_i^r$.  By triangle inequality, no point in $s_i$ is further than $2R^r$ from $p_i$.  Therefore, the diameter of any cluster in $S'$ cannot be greater than $4R^r \leq 4d_{OPT}$.
+\end{proof}
+
+To decentralize this algorithm, we only need to find a maximal independent set of $r$-neighborhoods in a decentralized fashion.  This may include a randomized solution for maximal independent set or a distributed, deterministic algorithm for finding local maximums.
+
+Such a clustering can be maintained while the points move.  Every point must keep track of its $r$-neighborhood.  Critical events, events when clusterings may change, occur when a point's $r$-neighborhood changes or when its is released from its current cluster.  To maintain a $4$-approximation clustering, when a critical event happens, the nodes must behave as the following.
+
+When a point's, $p_i's$, $r$-neighborhood changes, if the point is:
+\begin{enumerate}
+\item A center of a cluster - if the new member of $p_i's$ $r$-neighborhood is:
+\begin{enumerate}
+\item A center or cannonical member of another cluster - then $p_i$ becomes an outer member of the other point's cluster, all other points in $p_i's$ previous cluster are released from the cluster.
+\item An outer member of another cluster - the other point becomes a cannonical member of $p_i's$ cluster
+\end{enumerate}
+\item A member of a cannonical set or an outer member of a set - do nothing
+\end{enumerate}
+
+When a point, $p_i$, has been released from a cluster, if the point is:
+\begin{enumerate}
+\item A center of a cluster - doesn't happen
+\item A member of a cannonical set or an outer member
+\begin{enumerate}
+\item if its $r$-neighborhood contains a center or cannonical member of another set - $p_i$ joins that cluster as an outer member
+\item otherwise - $p_i$ and it's $r$-neighborhood can form it's own cluster
+\end{enumerate}
+\end{enumerate}

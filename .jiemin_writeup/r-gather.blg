@@ -1,0 +1,8 @@
+This is BibTeX, Version 0.99dThe top-level auxiliary file: r-gather.aux
+The style file: abbrv.bst
+Database file #1: r-gather.bib
+A bad cross reference---entry "DBLP:conf/stoc/AnshelevichK07"
+refers to entry "DBLP:conf/stoc/2007", which doesn't exist
+Warning--I didn't find a database entry for "DBLP:conf/stoc/2007"
+Warning--empty institution in Guha:2000:HPN:892551
+(There was 1 error message)

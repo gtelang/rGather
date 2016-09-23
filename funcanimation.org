@@ -1,0 +1,434 @@
+#+HTML_HEAD: <style>pre.src {background-color: #303030; color: #e5e5e5;} </style>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="~/Dropbox/MyWiki/codes/Haskell/LiterateHaskell/org-style.css"/>
+#+TITLE: Funcanimation
+
+* Visualizing evolving trajectories                    
+
+
+:PROPERTIES:
+:tangle: funcanimation.py
+:END:
+
+I want to animate in Python, the evolution of trajectories of moving objects. For that, I'll use *~FuncAnimation~*
+from the animation module.
+
+First I'll load the necessary modules, then extract latitudes and longitudes of GPS points along the trajectories
+from the given data file. This file is like an excel sheet with the $i$'th column containing temporally successive
+trajectory points of car $i$. The cars' co-ordinates have been sampled in lock-step at a 5 minute frequency for 24 hours.
+
+Each trajectory is a polygonal chain with the type *~[Point]~* where *~type Point=(Double,Double)~*. I store all
+trajectories in the list *~trajectories~* where ~trajectories[i]~ denotes the trajectory of the $i$-th car.
+
+#+BEGIN_SRC python :tangle newAndImproved.py
+  import matplotlib.pyplot as plt
+  import matplotlib.animation as animation
+  import matplotlib
+  import numpy as np
+  from scipy import io
+  import math
+
+  print "Loading data..."
+  data = io.loadmat('finalShenzhen9386V6.mat') # Trajectory data from Shenzhen
+  lats = data.get('lat')  # Latitudes
+  longs= data.get('long') # Longitudes
+
+  #+END_SRC
+
+Having extracted the co-ordinates, we set up the figure, axes and meta-data like title, axis limits etc.
+
+#+BEGIN_SRC python :tangle newAndImproved.py
+  [xmin, xmax] = [ min(lats.ravel() ), max( lats.ravel() )   ]
+  [ymin, ymax] = [ min(longs.ravel()), max(longs.ravel() ) ]
+
+  fig, ax = plt.subplots()
+  ax.set_title('Trajectories', fontdict={'fontsize':40})
+  ax.set_xlabel('Latitude', fontdict={'fontsize':20})
+  ax.set_ylabel('Longitude', fontdict={'fontsize':20})
+
+  ax.set_xlim(xmin, xmax)
+  ax.set_ylim(ymin,ymax)
+#+END_SRC
+
+
+** Animation without generators
+
+I had a lot of trouble getting generators to work to animate my data. Turns out, that might be due 
+to a bug in matplotlib, in which during the animate iteration, mpl askss for the length of the generator. 
+
+#+BEGIN_SRC python :tangle funcanimation.py
+import matplotlib
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import colorsys 
+import numpy as np
+from scipy import io
+import math
+import sys
+
+# For ensuring that the same sequence of colors are generated from run to run
+np.random.seed(0)
+# http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
+# For creating visually distinct colors
+def getRandomColor():
+    # use golden ratio
+    golden_ratio_conjugate = 0.618033988749895
+    h = np.random.rand() # use random start value
+    h += golden_ratio_conjugate
+    h %= 1.0
+    return colorsys.hsv_to_rgb(h, 0.7, 0.9)
+
+fig = plt.figure()
+ax  = plt.subplot(111)
+
+# Trajectory data from Shenzhen
+data = io.loadmat('finalShenzhen9386V6.mat')
+lats = data.get('lat')  # Latitudes
+longs= data.get('long') # Longitudes
+
+# Total number of GPS samples for each car
+numSamples   = lats.shape[0]
+
+# We can choose an arbitrary subset of cars. Specify the corresponding 
+# the column numbers in indicesOfCarsPlotted
+indicesOfCarsPlotted  =  range(8000,8200)
+numCars               =  len(indicesOfCarsPlotted)
+
+# Time interval between successive frames for rendering in milliseconds.
+dtFrame = 220
+
+# To turn of the visualization of the trajectory trail set this to zero
+# These are alpha values which should lie in the interval [0,1]
+lineTransparency   = 0.1
+markerTransparency = 1.0
+
+
+# Extract only the columns corresponding to the cars we are interested in
+lats  = lats  [ np.ix_( range(0, numSamples) , indicesOfCarsPlotted   ) ]
+longs = longs [ np.ix_( range(0, numSamples) , indicesOfCarsPlotted   ) ]
+
+print "Finished extracted the data..."
+
+
+#-------------------------------------------------------------------------
+trajectories = []
+for i in range(numCars):
+
+    linecolor = getRandomColor()
+    linecolor = ( linecolor[0], linecolor[1], linecolor[2] , lineTransparency) # Augment with a transparency
+    markercolor = (linecolor[0], linecolor[1], linecolor[2], markerTransparency)
+
+    line, = ax.plot([],[], lw=3, markerfacecolor=markercolor, markersize=5)
+
+    line.set_marker('o')
+    line.set_c(linecolor)
+
+    trajectories.append(line)
+
+# X and Y axis limits
+[xmin, xmax] = [ min(lats.ravel() ), max( lats.ravel() )   ]
+[ymin, ymax] = [ min(longs.ravel()), max(longs.ravel() ) ]
+ax.set_xlim(xmin, xmax)
+ax.set_ylim(ymin, ymax)
+ax.set_title('Trajectories', fontdict={'fontsize':40})
+ax.set_xlabel('Latitude', fontdict={'fontsize':20})
+ax.set_ylabel('Longitude', fontdict={'fontsize':20})
+
+
+# Update the state of rGather
+def update(i, *args):
+   print i
+   for car in range(numCars):
+      xdata = lats [0:i+1,car]
+      ydata = longs[0:i+1,car]
+      trajectories[car].set_data( xdata, ydata )
+
+      if i>1:
+          trajectories[car].set_markevery(  (i,i)  )
+
+   return trajectories
+
+# Call the animator.  blit=True means only re-draw the parts that have changed.
+# Ensures better speed
+anim = animation.FuncAnimation(fig, update, interval=dtFrame, blit=True)
+#anim.save('shenzen_animation.mp4', fps=2, extra_args=['-vcodec', 'libx264'])
+plt.show()
+#+END_SRC
+
+** Animation with generators
+ 
+
+It's main inputs are: 
+- A state generator *~genState()~* keeping track of the states of data-structures in the $r$-gather algorithms.
+- A state animator  *~animateState()~* mapping state-data computed by ~genState()~ to matplotlib =Artist= objects. 
+  In particular, each trajectory is represented as a *~matplotlib.lines.Line2D~* object. 
+- *~fargs~* containing possibly useful auxiliary data for =animateState()=
+
+#+BEGIN_SRC python :tangle newAndImproved.py
+  def animateState( trajectories, ax ):
+     ax.lines = trajectories
+     return ax.lines
+     
+
+  def genState(lats,longs):
+     """ Generate the state for animation. 
+     """
+     def makeEmptyLineObject():
+         """ Initialize an empty polyline corresponding to each car trajectory
+         """
+         return  matplotlib.lines.Line2D( [],[], color=np.random.rand(3,1) )
+
+     numCars      = 100 # i.e Number of columns
+     numSamples   = lats.shape[0] # i.e Number of rows. 
+     
+     print lats[0:20,9]
+     print lats.shape[0]
+
+     trajectories = [makeEmptyLineObject() for car in range(numCars)]
+     for car in range(numCars):
+        for sample in range(numSamples): 
+            
+             trajectories[car].set_data( lats [0:sample,car] , longs[0:sample,car])
+     
+     yield trajectories
+
+  # Bind the animation object to a variable to force it to persist
+  ani = animation.FuncAnimation( fig, 
+                                 animateState, 
+                                 frames   = genState(lats,longs), 
+                                 interval = 50, fargs = (ax,))  # milliseconds.
+
+  plt.show()
+#+END_SRC
+
+
+*** State Generator
+
+ http://stackoverflow.com/questions/17511843/python-animation-without-globals
+- The state generator yields all */CUMULATIVE/* xy-coordinates traversed thus far to the animate function.
+  And writes useful statistical information to disk about the progress of the r-gather
+  algotithms line objects of the axes corresponding to the trajectories. @@html:<font color = "red">@@  This is where the rGather logic will be inserted!!!*  @@html:</font>@@
+
+- It has 2 =for= loops.
+  1) Outer loop iterates over the rows of the excel sheet just read in.
+  2) Inner loop iterates over the N subsegments of each trajectory link
+     updating rgather properties
+  3) The generator needs to be initialized  with
+     - The excel sheet data
+     - Number of parts to divide each link of the trajectory into.
+     The same number  $N$ is chosen for all the links: say $N=10$. _*Fair warning:*_ The size of the data will really explode the bigger the size of your data-file.
+     Once initialized, we can pass it to funcanimation
+  5) The data yielded, grows one "*micro-row*" at a time. Remember that we will
+     be using lists for this!! So appending is ~O(1)~ for each column and hence cheap
+     over-all there will be two copies of the data: @@html:<font color = "red">@@  This would be a perfect place to
+     use ~getContents~ from Haskell to save memory and maintain just a single running
+     copy. Possibly this input itself can be extracted using generators in a lazy fashion.
+     See this link: http://stackoverflow.com/questions/519633/lazy-method-for-reading-big-file-in-python
+     This is perfect environment for streaming algorithms! Where the memory tray in this case, is the
+     size of the RAM available on your machine. You also have a chunking parameter here! Already an extremely
+     practical problem.
+  @@html:</font>@@.
+
+*** State Animator
+- _Question_: What /does/ the animate function consume?
+  _Answer_  : The output of the state generator, and optional arguments passed to funcanimation .
+- The animate function itself, is aware of the axes object, passed as an argument to fargs
+-  =animate= then just iterates over the line-objects of =ax= rendering them to screen via blitting.
+   @@html:<font color = "red">@@ Turning on this option is crucial!!   @@html:</font>@@
+
+
+* APPENDIX: A brief tutorial on generators
+Consider this litle code. Execute it as watch carefully the printed output.
+
+#+BEGIN_SRC python 
+   class person:
+         def __init__(self, age, job):
+             self.age=age
+             self.job=job
+
+   def genState(person):
+         for (age,job) in  zip([10,21,41], ["high school","student","professional"]):
+             person.age = age
+             person.job = job
+             yield person
+
+
+   # Gaurish is born. Give initial state
+   gaurish=person(0,"toddler")
+   state_generator_for_person = genState(gaurish)
+
+   for i in state_generator_for_person:
+       print gaurish.age, " ", gaurish.job
+
+   # Gaurish is born. Give initial state
+   anjana=person(0,"toddler")
+   for i in genState(anjana):
+       print anjana.age, " ", anjana.job
+#+END_SRC
+This example was borrowed from here: http://anandology.com/python-practice-book/iterators.html
+You could say, that generators generate a sequence of states lazily. The iteration over the states
+happens separate from the /processing/ of the state, such as animating it, writing to disk or getting
+some other kinds of data out of it.
+
+Here is how you can use generators for animation. This is unutbu's anwer to the question [[http://stackoverflow.com/questions/17511843/python-animation-without-globals][here]]
+#+BEGIN_SRC python :tangle ubuntu.py
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import matplotlib.animation as animation
+  import matplotlib as mpl
+  from time import sleep
+
+  # Critical to set the axes limits if you are adding 
+  # line data. independently of the a call to ax.plot()!!
+  # Gave me a lot of headeaches.
+  fig, ax = plt.subplots()
+  line = mpl.lines.Line2D([],[],marker='s')
+  ax.add_line(line)
+  ax.set_xlim(0,2*np.pi) 
+  ax.set_ylim(-6,6)
+
+  # The data here is returned by the generator
+  def animate(data, ax, mystring):
+      lineset = ax.get_lines()
+      line    = lineset[0]
+      line.set_data(data[0],data[1])
+      line.set_linestyle('-')
+      ax.set_title(mystring)
+
+  i=0
+  def nextstep():
+      """ As you can see, not a single line of code, has been 
+      about rendering to the screen! The power of yield!
+      """ 
+      global i
+      print "Inside the generator, yay!"
+      print i
+      while True:
+          xdata = np.arange(0,2*np.pi,0.1)
+          ydata = 5*np.sin(xdata) + np.random.rand(len(xdata))
+          sleep(0.1)
+          i += 1
+          print i
+          yield (xdata, ydata) 
+
+
+  def init():
+      global ax
+      print "Initializing"
+
+  mystring = "Hello World!"
+  ani = animation.FuncAnimation(fig, animate, nextstep, init_func= init, fargs=(ax,mystring))
+  plt.show()
+#+END_SRC
+
+
+
+* APPENDIX: How to grid in matplotlib
+
+
+Gridding, I feel will be useful after I finish implementing any algorithm for 
+rGather. Here is a code gleaned from the net which does just that.
+
+#+BEGIN_SRC python 
+import numpy as np                                                               
+import matplotlib.pyplot as plt                                                                                                                                 
+
+fig = plt.figure()                                                               
+ax = fig.add_subplot(1,1,1)                                                      
+
+# major ticks every 20, minor ticks every 5                                      
+major_ticks = np.arange(0, 101, 20)                                              
+minor_ticks = np.arange(0, 101, 5)                                               
+
+ax.set_xticks(major_ticks)                                                       
+ax.set_xticks(minor_ticks, minor=True)                                           
+ax.set_yticks(major_ticks)                                                       
+ax.set_yticks(minor_ticks, minor=True)                                           
+
+# and a corresponding grid                                                       
+
+ax.grid(which='both')                                                            
+
+# or if you want differnet settings for the grids:                               
+ax.grid(which='minor', alpha=0.2)                                                
+ax.grid(which='major', alpha=0.5)                                                
+
+plt.show()
+#+END_SRC
+* APPENDIX: Visualizing data in matlab
+
+Before I jumped into Python, I visualized the static data in matlab using this script. 
+
+
+#+BEGIN_SRC octave
+clc;
+clear;
+
+% Extract data from the file
+data = load('finalShenzhen9386V6.mat');
+lats  = data.lat  ; 
+longs = data.long ;  
+
+samplesPerCar = size(longs,1) ;
+numCars       = size(longs,2) ;
+
+
+% Plot the data of some cars 
+figure(1)
+
+endTime           = 3;
+numCarsConsidered = 100;
+
+% Axis limits
+xmin = min(lats(:))  ;
+xmax = max(lats(:)) ;
+
+ymin = min(longs(:)) ;
+ymax = max(longs(:)) ;
+
+for car = 1 : numCarsConsidered
+    
+    randomColor = [rand,rand,rand]; % Stick to RGB for now. Change to HSV for better rendering later. 
+    
+  
+    xs = lats (1:endTime,car);
+    ys = longs(1:endTime,car);
+    
+    p = plot( xs, ys  ,'s-','linewidth',4,'markerfacecolor',randomColor);
+    p.Color(4) = 0.2;
+    
+    % Set axis to a fixed scale every-single time
+    axis ([xmin, xmax, ymin, ymax])
+    
+    hold on
+end
+hold off            
+#+END_SRC
+
+* APPENDIX: Adding multiple lines to the axes object, one at a time
+#+BEGIN_SRC python
+# Warning!! append, insert for numpy arrays return copies of the arrays!
+import matplotlib.pyplot as plt
+import matplotlib
+import numpy as np
+fig = plt.figure()
+ax = plt.axes(xlim=(0, 2), ylim=(-2, 2))
+
+xs = np.arange(0,2,0.1)
+for i in range(5):
+          # Add a line object to ax depending on i
+          # Without a color value, it always gives blue color
+          line = matplotlib.lines.Line2D( xs, i*xs,
+                                          linewidth=2,
+                                          linestyle='--',
+                                          marker='o')
+          
+          ax.add_line(line)
+          
+          for k, line in zip(range(5),ax.get_lines()):
+                    print line
+                    xs= line.get_xdata()
+                    line.set_ydata( k*xs**2 )
+                    
+                    
+                    plt.show()
+#+END_SRC

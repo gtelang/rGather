@@ -1,0 +1,90 @@
+- [X] Make a function to read the YAML files you wrote out. For that will be critical.  
+- [X] Make a sanity check of the codes for the TSPLIB data-sets which you ran: Berlin 52.
+- [X] Check the tex files compile on your computer.   
+
+
+
+FINISH THE FOLLOWING THIS BY 11.30 AM
+- [X] Give a rough glance over the code. for a morning sanity check. 
+- [X] Change neighbour search for 2-Approximation. Overriding in subclass for R2L2. 
+      Will be important for large case, where I want it to work. 
+- [X] Rik's suggestion for Max independent Set which might give very good results. 
+
+
+
+- [x] Extract data from the trajectories at times [144] This is afternoon time.  
+        200, 400..,4000 cars. For this you will straightaway select the first so many columns. No rubbish here.  
+        Write them to a file: TSPLIB style. i.e. just the X-Y coordinates. 
+        N200.txt, N400.txt, N600.txt, .... N4000.txt
+
+  - [ ] Begin comparison
+      We will fix our attention on the 144 th row of the table. 
+      For this consider a fixed number of cars say 2000 cars. 
+      and then do the analysis for just this file. This is a sufficiently large data-set on which to do data-analysis
+      Do r=20,40,...,500 [ 25 values of r, which increases the cluster size. Smaller the r, lesser the privacy ] 
+      Just get the damned clusters first into YAML files. 
+ 
+    - [ ] Start generating plots here:!!!!
+          See the whiteboard for such plots. All plots eps.
+
+After which you can just keep writing away.Including all the plots and 
+what not. Joe and Jie will help. 
+---------------------------------------------------------------------------------------------------------
+
+
+
+Things to do <2016-07-30 Sat> 
+
+
+- [ ] What is longitude and latitude?
+
+- [ ] Learn how to make your matplotlib figures prettier. 
+     These should be double-checked against the 
+     - [ ] Latex
+     - [ ] Legends
+     - [ ] Text annotations.
+     - [ ] Grid should be on
+     - [ ] Fix font size on 
+         - [ ] xaxis
+         - [ ] yaxis
+         - [ ] Title. This should be a good explanatory title and a good font-size.  
+
+- [ ] Go quickly through the Aggarwal paper, about their radius claim 
+- [ ] Go over your implementation of the Aggarwal paper again. This is a sanity check
+- [ ] Implement the recursive scheme to improve their solutions, for obviously you will 
+      get better results. Next: Take the best over --- 10 iterations? This should not take 
+      too much longer if you will be testing r upto 15. Each recursive step is fast enough
+      for a set of size 60, since we will take r = N/4
+
+
+
+-[ ] There should be a folder which will contain the final code, used 
+     for generating the results. For it will be "frozen-in-time" to document all the decisions
+     that you made. 
+     - [ ] You should make a copy of the Literate Folder -- not just the code itself. 
+           For that is what provides the map. I will remove the .html file since it is  
+           not necessary. 
+      -[ ] Thus the YAML files, will also be distributed with the code results. 
+      -[ ] Make a small file in which is a README file for  
+           1. Generating new data-set by running it against a given set of coordinates. [xy, geographical corrdinates assume]
+           2. Analysing  new data-set and tell where the plots are produced. 
+           3. Using the GUI scripts for interacting with the code live. You might want to mention you wrote the GUI, 
+              and say it is available at so and so. The code could be hosted on Joe/Jie/Rik's website wherever. 
+      -[ ] The README file is more for your co-authors than for anyone else. To play with the code. 
+
+
+
+- [ ] We need to make more data. 
+      - [ ] TSPLIB data-set: As a backup, in case Jiaxin does not reply, 
+              do this for the EUC2D file. 
+              - berlin52 : For comparison of the algorithms. 
+              - Large file d1655, d657. 
+      - [ ] Implement  new distance function for coordinates given in longitude and latitude. 
+            This should not be too difficult to do. 
+
+- [ ] Possible data to be computed in a post-hoc analysis once we have the yaml files
+      from the final final final data. 
+        1. Histogram of the number of points per cluster (Jbig)
+        2  Max, 90p, maxrnearest (Jbig)
+        3. Max, 90p, maxrnearest (JAsmall)
+        4. Max, 90p, maxrnearest (JAsmall) 

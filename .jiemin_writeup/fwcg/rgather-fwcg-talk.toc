@@ -1,0 +1,6 @@
+\beamer@endinputifotherversion {3.36pt}
+\beamer@sectionintoc {1}{Intro}{3}{0}{1}
+\beamer@sectionintoc {2}{Hardness}{26}{0}{2}
+\beamer@subsectionintoc {2}{1}{$r\ge 4$ and cost = max bounding disk diameter}{27}{0}{2}
+\beamer@sectionintoc {3}{Algorithms}{71}{0}{3}
+\beamer@sectionintoc {4}{Conclusion}{74}{0}{4}
