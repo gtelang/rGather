@@ -1,5 +1,9 @@
 code/*.py linguist-language=Python
 code/*.cpp linguist-language=C++
-code/*.c   linguist-language=C
 code/*.hpp linguist-language=C++
-code/*.h   linguist-language=C
+*.html linguist-vendored
+*.css  linguist-vendored
+*.js   linguist-vendored
+code/*.html linguist-vendored
+code/*.css  linguist-vendored
+
