@@ -924,6 +924,90 @@ The following code block are birds-eye views of *~AlgoAggarwalStatic~* and *~Alg
 
 #+END_SRC
 
+
+The following concrete class inheriting from *~AlgoAggarwalStatic~* is implemented for the trajectory case
+#+BEGIN_SRC python :noweb-ref ALGO_JIEMIN_DYNAMIC :exports yes
+  class AlgoJieminDynamic( AlgoAggarwalStatic ):
+       
+      def __init__(self, r,  pointCloud):
+         # len(trajectories) = number of cars
+         # len(trajectories[i]) = number of GPS samples taken for the ith car. For shenzhen data set this is
+         # constant for all cars.
+
+         self.r                    = r     
+         self.pointCloud           = pointCloud # Should be of type  [ [(Double,Double)] ] 
+         self.computedClusterings  = []  
+         self.algoName             = 'r-Gather for trajectory clustering'
+    
+
+      def clearAllStates(self):
+            self.r                   = None
+            self.pointCloud          = [] 
+            self.computedClusterings = []
+            
+      def clearComputedClusteringsAndR(self):
+               self.r                   = None
+               self.computedClusterings = []
+
+      def dist(self, p,q):
+         """ distance between two trajectories p and q. The trajectories form a metric space under this distance 
+         If you visualize the given table as a microsoft excel sheet, where each column represents the trajectory 
+         of a car, then the distance between two trajectories is the max of L infinity norm of the difference of two 
+         columns. 
+
+         p,q :: [(Double,Double)]. The length of p or q, indicates the number of GPS samples taken
+         
+         """
+         dpq = 0
+         for t in range(len(p)):
+              
+              # M is the euclidean distance between two points at time t.  
+              M = np.sqrt( abs( (p[t][0]-q[t][0])**2 + (p[t][1]-q[t][1])**2 ) ) 
+              if M > dpq:
+                  dpq = M
+
+         return dpq
+
+
+      def findNearestNeighbours(self, pointCloud, k):
+         """Dumb brute force nearest neighbours"""
+         import numpy as np
+         import sys
+         # return distances, indices
+
+         distances = []
+         indices   = []
+         for traj_i, i in pointCloud, range(len(pointCloud)):
+                distances_and_indices = []
+                for traj_j, j in pointCloud, range(len(pointCloud)):
+                      dij = self.dist( traj_i, traj_j)
+                      distances_and_indices.append[(dij,j)]
+                 
+                # Now sort the distances of all points from point i. 
+                distances_and_indices.sort(key=lambda tup: tup[0]) # http://tinyurl.com/mf8yz5b
+                distances.append( [ d for (d,i) in distances_and_indices[0:k] ]  )
+                indices.append  ( [ i for (d,i) in distances_and_indices[0:k] ]  )
+
+         print "Fuck you!"
+         return distances, indices
+
+
+      def rangeSearch(self, pointCloud, radius):
+          print "Warning! Rangesearch used for trajectories"
+          pass
+
+
+      <<PLOT_CLUSTERS>>
+      <<PLOT_STATISTICS>>
+
+#+END_SRC
+
+
+
+
+
+
+
 The following concrete class inheriting from *~AlgoAggarwalStatic~* is implemented for the $L^2$ metric
 in $\mathbb{R}^2$
 
@@ -1029,7 +1113,7 @@ in $\mathbb{R}^2$
     numPoints = len( self.pointCloud )
 
     <<FIRST_CONDITION_PREDICATE>>
-    <<MAKE_CLUSTER_CENTERS>> 
+    <<MAKE_CLUSTER_CENTERS>> # There are two such assumptions. 
     <<MAKE_FLOW_NETWORK>>
     <<MAKE_AGGARWAL_CLUSTERS>>
 
@@ -1463,7 +1547,7 @@ abstract base classes and inheritance  to emulate their relationships in Python.
          -  MetricSpace  [fn:jiemin-metric: For trajectories $T_1$, and $T_2$, the function $d(T1,T2) = \max_{p \in T_1, q \in T_2} d(p,q)$ is a metric] 
 
    
-* SCRap
+* Scrap
    # # Select cluster centers in a greedy manner. Just mark all neighbours. 
       # # Don't care if the neighbours are marked or unmarked as described in the 
       # # paper. Requires clusterCenters to be a dictionary. 
@@ -1496,3 +1580,39 @@ abstract base classes and inheritance  to emulate their relationships in Python.
 
       # # Having marked all the points, return the cluster centers. 
       # return clusterCenters
+
+* Things to do for the dynamic rGather program
+- [X] Make a main file from the animation file
+- [X] Go through the visualization routine. Adapt it to the visualization 
+      for this case. 
+- [X] Add another class which derives from the metric space class
+- [ ] Implement the 0 regroupings allowed. k passed as a parameter. 
+- [ ] Visualize the trajectories statically. Trajectories in a cluster are colored with the same color.
+- [ ] Use the Delaunay triangulation heuristic for the r=3 case
+  - [ ] Learn how to use delauny triangulation. Scipy has a routine
+  - [ ] I know how to use Linear Programming already. Just replace it with 
+        a linear program. USeful to understand the LP relaxation of it though. 
+        But if needed you can directly use your LP setcover heuristic that 
+        you implemented in here. 
+- [ ] Implement the epsilon kernel routine. 
+  - [ ] It would be extremely useful to make a gridding function. 
+        You had implemented a similar one, in C++ some time back. 
+        Basically I think you would perform bucketing. *Add this to pointLib.py*
+        the library you wrote which handles interactive stuff, and can be appended 
+        to algorithms. 
+  - [ ] This is a very simple algorithm. The only complex 
+        part is setting the parmaters
+  - [ ] The epsilon kernel routine is implemented as part of 
+        a new aproximate rGather algorithm with the same 
+        structure as wht you did before. The only twist, 
+        would be that you generate the clusters, by passing an 
+        additional parameter, which is the approximation parameter 
+        called epsilon. 
+  - [ ] Have statistics to record the statistics of the sizes of the 
+        coresets, and other such trivia. 
+- [ ] Get properties of the proposed rGather coreset algorithm 
+     which uses onion layers.
+- [ ] This can be easily implemented in an interactive frame 
+      by adapting the routine AlgoJieminDecentralizedStatic.
+- [ ] The recursive improvement step, I think will be crucial to 
+      get improved results. Don't neglect the importance of this step. 

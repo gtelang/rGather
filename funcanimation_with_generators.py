@@ -1,7 +1,7 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import colorsys 
+import colorsys
 import numpy as np
 from scipy import io
 import math
@@ -48,7 +48,7 @@ markerTransparency = 1.0
 lats  = lats  [ np.ix_( range(0, numSamples) , indicesOfCarsPlotted   ) ]
 longs = longs [ np.ix_( range(0, numSamples) , indicesOfCarsPlotted   ) ]
 
-print "Finished extracted the data..."
+print "Finished extracting the data..."
 
 
 #-------------------------------------------------------------------------

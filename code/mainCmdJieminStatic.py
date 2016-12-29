@@ -5,7 +5,7 @@ import matplotlib as mpl
 import sys
 import argparse
 
-r           = 10
+r           = 5
 numCars     = 1000
 lats        = np.random.rand(numCars)
 longs       = np.random.rand(numCars)

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>r-Gather Programs</title>
-<!-- 2016-07-30 Sat 16:23 -->
+<!-- 2016-11-28 Mon 21:17 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Gaurish" />
@@ -538,6 +538,7 @@ These references are just the methods of this class grouped logically.
 </p>
 
 
+
 <div class="org-src-container">
 
 <pre class="src src-python"><span style="color: #8ac6f2; font-weight: bold;">class</span> <span style="color: #92a65e; font-weight: bold;">AlgoJieminDecentralizedStatic</span>:
@@ -577,6 +578,8 @@ of the <span class="underline">input</span> numpy array <b>pointCloud</b>: each 
   <span style="color: #8ac6f2; font-weight: bold;">self</span>.computedClusterings  = <span style="color: #8c8c8c;">[]</span>  
   <span style="color: #8ac6f2; font-weight: bold;">self</span>.algoName             = <span style="color: #ff9966;">'Decentralized Static r-Gather'</span>
 
+
+
 <span style="color: #8ac6f2; font-weight: bold;">def</span> <span style="color: #cae682;">clearAllStates</span><span style="color: #8c8c8c;">(</span><span style="color: #8ac6f2; font-weight: bold;">self</span><span style="color: #8c8c8c;">)</span>:
   <span style="color: #8ac6f2; font-weight: bold;">self</span>.r                   = <span style="color: #e5786d;">None</span>
   <span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud          = <span style="color: #8c8c8c;">[]</span> 
@@ -606,8 +609,9 @@ the class. This is by design to gain extra flexibility during experimental analy
   <span style="color: #ff9966;">""" config : Configuration parameters which might be needed </span>
 <span style="color: #ff9966;">               for the run. </span>
 <span style="color: #ff9966;">  Options recognized are (ALL LOWER-CASE)</span>
-<span style="color: #ff9966;">  1. mis_algorithm: 1. 'networkx_random_choose_20_iter_best', default </span>
-<span style="color: #ff9966;">                    2. 'riksuggestion'</span>
+<span style="color: #ff9966;">  1. mis_algorithm:</span>
+<span style="color: #ff9966;">       A. 'networkx_random_choose_20_iter_best', default </span>
+<span style="color: #ff9966;">       B. 'riksuggestion'</span>
 <span style="color: #ff9966;">  """</span>
 
 
@@ -618,6 +622,8 @@ the class. This is by design to gain extra flexibility during experimental analy
   &lt;&lt;FIND_NEAREST_NEIGHBOURS&gt;&gt;
   &lt;&lt;FIND_MAXIMAL_INDEPENDENT_SET_NEIGHBOURHOODS&gt;&gt;
   &lt;&lt;EXTRACT_UNIQUE_ELMENTS_FROM_LIST&gt;&gt;
+  &lt;&lt;DISTANCE_FUNCTION&gt;&gt;
+
 
   <span style="color: #cae682;">NrDistances</span>, <span style="color: #cae682;">Nr</span> = findNearestNeighbours<span style="color: #8c8c8c;">(</span> <span style="color: #8ac6f2; font-weight: bold;">self</span>.pointCloud, 
                                            <span style="color: #8ac6f2; font-weight: bold;">self</span>.r <span style="color: #8c8c8c;">)</span>
@@ -731,11 +737,14 @@ the point about whose neighbour list we are talking about.
 <span style="color: #ff9966;">       k          : The length of the neighbour list to compute. </span>
 <span style="color: #ff9966;">  """</span>
   <span style="color: #8ac6f2; font-weight: bold;">from</span> sklearn.neighbors <span style="color: #8ac6f2; font-weight: bold;">import</span> NearestNeighbors
+  <span style="color: #8ac6f2; font-weight: bold;">import</span> sklearn
   <span style="color: #8ac6f2; font-weight: bold;">import</span> numpy <span style="color: #8ac6f2; font-weight: bold;">as</span> np
   <span style="color: #8ac6f2; font-weight: bold;">import</span> sys
 
+
+
   <span style="color: #cae682;">X</span>    = np.array<span style="color: #8c8c8c;">(</span>pointCloud<span style="color: #8c8c8c;">)</span>
-  <span style="color: #cae682;">nbrs</span> = NearestNeighbors<span style="color: #8c8c8c;">(</span>n_neighbors=k, algorithm=<span style="color: #ff9966;">'ball_tree'</span><span style="color: #8c8c8c;">)</span>.fit<span style="color: #8c8c8c;">(</span>X<span style="color: #8c8c8c;">)</span>
+  <span style="color: #cae682;">nbrs</span> = NearestNeighbors<span style="color: #8c8c8c;">(</span>n_neighbors=k, algorithm=<span style="color: #ff9966;">'ball_tree'</span><span style="color: #8c8c8c;">)</span>.fit<span style="color: #8c8c8c;">(</span> X <span style="color: #8c8c8c;">)</span>
   <span style="color: #cae682;">distances</span>, <span style="color: #cae682;">indices</span> = nbrs.kneighbors<span style="color: #8c8c8c;">(</span>X<span style="color: #8c8c8c;">)</span>
 
   <span style="color: #8ac6f2; font-weight: bold;">return</span> distances, indices
@@ -901,7 +910,7 @@ the corresponding point-sets have a non-empty intersection.
          <span style="color: #cae682;">intersection_of_nbds_ij</span> = <span style="color: #8c8c8c;">[</span>val <span style="color: #8ac6f2; font-weight: bold;">for</span> val <span style="color: #8ac6f2; font-weight: bold;">in</span> nbds<span style="color: #93a8c6;">[</span>i<span style="color: #93a8c6;">]</span> <span style="color: #8ac6f2; font-weight: bold;">if</span> val <span style="color: #8ac6f2; font-weight: bold;">in</span> nbds<span style="color: #93a8c6;">[</span>j<span style="color: #93a8c6;">]</span> <span style="color: #8c8c8c;">]</span>
          <span style="color: #8ac6f2; font-weight: bold;">if</span> <span style="color: #e5786d;">len</span><span style="color: #8c8c8c;">(</span>intersection_of_nbds_ij<span style="color: #8c8c8c;">)</span> &gt;= <span style="color: #e5786d;">1</span>:
                <span style="color: #8ac6f2; font-weight: bold;">print</span> <span style="color: #ff9966;">"Neighbourhoods intersect!"</span>
-
+               sys.<span style="color: #e5786d;">exit</span><span style="color: #8c8c8c;">()</span>
 
   <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">print "Exiting!"</span>
   <span style="color: #808080; font-style: italic;"># </span><span style="color: #808080; font-style: italic;">import sys</span>
@@ -926,6 +935,7 @@ the corresponding point-sets have a non-empty intersection.
 </div>
 </div>
 </div>
+
 
 
 <div id="outline-container-sec-3-2-3" class="outline-4">
@@ -1400,7 +1410,7 @@ when trying to do the animation with generators as documented <a href="https://g
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Gaurish</p>
-<p class="date">Created: 2016-07-30 Sat 16:23</p>
+<p class="date">Created: 2016-11-28 Mon 21:17</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

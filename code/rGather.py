@@ -349,9 +349,9 @@ class AlgoJieminDecentralizedStatic:
                 
     
             ax.set_aspect(1.0)
-            ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize': 25})
-            #ax.set_xlabel('X', fontdict={'fontsize':20})
-            #ax.set_ylabel('Y', fontdict={'fontsize':20})
+            ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':20})
+            ax.set_xlabel('Latitude', fontdict={'fontsize':0})
+            ax.set_ylabel('Longitude',fontdict={'fontsize':0})
     
             #ax.get_xaxis().set_ticks( [] ,  fontdict={'fontsize':10})
             #ax.get_yaxis().set_ticks( [],  fontdict={'fontsize':10} ) 
@@ -515,7 +515,7 @@ class AlgoAggarwalStatic:
     
     
           # Having marked all the points, return the cluster centers. 
-          return clusterCenters 
+          return clusterCenters # There are two such assumptions. 
     def makeFlowNetwork( R                       ,
                          clusterCenters          ,
                          points = self.pointCloud,
@@ -871,6 +871,186 @@ class AlgoAggarwalStaticR2L2( AlgoAggarwalStatic ):
    
     
 
+class AlgoJieminDynamic( AlgoAggarwalStatic ):
+     
+    def __init__(self, r,  pointCloud):
+       # len(trajectories) = number of cars
+       # len(trajectories[i]) = number of GPS samples taken for the ith car. For shenzhen data set this is
+       # constant for all cars.
+
+       self.r                    = r     
+       self.pointCloud           = pointCloud # Should be of type  [ [(Double,Double)] ] 
+       self.computedClusterings  = []  
+       self.algoName             = 'r-Gather for trajectory clustering'
+  
+
+    def clearAllStates(self):
+          self.r                   = None
+          self.pointCloud          = [] 
+          self.computedClusterings = []
+          
+    def clearComputedClusteringsAndR(self):
+             self.r                   = None
+             self.computedClusterings = []
+
+    def dist(self, p,q):
+       """ distance between two trajectories p and q. The trajectories form a metric space under this distance 
+       If you visualize the given table as a microsoft excel sheet, where each column represents the trajectory 
+       of a car, then the distance between two trajectories is the max of L infinity norm of the difference of two 
+       columns. 
+
+       p,q :: [(Double,Double)]. The length of p or q, indicates the number of GPS samples taken
+       
+       """
+       dpq = 0
+       for t in range(len(p)):
+            
+            # M is the euclidean distance between two points at time t.  
+            M = np.sqrt( abs( (p[t][0]-q[t][0])**2 + (p[t][1]-q[t][1])**2 ) ) 
+            if M > dpq:
+                dpq = M
+
+       return dpq
+
+
+    def findNearestNeighbours(self, pointCloud, k):
+       """Dumb brute force nearest neighbours"""
+       import numpy as np
+       import sys
+       # return distances, indices
+
+       distances = []
+       indices   = []
+       for traj_i, i in pointCloud, range(len(pointCloud)):
+              distances_and_indices = []
+              for traj_j, j in pointCloud, range(len(pointCloud)):
+                    dij = self.dist( traj_i, traj_j)
+                    distances_and_indices.append[(dij,j)]
+               
+              # Now sort the distances of all points from point i. 
+              distances_and_indices.sort(key=lambda tup: tup[0]) # http://tinyurl.com/mf8yz5b
+              distances.append( [ d for (d,i) in distances_and_indices[0:k] ]  )
+              indices.append  ( [ i for (d,i) in distances_and_indices[0:k] ]  )
+
+       print "Fuck you!"
+       return distances, indices
+
+
+    def rangeSearch(self, pointCloud, radius):
+        print "Warning! Rangesearch used for trajectories"
+        pass
+
+
+    
+    
+    def plotClusters(self,  ax    , 
+                   pointSize=200, 
+                   marker='o'   , 
+                   pointCloudInfo='',
+                   annotatePoints=True):
+        
+    
+          from scipy import spatial
+          import numpy as np, matplotlib as mpl
+          import matplotlib.pyplot as plt
+     
+          # Plot point-cloud 
+          xs = [x for (x,y) in self.pointCloud]
+          ys = [y for (x,y) in self.pointCloud]
+          ax.plot(xs,ys,'bo', markersize=3) 
+          ax.set_aspect(1.0)    
+    
+          if annotatePoints==True:
+                # Annotate each point with a corresponding number. 
+                numPoints = len(xs)
+                labels = ['{0}'.format(i) for i in range(numPoints)]
+                
+                for label, x, y in zip(labels, xs, ys):
+                      ax.annotate(  label                       , 
+                                    xy         = (x, y)         , 
+                                    xytext     = (-3, 0)      ,
+                                    textcoords = 'offset points', 
+                                    ha         = 'right'        , 
+                                    va         = 'bottom')
+                      
+    
+          # Overlay with cluster-groups.
+          for s in self.computedClusterings:
+          
+            clusterColor = getRandomColor()
+            xc = [ xs[i]  for i in s   ]
+            yc = [ ys[i]  for i in s   ]
+    
+            # Mark all members of a cluster with a nice fat dot around it. 
+            #ax.scatter(xc, yc, c=clusterColor, 
+            #           marker=marker, 
+            #           s=pointSize) 
+    
+            #ax.plot(xc,yc, alpha=0.5, markersize=1 , markerfacecolor=clusterColor , linewidth=0)
+            #ax.set_aspect(1.0)
+    
+            # For some stupid reason sp.spatial.ConvexHull requires at least three points for computing the convex hull. 
+            
+            if len(xc) >= 3 : 
+                  hull = spatial.ConvexHull(  np.array(zip(xc,yc)) , qhull_options="QJn" ) # Last option because of this http://stackoverflow.com/q/30132124/505306
+                  hullPoints = np.array( zip( [ xc[i] for i in hull.vertices ],  
+                                              [ yc[i] for i in hull.vertices ] ) )
+                  ax.add_patch( mpl.patches.Polygon(hullPoints, alpha=0.5, 
+                                                    facecolor=clusterColor) )
+           
+    
+            elif len(xc) == 2:
+                   ax.plot( xc,yc, color=clusterColor )
+                
+    
+            ax.set_aspect(1.0)
+            ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':5})
+            ax.set_xlabel('Latitude', fontdict={'fontsize':5})
+            ax.set_ylabel('Longitude',fontdict={'fontsize':5})
+    
+            #ax.get_xaxis().set_ticks( [] ,  fontdict={'fontsize':10})
+            #ax.get_yaxis().set_ticks( [],  fontdict={'fontsize':10} ) 
+    
+            ax.grid(b=True)
+    
+    
+    
+    
+    def plotStatistics(self, axStatsDict ):
+       """ axStatsDict, specifies the mapping of axes objects to the statistic
+           being plotted.""" 
+    
+       def plotConvexHullDiameters(ax):
+          pass
+      
+       def plotMinBoundingCircleDiameters(ax):
+          pass
+    
+       def plotClusterPopulationSizes(ax):
+          barHeights = map(len, self.computedClusterings )
+          numBars    = len(barHeights)
+    
+          ax.bar( range(numBars) ,barHeights, width=1.0, align='center')
+          ax.set_title('Number of points per Cluster', fontdict={'fontsize':30})
+    
+          ax.set_aspect(1.0)
+          ax.grid(b=True)
+    
+       for ax, statistic in axStatsDict.iteritems():
+           
+            if statistic == 'convexHullDiameters': 
+               plotConvexHullDiameters(ax) 
+            
+            elif statistic == 'minBoundingCircleDiameters':
+               plotMinBoundingCircleDiameters(ax)
+    
+            elif statistic == 'clusterPopulationSizes':
+               plotClusterPopulationSizes(ax)
+    
+            else:
+               pass
+    
+    
 
 
 def getRandomColor():
