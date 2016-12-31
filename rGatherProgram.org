@@ -14,8 +14,7 @@ in $\mathbb{R}^2$ by exploiting the extra structure available.
 
 In the main paper, we give approximation algorithms for the following problems:
 
-*DYNAMIC $r$-GATHER:*      If the $(x,y)$ co-ordinates of the data-set are live and moving, how do we update 
-$OPT$ efficiently? 
+*DYNAMIC $r$-GATHER:* If the $(x,y)$ co-ordinates of the data-set are live and moving, how do we update $OPT$ efficiently? 
  
 *DECENTRALIZED $r$-GATHER:* Say the data-set is spread among several data-banks. How do we compute $OPT$ 
 with minimal co-ordination? 
@@ -970,25 +969,16 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
 
 
       def findNearestNeighbours(self, pointCloud, k):
-         """Dumb brute force nearest neighbours"""
+         """return the k-nearest nearest neighbours"""
          import numpy as np
-         import sys
-         # return distances, indices
+         from sklearn.neighbors import NearestNeighbors
 
-         distances = []
-         indices   = []
-         for traj_i, i in pointCloud, range(len(pointCloud)):
-                distances_and_indices = []
-                for traj_j, j in pointCloud, range(len(pointCloud)):
-                      dij = self.dist( traj_i, traj_j)
-                      distances_and_indices.append[(dij,j)]
-                 
-                # Now sort the distances of all points from point i. 
-                distances_and_indices.sort(key=lambda tup: tup[0]) # http://tinyurl.com/mf8yz5b
-                distances.append( [ d for (d,i) in distances_and_indices[0:k] ]  )
-                indices.append  ( [ i for (d,i) in distances_and_indices[0:k] ]  )
-
-         print "Fuck you!"
+         # build a data-structure for fast retrieval
+         (distances, indices) = NearestNeighbors(n_neighbors = k, 
+                                                 algorithm   = 'ball_tree', 
+                                                 metric      = self.dist, 
+                                                 n_jobs=-1).fit( pointCloud ).kneighbors( pointCloud )
+         print "Inside findNearestNeighbor"
          return distances, indices
 
 
@@ -1117,7 +1107,13 @@ in $\mathbb{R}^2$
     <<MAKE_FLOW_NETWORK>>
     <<MAKE_AGGARWAL_CLUSTERS>>
 
-    print "Started filtering!"
+    #print "Started filtering!"
+
+    #print "The points are ", points   
+    #print "Number of points", numPoints
+
+    #import sys
+    #sys.exit()
 
     dijHalfs = [0.5 * self.dist( points[ i ], points[ j ] ) 
                       for i in range( numPoints ) 
@@ -1214,9 +1210,61 @@ time neighbour searches in general metric spaces.
 /*NOTE* :: It is not immediately clear why the ~while~ loop below *must* terminate. Aggarwal et al.  do not prove this statement.  Possible 
  issue to be raised with Prof. Gao and Rik? But I suppose it might work for low values....$r = 2,3$...Not sure.Will need to check this out properly./
 /Possible hacks: if the loop looks like it is infinite, terminate it, and figure out how to treat these points./
+#+BEGIN_SRC python :noweb-ref MAKE_CLUSTER_CENTERS :exports no
+  def makeClusterCenters( R,
+                          points = self.pointCloud, 
+                          dist   = self.dist      , 
+                          r      = self.r         ):
+        """ Marking loop for choosing good cluster centers """
+        import numpy as np
+        from sklearn.neighbors import NearestNeighbors
+
+        numPoints               = len( points )
+        markers                 = [ False for i in range( numPoints ) ]
+        potentialClusterCenters = [ ] # Populated in the while loop below.  
+   
+        # Warning: The n_neighbors=r was chosen by me arbitrarily. Without this, the default parameter chosen by sklearn is 5
+        # Might have to do replace this with something else in the future me thinks.  
+        nbrs_datastructure = NearestNeighbors (n_neighbors=r, radius=2*R , algorithm='ball_tree',metric=self.dist , n_jobs=-1).fit( points ) 
+        # See note above. It might be very important! 
+        # The following while loop replacement to the confusing tangle spelled out in the Aggarwal 
+        # paper was suggested by Jie and Jiemin in the email thread with Rik, after I cried for help. 
+        while( all( markers ) !=  True ): 
+             
+            unmarkedIndices =  [ index for ( index,boolean ) 
+                                       in zip( range( numPoints ), markers) 
+                                       if boolean == False ]
+         
+            randomIndex = random.choice ( unmarkedIndices ) 
+
+            # WARNING: THE INDICES ARE NOT SORTED ACCORDING TO THE DISTANCE FROM the RANDOMINDEX point
+            (_, idx_nbrs) = nbrs_datastructure.radius_neighbors( X=[points[randomIndex]], radius=2*R ) 
+            # this list needs to be analysed properly.
+           
+            ball2R_neighbor_list = idx_nbrs[0]
+           
+            #print ball2R_neighbor_list 
+ 
+            # Mark all the neighbours including the point itself. 
+            for nbrIndex in ball2R_neighbor_list:
+                   markers[ nbrIndex ] = True 
+    
+            potentialClusterCenters.append( ( randomIndex, ball2R_neighbor_list ) ) 
 
 
-#+BEGIN_SRC python :noweb-ref MAKE_CLUSTER_CENTERS :exports none
+        print " All points marked! "
+        # Cluster centers are those which have atleast r points in their neighbourhood. 
+        clusterCenters = [ index for ( index, ball2R_neighbor_list ) in potentialClusterCenters 
+                            if len( ball2R_neighbor_list ) >= r  ]
+
+
+        # Having marked all the points, return the cluster centers. 
+        return clusterCenters
+#+END_SRC
+
+
+
+#+BEGIN_SRC python :noweb-ref MAKE_CLUSTER_CENTERS_JUL29_WORKING_FOR_R2L2_BUT_BUGGY :exports no
   def makeClusterCenters( R,
                           points = self.pointCloud, 
                           dist   = self.dist      , 

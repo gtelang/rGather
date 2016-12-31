@@ -349,9 +349,9 @@ class AlgoJieminDecentralizedStatic:
                 
     
             ax.set_aspect(1.0)
-            ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':20})
-            ax.set_xlabel('Latitude', fontdict={'fontsize':0})
-            ax.set_ylabel('Longitude',fontdict={'fontsize':0})
+            ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':5})
+            ax.set_xlabel('Latitude', fontdict={'fontsize':5})
+            ax.set_ylabel('Longitude',fontdict={'fontsize':5})
     
             #ax.get_xaxis().set_ticks( [] ,  fontdict={'fontsize':10})
             #ax.get_yaxis().set_ticks( [],  fontdict={'fontsize':10} ) 
@@ -474,16 +474,16 @@ class AlgoAggarwalStatic:
                             dist   = self.dist      , 
                             r      = self.r         ):
           """ Marking loop for choosing good cluster centers """
-    
-          from scipy import spatial
+          import numpy as np
+          from sklearn.neighbors import NearestNeighbors
     
           numPoints               = len( points )
           markers                 = [ False for i in range( numPoints ) ]
           potentialClusterCenters = [ ] # Populated in the while loop below.  
-      
-          # For fast neighbour search in the while loop below. 
-          mykdtree = spatial.KDTree( self.pointCloud )
-          
+     
+          # Warning: The n_neighbors=r was chosen by me arbitrarily. Without this, the default parameter chosen by sklearn is 5
+          # Might have to do replace this with something else in the future me thinks.  
+          nbrs_datastructure = NearestNeighbors (n_neighbors=r, radius=2*R , algorithm='ball_tree',metric=self.dist , n_jobs=-1).fit( points ) 
           # See note above. It might be very important! 
           # The following while loop replacement to the confusing tangle spelled out in the Aggarwal 
           # paper was suggested by Jie and Jiemin in the email thread with Rik, after I cried for help. 
@@ -496,11 +496,13 @@ class AlgoAggarwalStatic:
               randomIndex = random.choice ( unmarkedIndices ) 
     
               # WARNING: THE INDICES ARE NOT SORTED ACCORDING TO THE DISTANCE FROM the RANDOMINDEX point
-              ball2R_neighbor_list = mykdtree.query_ball_point( points[randomIndex] , 2*R)
-              
-              #ball2R_neighbor_list = [ index for index in range( numPoints ) 
-              #                               if dist( points[ randomIndex ], points[ index ]) <= 2*R ] 
-    
+              (_, idx_nbrs) = nbrs_datastructure.radius_neighbors( X=[points[randomIndex]], radius=2*R ) 
+              # this list needs to be analysed properly.
+             
+              ball2R_neighbor_list = idx_nbrs[0]
+             
+              #print ball2R_neighbor_list 
+     
               # Mark all the neighbours including the point itself. 
               for nbrIndex in ball2R_neighbor_list:
                      markers[ nbrIndex ] = True 
@@ -637,7 +639,13 @@ class AlgoAggarwalStatic:
         # Make sure all points have been covered in the clustering
         return clusterings
   
-    print "Started filtering!"
+    #print "Started filtering!"
+  
+    #print "The points are ", points   
+    #print "Number of points", numPoints
+  
+    #import sys
+    #sys.exit()
   
     dijHalfs = [0.5 * self.dist( points[ i ], points[ j ] ) 
                       for i in range( numPoints ) 
@@ -914,25 +922,16 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
 
 
     def findNearestNeighbours(self, pointCloud, k):
-       """Dumb brute force nearest neighbours"""
+       """return the k-nearest nearest neighbours"""
        import numpy as np
-       import sys
-       # return distances, indices
+       from sklearn.neighbors import NearestNeighbors
 
-       distances = []
-       indices   = []
-       for traj_i, i in pointCloud, range(len(pointCloud)):
-              distances_and_indices = []
-              for traj_j, j in pointCloud, range(len(pointCloud)):
-                    dij = self.dist( traj_i, traj_j)
-                    distances_and_indices.append[(dij,j)]
-               
-              # Now sort the distances of all points from point i. 
-              distances_and_indices.sort(key=lambda tup: tup[0]) # http://tinyurl.com/mf8yz5b
-              distances.append( [ d for (d,i) in distances_and_indices[0:k] ]  )
-              indices.append  ( [ i for (d,i) in distances_and_indices[0:k] ]  )
-
-       print "Fuck you!"
+       # build a data-structure for fast retrieval
+       (distances, indices) = NearestNeighbors(n_neighbors = k, 
+                                               algorithm   = 'ball_tree', 
+                                               metric      = self.dist, 
+                                               n_jobs=-1).fit( pointCloud ).kneighbors( pointCloud )
+       print "Inside findNearestNeighbor"
        return distances, indices
 
 

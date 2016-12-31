@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>r-Gather Programs</title>
-<!-- 2016-12-31 Sat 14:37 -->
+<!-- 2016-12-31 Sat 14:36 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Gaurish" />
@@ -1408,59 +1408,6 @@ time neighbour searches in general metric spaces.
  issue to be raised with Prof. Gao and Rik? But I suppose it might work for low values&#x2026;.\(r = 2,3\)&#x2026;Not sure.Will need to check this out properly.</i>
 <i>Possible hacks: if the loop looks like it is infinite, terminate it, and figure out how to treat these points.</i>
 </p>
-
-
-<div class="org-src-container">
-
-<pre class="src src-python">def makeClusterCenters( R,
-                        points = self.pointCloud, 
-                        dist   = self.dist      , 
-                        r      = self.r         ):
-      """ Marking loop for choosing good cluster centers """
-
-      from scipy import spatial
-
-      numPoints               = len( points )
-      markers                 = [ False for i in range( numPoints ) ]
-      potentialClusterCenters = [ ] # Populated in the while loop below.  
-
-      # For fast neighbour search in the while loop below. 
-      mykdtree = spatial.KDTree( self.pointCloud )
-
-      # See note above. It might be very important! 
-      # The following while loop replacement to the confusing tangle spelled out in the Aggarwal 
-      # paper was suggested by Jie and Jiemin in the email thread with Rik, after I cried for help. 
-      while( all( markers ) !=  True ): 
-
-          unmarkedIndices =  [ index for ( index,boolean ) 
-                                     in zip( range( numPoints ), markers) 
-                                     if boolean == False ]
-
-          randomIndex = random.choice ( unmarkedIndices ) 
-
-          # WARNING: THE INDICES ARE NOT SORTED ACCORDING TO THE DISTANCE FROM the RANDOMINDEX point
-          ball2R_neighbor_list = mykdtree.query_ball_point( points[randomIndex] , 2*R)
-
-          #ball2R_neighbor_list = [ index for index in range( numPoints ) 
-          #                               if dist( points[ randomIndex ], points[ index ]) &lt;= 2*R ] 
-
-          # Mark all the neighbours including the point itself. 
-          for nbrIndex in ball2R_neighbor_list:
-                 markers[ nbrIndex ] = True 
-
-          potentialClusterCenters.append( ( randomIndex, ball2R_neighbor_list ) ) 
-
-
-      print " All points marked! "
-      # Cluster centers are those which have atleast r points in their neighbourhood. 
-      clusterCenters = [ index for ( index, ball2R_neighbor_list ) in potentialClusterCenters 
-                          if len( ball2R_neighbor_list ) &gt;= r  ]
-
-
-      # Having marked all the points, return the cluster centers. 
-      return clusterCenters
-</pre>
-</div>
 </div>
 </div>
 </div>
@@ -1612,7 +1559,7 @@ when trying to do the animation with generators as documented <a href="https://g
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Gaurish</p>
-<p class="date">Created: 2016-12-31 Sat 14:37</p>
+<p class="date">Created: 2016-12-31 Sat 14:36</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
