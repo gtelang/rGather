@@ -1,0 +1,20 @@
+- [X] A sample file
+- [X] Add this file generation code to rGatherProgram.org
+- [ ] Read the table from the sample file in the constructor
+- [ ] Can the table generation be done within the constructor itself? 
+      Will make life much simpler, since the tables are relatively easy to 
+      generate. What takes time is writing to disk.
+ 
+---------
+Workflow:
+---------
+
+- [X] Both table option, and within constructor table construction is supported
+- [X] Fix rangeSearch and findNearestNeighbors, by making use of the table just constructed. 
+      This way there is no need to write files, and make files for different sample numbers!!
+ 
+- [ ] Recursion  , to improve solution quality. The random choices affect the output.
+- [ ] Regroupings, dynamic program
+- [ ] Rendering  , animate the sequences, and the trajectory groupings. 
+      possibly, one all same colors/completely different colors,
+- [ ] Threading, and then run it on 4-core computer.!!!

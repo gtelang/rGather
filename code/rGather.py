@@ -349,9 +349,9 @@ class AlgoJieminDecentralizedStatic:
                 
     
             ax.set_aspect(1.0)
-            ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':5})
-            ax.set_xlabel('Latitude', fontdict={'fontsize':5})
-            ax.set_ylabel('Longitude',fontdict={'fontsize':5})
+            ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':15})
+            ax.set_xlabel('Latitude', fontdict={'fontsize':10})
+            ax.set_ylabel('Longitude',fontdict={'fontsize':10})
     
             #ax.get_xaxis().set_ticks( [] ,  fontdict={'fontsize':10})
             #ax.get_yaxis().set_ticks( [],  fontdict={'fontsize':10} ) 
@@ -447,30 +447,34 @@ class AlgoAggarwalStatic:
         #return  all(   [True if len(nbrList) >= self.r else False 
         #                     for nbrList in everyonesBall2R_Neighbors]   )
     
-        # Team Sklearn
         start = time.time()
         distances, r_nearest_indices = self.findNearestNeighbours( self.pointCloud, self.r  ) # This is the bottleneck inside your code.      
         endknn = time.time()
+        print 'Just the knn inside firstConditionPredicatetook ', (endknn-start), "seconds"
     
-        flags = []
-        for i in range( numPoints ):
-            flagi = [True if self.dist( self.pointCloud[i], self.pointCloud[nbr]  ) <= 2*R  else False for nbr in r_nearest_indices[i] ] 
-            flags.append( all(flagi) )
+        #------------------ Gold
+        #flags = []
+        #for i in range( numPoints ):
+        #    flagi = [True if self.dist( self.pointCloud[i], self.pointCloud[nbr]  ) <= 2*R  else False for nbr in r_nearest_indices[i] ] 
+        #    flags.append( all(flagi) )
          
-            #if all( flagi ): # All points within the distance of 2*R
-            #    flags.append( all(flagi)  )
+        #    #if all( flagi ): # All points within the distance of 2*R
+        #    #    flags.append( all(flagi)  )
+    
+        #return all( flags ) 
+    
+        #------------------ Bench
+        for i in range( numPoints ):
+            for j in range(len(r_nearest_indices[i])):
+                 if distances[i][j] >= 2*R :
+                      endfn   = time.time()
+                      print 'firstConditionPredicate took ' , (endfn-start) , "seconds"
+                      return False
     
         endfn   = time.time()
+        print 'firstConditionPredicate took ' , (endfn-start) , "seconds"
+        return True # non of flagis tested negative.
     
-        print 'Just the knn inside firstConditionPredicatetook ', (endknn-start), "seconds"
-        print 'firstConditionPredicate took '                   , (endfn-start) , "seconds"
-    
-        #print distances, r_nearest_indices
-    
-        #print flags
-        #sys.exit()
-    
-        return all( flags ) 
     
     def makeClusterCenters( R,
                             points = self.pointCloud, 
@@ -656,8 +660,6 @@ class AlgoAggarwalStatic:
     dijHalfsFiltered =  filter( firstConditionPredicate, dijHalfs )  #smallest to highest
     print "dijHalfsFiltered done!"
   
-    #sys.exit()
-  
     # 'FOR' Loop to find the minimum 'R' from these filtered dijs satisfying 
     #  condition 2 on page 4 of the paper. 
     bestR, bestRflowNetwork, bestRflowDict = float( 'inf' ), nx.DiGraph(), {} 
@@ -836,9 +838,9 @@ class AlgoAggarwalStaticR2L2( AlgoAggarwalStatic ):
                
    
            ax.set_aspect(1.0)
-           ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':5})
-           ax.set_xlabel('Latitude', fontdict={'fontsize':5})
-           ax.set_ylabel('Longitude',fontdict={'fontsize':5})
+           ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':15})
+           ax.set_xlabel('Latitude', fontdict={'fontsize':10})
+           ax.set_ylabel('Longitude',fontdict={'fontsize':10})
    
            #ax.get_xaxis().set_ticks( [] ,  fontdict={'fontsize':10})
            #ax.get_yaxis().set_ticks( [],  fontdict={'fontsize':10} ) 
@@ -886,7 +888,21 @@ class AlgoAggarwalStaticR2L2( AlgoAggarwalStatic ):
 
 class AlgoJieminDynamic( AlgoAggarwalStatic ):
      
-    def __init__(self, r,  pointCloud):
+    def __init__(self, r,  pointCloud,  memoizeNbrSearch = False, distances_and_indices_file=''):
+       """ Initialize the AlgoJieminDynamic
+ 
+           memoizeNbrSearch = this computes the table in the constructor itself. no need for a file. The file option below, is only useful for large runs.
+           distances_and_indices_file = must be a string identifer for the file-name on disk. 
+                                        containing the pairwise-distances and corresponding index numbers
+                                        between points. I had to appeal to this hack, since sklearn's algorithm to search in arbitrary metric spaces does not work for my case. 
+                                        Also the brute-force computation, which I initially implemented took far too long. 
+                                        Since  don't know how to do the neighbor computation for arbitrary metric spaces, I just precompute 
+                                        everything into a table, stored in a YAML file.
+       """
+
+       from termcolor import colored
+       import yaml
+
        # len(trajectories) = number of cars
        # len(trajectories[i]) = number of GPS samples taken for the ith car. For shenzhen data set this is
        # constant for all cars.
@@ -895,7 +911,47 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
        self.pointCloud           = pointCloud # Should be of type  [ [(Double,Double)] ] 
        self.computedClusterings  = []  
        self.algoName             = 'r-Gather for trajectory clustering'
-  
+       self.superSlowBruteForce  = False
+
+       if memoizeNbrSearch :
+             numpts     = len(self.pointCloud)
+             (self.nbrTable_dist, self.nbrTable_idx) = ([], [])
+
+             for i in range(numpts):
+
+                     print colored ('Calculating distance from '+str(i), 'white', 'on_magenta',['underline','bold']) 
+                     traj_i = pointCloud[i]
+                     distances_and_indices = []
+
+                     for j in range(numpts):
+              
+                          traj_j = pointCloud[j]
+                          dij = self.dist( traj_i, traj_j)
+                          distances_and_indices.append((dij,j))
+                          print '......to j= '  , j, '  dij= ', dij
+                   
+                     # Now sort the distances of all points from point i. 
+                     distances_and_indices.sort(key=lambda tup: tup[0]) # http://tinyurl.com/mf8yz5b
+                     self.nbrTable_dist.append( [ d   for (d,idx) in distances_and_indices ]  )
+                     self.nbrTable_idx.append ( [ idx for (d,idx) in distances_and_indices ]  )
+
+       elif distances_and_indices_file != '': # Non empty file name passed
+
+             print colored("Started reading neighbor file", 'white','on_magenta',['bold','underline'])              
+             stream       = open(distances_and_indices_file,'r')
+             filecontents = yaml.load(stream) # This will be a dictionary
+             print colored("Finished reading neighbor file", 'white','on_green',['bold','underline'])              
+
+             self.nbrTable_dist = filecontents['Distances']
+             self.nbrTable_idx  = filecontents['Indices']
+
+       else:
+             self.superSlowBruteForce = True
+
+
+
+
+
 
     def clearAllStates(self):
           self.r                   = None
@@ -933,56 +989,53 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
 
 
     def findNearestNeighbours(self, pointCloud, k):
-       """return the k-nearest nearest neighbours"""
-       import numpy as np
+       """Return the k-nearest nearest neighbours"""
+       import numpy as np, itertools as it
        from termcolor import colored 
-       import itertools as it
-       from sklearn.neighbors import NearestNeighbors
-
-       print "Inside findNearestNeighbor"
-       print type(pointCloud), pointCloud.shape
+       numpts = len(pointCloud)
 
        # Calling sklearn works only on R2L2 case for some reason. So for the moment, the only option is to use brute-force techniques.
-       #print colored('Calling NearestNeighbors', 'white', 'on_magenta', ['bold'])
-       #(distances, indices) = NearestNeighbors(n_neighbors = k, algorithm   = 'ball_tree', metric      = self.dist, n_jobs=-1).fit( pointCloud ).kneighbors( pointCloud ) # n_jobs=-1 means all physical cores of the machine are utilized.
-       #print colored('Finished NearestNeighbors', 'white', 'on_green', ['bold', 'underline'])
+       if self.superSlowBruteForce : 
+                  print colored('Calling Super-slow brute Force kNN' , 'white', 'on_magenta', ['bold'])
+                  
+                  distances, indices = ([], [])
+                  for i in range(numpts):
+                           traj_i = pointCloud[i]
+                           distances_and_indices = []
 
-       # numpts = len(pointCloud)   
-       # def bruteForce_kNN(k, pointCloud):
-       #      for p in pointCloud: 
-       #           distp = np.zeros( numpts, dtype='float64' )     
-       #           for (q, j) in zip(pointCloud, range(numpts)): 
-       #              distp[j] = self.dist(p, q) 
-                   
-       #print pointCloud
-       #sys.exit() 
-       #(distances, indices) = bruteForce_kNN(k, pointCloud)
-       #return distances, indices
- 
-       print colored('Calling Brute Force Neighbors', 'white', 'on_magenta', ['bold'])
-       numpts = len(pointCloud)
-       distances = []
-       indices   = []
-       for i in range(numpts):
-               traj_i = pointCloud[i]
-               distances_and_indices = []
-
-               for j in range(numpts):
+                           for j in range(numpts):
                       
-                     traj_j = pointCloud[j]
-                     dij = self.dist( traj_i, traj_j)
-                     distances_and_indices.append((dij,j))
+                                  traj_j = pointCloud[j]
+                                  dij = self.dist( traj_i, traj_j)
+                                  distances_and_indices.append((dij,j))
                 
-               # Now sort the distances of all points from point i. 
-               distances_and_indices.sort(key=lambda tup: tup[0]) # http://tinyurl.com/mf8yz5b
-               distances.append( [ d for (d,i) in distances_and_indices[0:k] ]  )
-               indices.append  ( [ i for (d,i) in distances_and_indices[0:k] ]  )
+                           # Now sort the distances of all points from point i. 
+                           distances_and_indices.sort(key=lambda tup: tup[0]) # http://tinyurl.com/mf8yz5b
+                           distances.append( [ d   for ( d,  _ ) in distances_and_indices[0:k] ]  )
+                           indices.append  ( [ idx for ( _, idx) in distances_and_indices[0:k] ]  )
        
-       #print "Distance matrix is ", np.array(distances) 
-       #print "Index matrix is  "  , np.array(indices) 
-       print colored('Finished Brute Force Neighbors', 'white', 'on_green', ['bold', 'underline'])
-       #sys.exit()
-       return distances, indices
+                  #print "Distance matrix is ", np.array(distances) 
+                  #print "Index matrix is  "  , np.array(indices) 
+                  print colored('Finished Super-slow brute Force' , 'white', 'on_green', ['bold', 'underline'])
+                  return distances, indices
+
+       else: # This means the table has already been computed or read in from a file in the constructor itself
+                  print colored('Calling  Memoized brute Force kNN' , 'white', 'on_magenta', ['bold'])
+                  
+                  #zipDistIdx = zip (self.nbrTable_dist, self.nbrTable_idx)
+                  #print zipDistIdx[0][0:k]
+
+                  distances = [ [d   for d   in self.nbrTable_dist[i][0:k]] for i in range(numpts)]        
+                  indices   = [ [idx for idx in self.nbrTable_idx[i][0:k] ] for i in range(numpts)]        
+
+                  #print "Distance matrix is ", np.array(distances) 
+                  #print "Index matrix is  "  , np.array(indices) 
+                  print colored('Finished Memoized brute Force kNN' , 'white', 'on_green', ['bold', 'underline'])
+                  return distances, indices
+
+
+
+
 
     def rangeSearch(self, pointCloud, radius):
           """ A range search routine.
@@ -997,33 +1050,53 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
           print colored("Inside trajectory rangeSearch",'white', 'on_magenta',['bold'])
 
 
-          numpts = len(pointCloud)
-          distances = []
-          indices   = []
-          for i in range(numpts):
-               traj_i = pointCloud[i]
-               distances_and_indices = []
+          numpts              = len(pointCloud)
 
-               for j in range(numpts):
+
+          if self.superSlowBruteForce:
+                
+                distances, indices = ([], [])
+                for i in range(numpts):
+                     traj_i = pointCloud[i]
+                     distances_and_indices = []
+
+                     for j in range(numpts):
                       
-                     traj_j = pointCloud[j]
-                     dij = self.dist( traj_i, traj_j)
-                     if dij < radius: # We are doing range search 
-                         distances_and_indices.append((dij,j))
+                          traj_j = pointCloud[j]
+                          dij = self.dist( traj_i, traj_j)
+                          if dij < radius: # We are doing range search 
+                                distances_and_indices.append((dij,j))
                
-               # Now sort the distances of all points from point i. 
-               distances_and_indices.sort(key=lambda tup: tup[0]) # http://tinyurl.com/mf8yz5b
+                     # Now sort the distances of all points from point i. 
+                     distances_and_indices.sort(key=lambda tup: tup[0]) # http://tinyurl.com/mf8yz5b
 
-               distances.append([distance for (distance,index) in distances_and_indices])
-               indices.append  ([index    for (distance,index) in distances_and_indices])
+                     distances.append([d   for (d, _ ) in distances_and_indices])
+                     indices.append  ([idx for (_,idx) in distances_and_indices])
        
-          #print "Radius specified was ", colored(str(radius), 'white', 'on_green', ['bold'])
-          #print "Distance matrix is \n", np.array(distances) 
-          #print "Index matrix is  \n"  , np.array(indices) 
-          print colored('Finished rangeSearch Neighbors', 'magenta', 'on_grey', ['bold', 'underline'])
-          return distances, indices
+                #print "Radius specified was ", colored(str(radius), 'white', 'on_green', ['bold'])
+                #print "Distance matrix is \n", np.array(distances) 
+                #print "Index matrix is  \n"  , np.array(indices) 
+                print colored('Finished rangeSearch Neighbors', 'magenta', 'on_grey', ['bold', 'underline'])
+                return distances, indices
 
-    
+          else: # This means the table has already been computed or read in from a file in the constructor itself
+                print colored('Calling  Memoized brute Force rangeSearch' , 'yellow', 'on_magenta', ['bold'])
+                  
+                distances, indices = ([], [])
+ 
+                for i in range(numpts):
+                       d_npbr   = self.nbrTable_dist[i]
+                       idx_npbr = self.nbrTable_idx[i]
+                       distances_and_indices = zip ( d_npbr, idx_npbr  )
+
+                       distances.append([d   for (d ,  _ ) in distances_and_indices if d<radius ])  
+                       indices.append  ([idx for (d , idx) in distances_and_indices if d<radius ])
+
+                #print "Distance matrix is ", np.array(distances) 
+                #print "Index matrix is  "  , np.array(indices) 
+                print colored('Finished Memoized brute Force rangeSearch' , 'yellow', 'on_blue', ['bold', 'underline'])
+                return distances, indices
+   
     def plotClusters(self,  ax            , 
                      trajThickness  = 10 , 
                      marker         = 'o' , 
