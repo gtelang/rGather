@@ -449,7 +449,8 @@ class AlgoAggarwalStatic:
     
         # Team Sklearn
         start = time.time()
-        distances, r_nearest_indices = self.findNearestNeighbours( self.pointCloud, self.r  )      
+        distances, r_nearest_indices = self.findNearestNeighbours( self.pointCloud, self.r  ) # This is the bottleneck inside your code.      
+        endknn = time.time()
     
         flags = []
         for i in range( numPoints ):
@@ -459,8 +460,10 @@ class AlgoAggarwalStatic:
             #if all( flagi ): # All points within the distance of 2*R
             #    flags.append( all(flagi)  )
     
-        end   = time.time()
-        print (end-start), " seconds"
+        endfn   = time.time()
+    
+        print 'Just the knn inside firstConditionPredicatetook ', (endknn-start), "seconds"
+        print 'firstConditionPredicate took '                   , (endfn-start) , "seconds"
     
         #print distances, r_nearest_indices
     
@@ -483,24 +486,21 @@ class AlgoAggarwalStatic:
      
           # Warning: The n_neighbors=r was chosen by me arbitrarily. Without this, the default parameter chosen by sklearn is 5
           # Might have to do replace this with something else in the future me thinks.  
-          nbrs_datastructure = NearestNeighbors (n_neighbors=r, radius=2*R , algorithm='ball_tree',metric=self.dist , n_jobs=-1).fit( points ) 
+          #nbrs_datastructure = NearestNeighbors (n_neighbors=r, radius=2*R , algorithm='ball_tree',metric=self.dist , n_jobs=-1).fit( points ) 
           # See note above. It might be very important! 
           # The following while loop replacement to the confusing tangle spelled out in the Aggarwal 
           # paper was suggested by Jie and Jiemin in the email thread with Rik, after I cried for help. 
+    
+          # First get all the points within distance 2*R for EVERY point in the cloud.
+          (_, idx_nbrs_2R) = self.rangeSearch( points, 2.0*R )
           while( all( markers ) !=  True ): 
                
               unmarkedIndices =  [ index for ( index,boolean ) 
                                          in zip( range( numPoints ), markers) 
                                          if boolean == False ]
            
-              randomIndex = random.choice ( unmarkedIndices ) 
-    
-              # WARNING: THE INDICES ARE NOT SORTED ACCORDING TO THE DISTANCE FROM the RANDOMINDEX point
-              (_, idx_nbrs) = nbrs_datastructure.radius_neighbors( X=[points[randomIndex]], radius=2*R ) 
-              # this list needs to be analysed properly.
-             
-              ball2R_neighbor_list = idx_nbrs[0]
-             
+              randomIndex          = random.choice ( unmarkedIndices ) 
+              ball2R_neighbor_list = idx_nbrs_2R[randomIndex]
               #print ball2R_neighbor_list 
      
               # Mark all the neighbours including the point itself. 
@@ -639,10 +639,10 @@ class AlgoAggarwalStatic:
         # Make sure all points have been covered in the clustering
         return clusterings
   
-    #print "Started filtering!"
+    print "Started filtering!"
   
     #print "The points are ", points   
-    #print "Number of points", numPoints
+    #print "Number of points are", numPoints
   
     #import sys
     #sys.exit()
@@ -656,13 +656,18 @@ class AlgoAggarwalStatic:
     dijHalfsFiltered =  filter( firstConditionPredicate, dijHalfs )  #smallest to highest
     print "dijHalfsFiltered done!"
   
+    #sys.exit()
+  
     # 'FOR' Loop to find the minimum 'R' from these filtered dijs satisfying 
     #  condition 2 on page 4 of the paper. 
     bestR, bestRflowNetwork, bestRflowDict = float( 'inf' ), nx.DiGraph(), {} 
     bestRCenters = []
   
-    for R in dijHalfsFiltered : # The first R that goes through the else block is the required R
+    from termcolor import colored
   
+    for R in dijHalfsFiltered : # The first R that goes through the else block is the required R
+     
+      print colored(str(R) + 'is being tested', 'red', 'on_white', ['underline', 'bold'])
       clusterCenters = makeClusterCenters( R )
       flowNetwork    = makeFlowNetwork( R, clusterCenters )
   
@@ -907,149 +912,180 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
        of a car, then the distance between two trajectories is the max of L infinity norm of the difference of two 
        columns. 
 
-       p,q :: [(Double,Double)]. The length of p or q, indicates the number of GPS samples taken
+       p,q :: [ [Double,Double] ]. The length of p or q, indicates the number of GPS samples taken
        
        """
+       #print "Inside distance function"
+       #print "p is ", p.shape, ' ' , p
+       #print "q is ", q.shape, ' ' , q
+
        dpq = 0
        for t in range(len(p)):
-            
             # M is the euclidean distance between two points at time t.  
             M = np.sqrt( abs( (p[t][0]-q[t][0])**2 + (p[t][1]-q[t][1])**2 ) ) 
             if M > dpq:
                 dpq = M
-
+       
+       #print p, q, dpq, ' ' , np.sqrt( (p[0][0]-q[0][0])**2 + (p[0][1]-q[0][1])**2)
+       #from termcolor import colored 
+       #print colored( str(dpq) , 'white', 'on_red', ['bold'] ) # This to make sure that dpq being returned is a sane number.
        return dpq
 
 
     def findNearestNeighbours(self, pointCloud, k):
        """return the k-nearest nearest neighbours"""
        import numpy as np
+       from termcolor import colored 
+       import itertools as it
        from sklearn.neighbors import NearestNeighbors
 
-       # build a data-structure for fast retrieval
-       (distances, indices) = NearestNeighbors(n_neighbors = k, 
-                                               algorithm   = 'ball_tree', 
-                                               metric      = self.dist, 
-                                               n_jobs=-1).fit( pointCloud ).kneighbors( pointCloud )
        print "Inside findNearestNeighbor"
+       print type(pointCloud), pointCloud.shape
+
+       # Calling sklearn works only on R2L2 case for some reason. So for the moment, the only option is to use brute-force techniques.
+       #print colored('Calling NearestNeighbors', 'white', 'on_magenta', ['bold'])
+       #(distances, indices) = NearestNeighbors(n_neighbors = k, algorithm   = 'ball_tree', metric      = self.dist, n_jobs=-1).fit( pointCloud ).kneighbors( pointCloud ) # n_jobs=-1 means all physical cores of the machine are utilized.
+       #print colored('Finished NearestNeighbors', 'white', 'on_green', ['bold', 'underline'])
+
+       # numpts = len(pointCloud)   
+       # def bruteForce_kNN(k, pointCloud):
+       #      for p in pointCloud: 
+       #           distp = np.zeros( numpts, dtype='float64' )     
+       #           for (q, j) in zip(pointCloud, range(numpts)): 
+       #              distp[j] = self.dist(p, q) 
+                   
+       #print pointCloud
+       #sys.exit() 
+       #(distances, indices) = bruteForce_kNN(k, pointCloud)
+       #return distances, indices
+ 
+       print colored('Calling Brute Force Neighbors', 'white', 'on_magenta', ['bold'])
+       numpts = len(pointCloud)
+       distances = []
+       indices   = []
+       for i in range(numpts):
+               traj_i = pointCloud[i]
+               distances_and_indices = []
+
+               for j in range(numpts):
+                      
+                     traj_j = pointCloud[j]
+                     dij = self.dist( traj_i, traj_j)
+                     distances_and_indices.append((dij,j))
+                
+               # Now sort the distances of all points from point i. 
+               distances_and_indices.sort(key=lambda tup: tup[0]) # http://tinyurl.com/mf8yz5b
+               distances.append( [ d for (d,i) in distances_and_indices[0:k] ]  )
+               indices.append  ( [ i for (d,i) in distances_and_indices[0:k] ]  )
+       
+       #print "Distance matrix is ", np.array(distances) 
+       #print "Index matrix is  "  , np.array(indices) 
+       print colored('Finished Brute Force Neighbors', 'white', 'on_green', ['bold', 'underline'])
+       #sys.exit()
        return distances, indices
 
-
     def rangeSearch(self, pointCloud, radius):
-        print "Warning! Rangesearch used for trajectories"
-        pass
+          """ A range search routine.
+          Given a point-cloud, return the neighbours within a distance of 'radius'
+          for every element of the pointcloud. return the neighbour indices , sorted 
+          according to distance. """
+          import numpy as np
+          from termcolor import colored 
+          import itertools as it
+          import sys
+
+          print colored("Inside trajectory rangeSearch",'white', 'on_magenta',['bold'])
 
 
-    
-    
-    def plotClusters(self,  ax    , 
-                   pointSize=200, 
-                   marker='o'   , 
-                   pointCloudInfo='',
-                   annotatePoints=True):
-        
-    
-          from scipy import spatial
-          import numpy as np, matplotlib as mpl
-          import matplotlib.pyplot as plt
-     
-          # Plot point-cloud 
-          xs = [x for (x,y) in self.pointCloud]
-          ys = [y for (x,y) in self.pointCloud]
-          ax.plot(xs,ys,'bo', markersize=3) 
-          ax.set_aspect(1.0)    
-    
-          if annotatePoints==True:
-                # Annotate each point with a corresponding number. 
-                numPoints = len(xs)
-                labels = ['{0}'.format(i) for i in range(numPoints)]
-                
-                for label, x, y in zip(labels, xs, ys):
-                      ax.annotate(  label                       , 
-                                    xy         = (x, y)         , 
-                                    xytext     = (-3, 0)      ,
-                                    textcoords = 'offset points', 
-                                    ha         = 'right'        , 
-                                    va         = 'bottom')
+          numpts = len(pointCloud)
+          distances = []
+          indices   = []
+          for i in range(numpts):
+               traj_i = pointCloud[i]
+               distances_and_indices = []
+
+               for j in range(numpts):
                       
+                     traj_j = pointCloud[j]
+                     dij = self.dist( traj_i, traj_j)
+                     if dij < radius: # We are doing range search 
+                         distances_and_indices.append((dij,j))
+               
+               # Now sort the distances of all points from point i. 
+               distances_and_indices.sort(key=lambda tup: tup[0]) # http://tinyurl.com/mf8yz5b
+
+               distances.append([distance for (distance,index) in distances_and_indices])
+               indices.append  ([index    for (distance,index) in distances_and_indices])
+       
+          #print "Radius specified was ", colored(str(radius), 'white', 'on_green', ['bold'])
+          #print "Distance matrix is \n", np.array(distances) 
+          #print "Index matrix is  \n"  , np.array(indices) 
+          print colored('Finished rangeSearch Neighbors', 'magenta', 'on_grey', ['bold', 'underline'])
+          return distances, indices
+
     
-          # Overlay with cluster-groups.
-          for s in self.computedClusterings:
-          
-            clusterColor = getRandomColor()
-            xc = [ xs[i]  for i in s   ]
-            yc = [ ys[i]  for i in s   ]
-    
-            # Mark all members of a cluster with a nice fat dot around it. 
-            #ax.scatter(xc, yc, c=clusterColor, 
-            #           marker=marker, 
-            #           s=pointSize) 
-    
-            #ax.plot(xc,yc, alpha=0.5, markersize=1 , markerfacecolor=clusterColor , linewidth=0)
-            #ax.set_aspect(1.0)
-    
-            # For some stupid reason sp.spatial.ConvexHull requires at least three points for computing the convex hull. 
-            
-            if len(xc) >= 3 : 
-                  hull = spatial.ConvexHull(  np.array(zip(xc,yc)) , qhull_options="QJn" ) # Last option because of this http://stackoverflow.com/q/30132124/505306
-                  hullPoints = np.array( zip( [ xc[i] for i in hull.vertices ],  
-                                              [ yc[i] for i in hull.vertices ] ) )
-                  ax.add_patch( mpl.patches.Polygon(hullPoints, alpha=0.5, 
-                                                    facecolor=clusterColor) )
-           
-    
-            elif len(xc) == 2:
-                   ax.plot( xc,yc, color=clusterColor )
-                
-    
-            ax.set_aspect(1.0)
-            ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':5})
-            ax.set_xlabel('Latitude', fontdict={'fontsize':5})
-            ax.set_ylabel('Longitude',fontdict={'fontsize':5})
-    
-            #ax.get_xaxis().set_ticks( [] ,  fontdict={'fontsize':10})
-            #ax.get_yaxis().set_ticks( [],  fontdict={'fontsize':10} ) 
-    
-            ax.grid(b=True)
-    
-    
-    
-    
-    def plotStatistics(self, axStatsDict ):
-       """ axStatsDict, specifies the mapping of axes objects to the statistic
-           being plotted.""" 
-    
-       def plotConvexHullDiameters(ax):
-          pass
-      
-       def plotMinBoundingCircleDiameters(ax):
-          pass
-    
-       def plotClusterPopulationSizes(ax):
-          barHeights = map(len, self.computedClusterings )
-          numBars    = len(barHeights)
-    
-          ax.bar( range(numBars) ,barHeights, width=1.0, align='center')
-          ax.set_title('Number of points per Cluster', fontdict={'fontsize':30})
-    
-          ax.set_aspect(1.0)
-          ax.grid(b=True)
-    
-       for ax, statistic in axStatsDict.iteritems():
-           
-            if statistic == 'convexHullDiameters': 
-               plotConvexHullDiameters(ax) 
-            
-            elif statistic == 'minBoundingCircleDiameters':
-               plotMinBoundingCircleDiameters(ax)
-    
-            elif statistic == 'clusterPopulationSizes':
-               plotClusterPopulationSizes(ax)
-    
-            else:
-               pass
-    
-    
+    def plotClusters(self,  ax            , 
+                     trajThickness  = 10 , 
+                     marker         = 'o' , 
+                     pointCloudInfo = ''  ,
+                     annotatePoints = False):
+        """ Plot the trajectory clusters computed by the algorithm."""
+
+        def get_spaced_colors(n):
+               """Get n evenly spaced colors"""
+  
+               return [(int(i[:2], 16), int(i[2:4], 16), int(i[4:], 16)) for i in colors]
+
+
+
+        from scipy import spatial
+        import numpy as np, matplotlib as mpl
+        import matplotlib.pyplot as plt
+        import colorsys
+        import itertools
+
+        trajectories = self.pointCloud
+        numCars      = len(trajectories)
+        numClusters  = len(self.computedClusterings)
+
+        # Generate equidistant colors
+        colors       = [(x*1.0/numClusters, 0.5, 0.5) for x in range(numClusters)]
+        colors       = map(lambda x: colorsys.hsv_to_rgb(*x), colors)
+
+        marker_pool  = ["o", "v", "s", "x", "h", "D"]
+         
+
+        for clusIdx, cluster in enumerate(self.computedClusterings):
+             clusterColor = colors[clusIdx]  # np.random.rand(3,1)
+
+             for carIdx in cluster:
+                    xdata = [point[0] for point in trajectories[carIdx]]
+                    ydata = [point[1] for point in trajectories[carIdx]]
+
+                    # Every line in a cluster gets a unique color     
+                    line, = ax.plot(xdata, ydata, '-')
+                    line.set_color(clusterColor)
+ 
+                    # Cluster center i.e. cluster[0] is made bolder and thicker. Think of it as a highway
+                    isClusterCenter = (carIdx == cluster[0])
+                    line.set_linewidth(trajThickness + 3*isClusterCenter)
+                    line.set_alpha(0.5 + 0.5*isClusterCenter)
+ 
+                    # Only highways are marked with markers 
+                    if isClusterCenter:
+                         line.set_marker(marker_pool[clusIdx])
+                         line.set_markersize(14)
+                         line.set_markeredgewidth(2)
+                         line.set_markeredgecolor('k')
+                         #line.set_markevery(3)
+                    
+
+
+        ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':20})
+        ax.set_xlabel('Latitude', fontdict={'fontsize':5})
+        ax.set_ylabel('Longitude',fontdict={'fontsize':5})
+        ax.grid(b=True)
+
 
 
 def getRandomColor():
