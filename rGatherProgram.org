@@ -1177,7 +1177,7 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
             import numpy as np
             from termcolor import colored 
             import itertools as it
-            import sys
+            import sys, time
 
             print colored("Inside trajectory rangeSearch",'white', 'on_magenta',['bold'])
 
@@ -1214,16 +1214,31 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
             else: # This means the table has already been computed or read in from a file in the constructor itself
                   print colored('Calling  Memoized brute Force rangeSearch' , 'yellow', 'on_magenta', ['bold'])
                     
+                  start = time.time()
                   distances, indices = ([], [])
- 
+                         
                   for i in range(numpts):
-                         d_npbr   = self.nbrTable_dist[i]
-                         idx_npbr = self.nbrTable_idx[i]
+                         d_npbr   = np.array(self.nbrTable_dist[i])
+                         idx_npbr = np.array(self.nbrTable_idx[i], dtype=int)
                          distances_and_indices = zip ( d_npbr, idx_npbr  )
 
-                         distances.append([d   for (d ,  _ ) in distances_and_indices if d<radius ])  
-                         indices.append  ([idx for (d , idx) in distances_and_indices if d<radius ])
+                         #################################### Bench
+                         tmpd   = []
+                         tmpidx = []
+                         for (d, idx) in distances_and_indices:
+                                if d<radius:
+                                      tmpd.append(d)
+                                      tmpidx.append(idx)
 
+                         distances.append(tmpd)
+                         indices.append(tmpidx)                
+
+                         ######################################### Gold : But this compares distance twice 
+                         #distances.append([d   for (d ,  _ ) in distances_and_indices if d<radius ])  
+                         #indices.append  ([idx for (d , idx) in distances_and_indices if d<radius ])
+
+                  end = time.time()       
+                  print "Time taken for Range Search is ", end-start
                   #print "Distance matrix is ", np.array(distances) 
                   #print "Index matrix is  "  , np.array(indices) 
                   print colored('Finished Memoized brute Force rangeSearch' , 'yellow', 'on_blue', ['bold', 'underline'])
@@ -1235,13 +1250,6 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
                        pointCloudInfo = ''  ,
                        annotatePoints = False):
           """ Plot the trajectory clusters computed by the algorithm."""
-
-          def get_spaced_colors(n):
-                 """Get n evenly spaced colors"""
-    
-                 return [(int(i[:2], 16), int(i[2:4], 16), int(i[4:], 16)) for i in colors]
-
-
 
           from scipy import spatial
           import numpy as np, matplotlib as mpl

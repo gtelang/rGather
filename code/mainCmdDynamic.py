@@ -20,10 +20,10 @@ import matplotlib as mpl, colorsys
 from scipy import io
 
 # We can choose an arbitrary subset of cars. Specify the corresponding the column numbers in indicesOfCarsPlotted
-indicesOfCarsPlotted  = range(9000,9040)
-nbrFile               = './DynamicInput/distIdx_cars_40_samples_40_@9000_9040.yaml'
-numSamples            = 40 # all_lats.shape[0] # Total number of GPS samples for each car. 
-r                     = 3
+indicesOfCarsPlotted  = range(9000,9030)
+nbrFile               = './DynamicInput/distIdx_cars_30_samples_5_@9000_9030.yaml'
+numSamples            = 5 # all_lats.shape[0] # Total number of GPS samples for each car. 
+r                     = 2
 
 
 
@@ -86,5 +86,5 @@ print run.computedClusterings
 
 # Colour all trajectories in one group with the same colour. 
 fig, ax = plt.subplots()
-run.plotClusters( ax, trajThickness=6 ) 
+run.plotClusters( ax, trajThickness=2 ) 
 plt.show()
