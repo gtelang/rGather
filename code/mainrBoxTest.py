@@ -1,3 +1,4 @@
+#!/home/gaurish/anaconda2/bin/ipython2
 import rGather as rg
 import numpy as np
 import matplotlib.pyplot as plt
@@ -135,7 +136,7 @@ ax[0].grid( b=True )
 ax[1].grid( b=True )
 
 r = 5
-pointCloud = givePoints('rbox 30 D2')
+pointCloud = givePoints('rbox 120 D2')
 run1 = rg.AlgoAggarwalStaticR2L2(r=r, pointCloud=pointCloud) 
 run2 = rg.AlgoJieminDecentralizedStatic( r=r, pointCloud = pointCloud ) 
 

@@ -36,11 +36,11 @@ indicesOfCarsPlotted  =  range(9000,9030)
 numCars               =  len(indicesOfCarsPlotted)
 
 # Time interval between successive frames for rendering in milliseconds.
-dtFrame = 150
+dtFrame = 1550
 
 # To turn of the visualization of the trajectory trail set this to zero
 # These are alpha values which should lie in the interval [0,1]
-lineTransparency   = 0.15
+lineTransparency   = 0.55
 markerTransparency = 1.0
 
 
@@ -122,6 +122,6 @@ def animateData(state, fig, ax):
 # Ensures better speed
 
 anim = animation.FuncAnimation(fig, animateData, rGather(),
-                               init_func=init, interval=100, blit=True, fargs=(fig,ax))
+                               init_func=init, interval=200, blit=True, fargs=(fig,ax))
 #anim.save('shenzen_150.mp4', fps=5, extra_args=['-vcodec', 'libx264'])
 plt.show()

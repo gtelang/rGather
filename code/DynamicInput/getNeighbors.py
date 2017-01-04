@@ -1,4 +1,4 @@
-
+#!/home/gaurish/anaconda2/bin/ipython2
 # To load the file generated with this code, do
 # stream = open('distances_and_indices.yaml','r')
 # filecontents = yaml.load(stream) # This will be a dictionary
@@ -15,11 +15,10 @@ from termcolor import colored
 # ----------------------------------------------------------------------
 
 indicesOfCarsPlotted  = range(firstCarIdx, lastCarIdx)
-nbrFile_prefix        = 'distIdx'
+nbrFile_prefix        = 'samples_'
 numCars               = len(indicesOfCarsPlotted) 
 
-nbrFile               = nbrFile_prefix + '_cars_'    + str(numCars) \
-                                       + '_samples_' + str(numSamples) \
+nbrFile               = nbrFile_prefix + str(numSamples) \
                                        + '_@' + str(firstCarIdx) + '_' + str(lastCarIdx) \
                                        + '.yaml'
 
@@ -69,9 +68,14 @@ for i in range(numpts):
 
 print colored('Finished Brute Force Neighbors !!', 'white', 'on_green', ['bold', 'underline'])
 
+
+
 stream = file( nbrFile , 'w') # Write all data to file.
 print yaml.dump({'Metadata' : { 'Cars: '     : str(numCars), \
                                 ' Samples: ': str(numSamples), \
                                 ' Range:  ': str([firstCarIdx,lastCarIdx])}, 
                  'Distances': distances,
                  'Indices'  : indices}, stream)
+
+print nbrFile
+print "Data dumped yay!"

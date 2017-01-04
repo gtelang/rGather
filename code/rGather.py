@@ -667,7 +667,7 @@ class AlgoAggarwalStatic:
   
     from termcolor import colored
   
-    for R in dijHalfsFiltered : # The first R that goes through the else block is the required R
+    for R in sorted(dijHalfsFiltered) : # The first R that goes through the else block is the required R
      
       print colored(str(R) + 'is being tested', 'red', 'on_white', ['underline', 'bold'])
       clusterCenters = makeClusterCenters( R )
@@ -680,24 +680,30 @@ class AlgoAggarwalStatic:
             print Fore.RED, "Unfeasible R detected: R= ", R, Style.RESET_ALL
             continue 
       else: # Found a feasible R.  
-          print "Found a feasible R! R= ", R
-          if R < bestR: # Yippee a smaller and feasible R! Update bestR. 
-              print Fore.RED, " In fact, it is the best thus far ", Style.RESET_ALL 
-              bestR            = R
-              bestRflowNetwork = flowNetwork
-              bestRflowDict    = flowDict
-              bestRCenters     = clusterCenters
-  
+          print "Found an feasible R! R= ", R
+          print Fore.RED, " In fact, it is the best thus far ", Style.RESET_ALL 
+          bestR            = R
+          bestRflowNetwork = flowNetwork
+          bestRflowDict    = flowDict
+          bestRCenters     = clusterCenters
+          break 
   
     #Use the best network to construct the needed clusters. 
-    self.computedClusterings = makeClusters( bestRflowDict, bestRCenters, bestRflowNetwork, R)
+    self.computedClusterings = makeClusters( bestRflowDict, bestRCenters, bestRflowNetwork, bestR)
   
     # Sanity check on the computed clusters. They should all be of size r and should cover the full point set
     assert( all( [ len(cluster) >= self.r for cluster in self.computedClusterings ] ) )
     assert( len( { i for cluster in self.computedClusterings for i in cluster } ) == numPoints   )
     print Fore.YELLOW, "Yay All points Covered!!", Style.RESET_ALL
-   
+  
     print "BestRCenters are ", bestRCenters 
+  
+    # Print the clusters along with their sizes
+    print colored(str(len(self.computedClusterings)) + ' have been computed on ' + \
+                  str(len(self.pointCloud)) + ' elements' , 'magenta',  attrs=['bold', 'underline'] )
+    for i, cluster in enumerate(self.computedClusterings):
+        print "Cluster(", i+1, ") Size:", len(cluster), "  ", np.array( cluster ) 
+   
     return  bestRCenters
 
 
@@ -949,10 +955,6 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
              self.superSlowBruteForce = True
 
 
-
-
-
-
     def clearAllStates(self):
           self.r                   = None
           self.pointCloud          = [] 
@@ -1123,7 +1125,7 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
         import numpy as np, matplotlib as mpl
         import matplotlib.pyplot as plt
         import colorsys
-        import itertools
+        import itertools as it
 
         trajectories = self.pointCloud
         numCars      = len(trajectories)
@@ -1133,7 +1135,8 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
         colors       = [(x*1.0/numClusters, 0.5, 0.5) for x in range(numClusters)]
         colors       = map(lambda x: colorsys.hsv_to_rgb(*x), colors)
 
-        marker_pool  = ["o", "v", "s", "x", "h", "D"]
+        # An iterator tht creates an infinite list.Ala Haskell's cycle() function.
+        marker_pool  =it.cycle (["o", "v", "s", "D", "h", "x"])
          
 
         for clusIdx, cluster in enumerate(self.computedClusterings):
@@ -1144,9 +1147,10 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
                     ydata = [point[1] for point in trajectories[carIdx]]
 
                     # Every line in a cluster gets a unique color     
-                    line, = ax.plot(xdata, ydata, '-')
+                    line, = ax.plot(xdata, ydata, 'o-')
                     line.set_color(clusterColor)
- 
+                    line.set_markeredgecolor('k')
+
                     # Cluster center i.e. cluster[0] is made bolder and thicker. Think of it as a highway
                     isClusterCenter = (carIdx == cluster[0])
                     line.set_linewidth(trajThickness + 3*isClusterCenter)
@@ -1154,7 +1158,7 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
  
                     # Only highways are marked with markers 
                     if isClusterCenter:
-                         line.set_marker(marker_pool[clusIdx])
+                         line.set_marker( next(marker_pool) )
                          line.set_markersize(14)
                          line.set_markeredgewidth(2)
                          line.set_markeredgecolor('k')
@@ -1163,11 +1167,99 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
 
 
         ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':20})
-        ax.set_xlabel('Latitude', fontdict={'fontsize':5})
-        ax.set_ylabel('Longitude',fontdict={'fontsize':5})
-        ax.grid(b=True)
+        ax.set_xlabel('Latitude', fontdict={'fontsize':15})
+        ax.set_ylabel('Longitude',fontdict={'fontsize':15})
+        #ax.grid(b=True)
 
 
+    def animateClusters(self, ax, fig, lats, longs,
+                     interval_between_frame=200,
+                     lineTransparency   = 0.55,
+                     markerTransparency = 1.0,
+                     saveAnimation=False):
+       """Instead of viewing the trajectories like a bowl of spaghetti, watch them 
+       evolve in time. Each cluster gets assigned a unique color just like in plotClusters
+       interval_between_frames is in milliseconds.
+       """ 
+       print lats, longs
+       numCars      = len(self.pointCloud)
+       numClusters  = len(self.computedClusterings)
+       numSamples   = len(self.pointCloud[0])
+       
+       # Generate equidistant colors
+       colors       = [(x*1.0/numClusters, 0.5, 0.5) for x in range(numClusters)]
+       colors       = map(lambda x: colorsys.hsv_to_rgb(*x), colors)
+       
+       
+       # For each car create a trajectory object. 
+       trajectories = []
+       for clusIdx, cluster in enumerate(self.computedClusterings):
+           print "Setting line"
+           linecolor = colors[clusIdx]
+           linecolor = ( linecolor[0], linecolor[1], linecolor[2] , lineTransparency) # Augment with a transparency
+           markercolor = (linecolor[0], linecolor[1], linecolor[2], markerTransparency)
+       
+           for traj in cluster:
+               print "---< Line Set"
+               line, = ax.plot([],[], lw=3, markerfacecolor=markercolor, markersize=5)
+               line.set_marker('o')
+               line.set_c(linecolor)
+       
+               trajectories.append(line)
+       
+       #ax.set_title('r= ' + str(self.r) + + ' Clusters= ', str(numClusters), fontdict={'fontsize':40})
+       ax.set_xlabel('Latitude', fontdict={'fontsize':20})
+       ax.set_ylabel('Longitude', fontdict={'fontsize':20})
+       
+       # A special dumb initial function.
+       # Absolutely essential if you do blitting
+       # otherwise it will call the generator as an
+       # initial function, leading to trouble
+       def init():
+           #global ax
+           print "Initializing "
+           return ax.lines
+       
+       # Update the state of rGather
+       def rGather():
+           """ Run the online r-gather algorithm as the cars
+           move around. TODO: Make this function itself call
+           another generator which is revealing the data piece
+           by piece. Generators all the way down! Chaining of
+           several functions and lazy evaluation!!
+           """
+           for i in range(numSamples):
+               for car in range(numCars):
+                   xdata = lats [0:i+1,car]
+                   ydata = longs[0:i+1,car]
+                   trajectories[car].set_data( xdata, ydata )
+       
+               yield trajectories, i
+       
+       
+       # Separating the animateData and the rGather generator function allows
+       def animateData(state, fig, ax):
+           """ Render the trajectories rendered by the rGather algorithms
+           and add fancy effects.
+           """
+           trajectories = state[0] # All trajectories
+           currentTime  = state[1] # The time at which to animate
+       
+           if currentTime > 1:
+               for car in range(len(trajectories)):
+                   trajectories[car].set_markevery(  (currentTime,currentTime)  )
+       
+           return trajectories
+       
+       # Call the animator.  blit=True means only re-draw the parts that have changed.
+       # Ensures better speed
+       
+       anim = animation.FuncAnimation(fig, animateData, rGather(),
+                                      init_func=init, interval=200, blit=False, fargs=(fig,ax))
+       # The draw commands are very important for the animation to be rednered.
+       fig.canvas.draw()
+       plt.show()
+       #anim.save('shenzen_show.mp4', fps=5, extra_args=['-vcodec', 'libx264'])
 
 def getRandomColor():
     """ Ripped from http://goo.gl/SMlEaU"""
