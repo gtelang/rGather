@@ -1,5 +1,4 @@
-#!/home/gaurish/anaconda2/bin/ipython2
-
+#!/home/gaurish/anaconda2/bin/python2
 # In the paper we show that the 2-approximation rGather problem applies to
 # trajectory data with zero regroupings. When we allow  max of k regroupings
 # there is a nice, Dyanmic programming algorithm which we also implement.
@@ -23,11 +22,22 @@ from scipy import io
 import os.path
 from termcolor import colored
 print colored("Script started",'yellow','on_blue')
+import argparse
+
+# https://docs.python.org/2/library/argparse.html#module-argparse
+parser = argparse.ArgumentParser(prog='mainGuiDynamic.py',formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+parser.add_argument('-memFlag' , type=bool, default=True, help='Memoize the neighbor search')
+parser.add_argument('-range'   , nargs=2  , type=int    , default=[9000, 9050], help='Ending Index from Shenzen data set')
+parser.add_argument('-samples' , type=int , default=20  , help='Number of Samples')
+parser.add_argument('-r'       , type=int , default=2   , help='Minimum number of elements per cluster')
+args = parser.parse_args()
+
 #We can choose an arbitrary subset of cars. Specify the corresponding the column numbers in indicesOfCarsPlotted
-memFlag = True
-indicesOfCarsPlotted  = range(350, 400)
-numSamples            = 150# all_lats.shape[0] # Total number of GPS samples for each car. 
-r                     = 5
+memFlag               = args.memFlag
+indicesOfCarsPlotted  = range(args.range[0], args.range[1])#range(350, 400)
+numSamples            = args.samples # All_lats.shape[0] # Total number of GPS samples for each car. 
+r                     = args.r
 
 #Extract integers from the file-name. From http://stackoverflow.com/a/4289348
 # nbrFile ='samples_10_@90_160.yaml' 
@@ -74,8 +84,6 @@ def checkTriangleInequality(points, distFn):
 
 
 
-		    
-
 numCars = len(indicesOfCarsPlotted) # Total number of cars selected to run the data on.
 
 # Trajectory data from Shenzhen
@@ -88,9 +96,6 @@ all_longs = data.get('long') # Longitudes of ALL cars in the data
 # albeit give us a low-resolutiom image.
 lats  = all_lats  [ np.ix_( range(0, numSamples), indicesOfCarsPlotted) ]
 longs = all_longs [ np.ix_( range(0, numSamples), indicesOfCarsPlotted) ]
-
-
-
 
 
 # Traverse the excel sheet column by column
@@ -119,7 +124,7 @@ run.plotClusters( ax, trajThickness=2 )
 def wrapperkeyPressHandler( fig, ax, keyStack=[] ): # the key-stack argument is mutable! I am using this hack to my advantage.
     def _keyPressHandler(event):
         if event.key in ['r', 'R']: # Signal to start entering an r-value
-            
+
             run.clearComputedClusteringsAndR() # Neighbor map remain intact.
             keyStack.append('r')
 
@@ -157,10 +162,7 @@ def wrapperkeyPressHandler( fig, ax, keyStack=[] ): # the key-stack argument is 
 		run.animateClusters(ax, fig, lats, longs)
 		fig.canvas.draw()
 
-	   
-
     return _keyPressHandler
-
 
 
 keyPress     = wrapperkeyPressHandler(fig, ax)
