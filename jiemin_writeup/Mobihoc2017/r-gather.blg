@@ -1,0 +1,145 @@
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: r-gather.aux
+The style file: ACM-Reference-Format.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Database file #1: r-gather.bib
+Database file #2: privacy.bib
+Database file #3: jie.bib
+Repeated entry---line 3227 of file jie.bib
+ : @inproceedings{abraham04LLS
+ :                            ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 3363 of file jie.bib
+ : @inproceedings{basagni99distributed
+ :                                    ,
+I'm skipping whatever remains of this entry
+I was expecting a `,' or a `}'---line 6749 of file jie.bib
+ :     
+ :     howpublished="arXiv:0812.0197v1 [cs.CG]",
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+I was expecting a `,' or a `}'---line 8497 of file jie.bib
+ :     
+ :     pages="353--397"
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Repeated entry---line 8878 of file jie.bib
+ : @inproceedings{abraham04LLS
+ :                            ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 8977 of file jie.bib
+ : @article{gghzz-dmc-03
+ :                      
+I'm skipping whatever remains of this entry
+Repeated entry---line 9186 of file jie.bib
+ : @article{gghzz-dmc-03
+ :                      
+I'm skipping whatever remains of this entry
+You're missing a field name---line 11082 of file jie.bib
+ : 
+ : %   Author = {Dennis Overbye},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 11200 of file jie.bib
+ : 
+ : %   Author = {William P. Thurston},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 12167 of file jie.bib
+ : 
+ : %  booktitle = {4th Symposium on Networked Systems Design and Implementation (NSDI 2007)},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 13961 of file jie.bib
+ : 
+ : %   Author = {Dennis Overbye},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 14081 of file jie.bib
+ : 
+ : %   Author = {William P. Thurston},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+I was expecting a `,' or a `}'---line 14961 of file jie.bib
+ : 
+ : volume = {77},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+I was expecting a `,' or a `}'---line 15047 of file jie.bib
+ :     
+ :     author="Yosuke Okayama and Masashi Kiyomi and Ryuhei Uehara",
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Repeated entry---line 16282 of file jie.bib
+ : @article{Sweeney02
+ :                   ,
+I'm skipping whatever remains of this entry
+""" immediately follows a field name---line 20198 of file jie.bib
+ :     journal
+ :            "Diskret Analiz",
+I'm skipping whatever remains of this entry
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Warning--empty publisher in abraham04LLS
+Warning--empty address in abraham04LLS
+Warning--empty publisher in Aggarwal06achievinganonymity
+Warning--empty address in Aggarwal06achievinganonymity
+Warning--empty publisher in Basagni99distributed
+Warning--empty address in Basagni99distributed
+Warning--empty publisher in basu01mobility
+Warning--empty address in basu01mobility
+Warning--page numbers missing in both pages and numpages fields in basu01mobility
+Warning--require articleno with numpages field in Chow:2007:EPC:1784462.1784477
+Warning--require articleno with numpages field in Chow:2011:TPL:2031331.2031335
+Warning--require articleno with numpages field in Gruteser:2003:AUL:1066116.1189037
+Warning--empty address in Mokbel:2006:NCQ:1182635.1164193
+Warning--require articleno with numpages field in Mokbel:2006:NCQ:1182635.1164193
+Warning--empty year in Sarkar:2010:forms
+Warning--empty publisher in Sarkar:2010:forms
+Warning--empty address in Sarkar:2010:forms
+Warning--require articleno with numpages field in Sarkar:2010:forms
+Warning--empty publisher in 4509698
+Warning--empty address in 4509698
+You've used 22 entries,
+            5551 wiz_defined-function locations,
+            1486 strings with 20310 characters,
+and the built_in function-call counts, 25680 in all, are:
+= -- 3431
+> -- 850
+< -- 1
++ -- 262
+- -- 512
+* -- 1843
+:= -- 2677
+add.period$ -- 110
+call.type$ -- 22
+change.case$ -- 141
+chr.to.int$ -- 22
+cite$ -- 42
+duplicate$ -- 1904
+empty$ -- 1369
+format.name$ -- 388
+if$ -- 6039
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 89
+newline$ -- 237
+num.names$ -- 176
+pop$ -- 722
+preamble$ -- 1
+purify$ -- 251
+quote$ -- 0
+skip$ -- 553
+stack$ -- 0
+substring$ -- 2472
+swap$ -- 192
+text.length$ -- 405
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 308
+warning$ -- 20
+while$ -- 195
+width$ -- 0
+write$ -- 445
+(There were 16 error messages)

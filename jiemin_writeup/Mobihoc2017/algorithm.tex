@@ -1,0 +1,206 @@
+%!TEX root = r-gather.tex
+
+\section{A Distributed Algorithm for \lowercase{$r$-gather}}
+
+
+In this section, we consider the $r$-gather as a distributed computation problem. This approach is particularly relevant in the context of locations, where data is naturally spread over a spatial region, and we can use local computations at access points and local devices for anonymization and cloaking. This approach also provides better security and privacy, since it is harder for an attacker to compromise many devices spread over a large region.
+
+\subsection{Distributed Computation and Location Management}
+
+We consider the problem from an {\em edge computation} perspective, where computation is pushed away from central servers and toward the edges of the network. Computations may be carried out in mobile phones themselves, or in other local facilities, such as access points, cellular base stations or other local servers. In such setups, a mobile device may not need to perform its own computations, which may instead be performed by servers in charge of each locality. 
+
+We assume that each mobile device is capable of finding its approximate location, either from GPS or from the presence of nearby transmitters (e.g., cell towers). We also assume that the devices report their location changes to a distributed location management system such as~\cite{abraham04LLS}. Such location management systems can be modified easily to respond to range queries, such as how many nodes are present in a given area~\cite{Sarkar:2010:forms}. In the following, we assume that every node can query the location server to find nodes within any particular distance from it, and thus derive its $r$ nearest neighbors. We follow the general distributed computation terminology of a node performing computations, but,  in general, location servers may be carrying out the computations on behalf of the nodes. We give more details of location management and neighborhood queries in Subsection~\ref{subsec:dynamic}
+
+
+\subsection{Maximal Independent Neighborhoods}
+
+We assume there is a set of $n$ mobile nodes $1,2,\dots , n$, and use $p_{i}$ to denote the location of node $i$. The set $P$ is the set of locations ($p_{i}$s) of the nodes. 
+For any point $p_i$, we let $p_i^{(r)}$ denote its $r^{th}$ nearest neighbor in $P$, and we let $d_{r}(p_{i}) = \abs{p_{i} - p_{i}^{(r)}}$ denote the corresponding distance. We let $N_{r}(p_{i})$ denote the set of $r$ nodes nearest to point $p_i$, and let $N(P)=\{N(p_{i}): p_{i}\in P\}$ denote the set of such {\em $r$-neighborhoods}. If $N_{r}(p_{i}) \cap N_{r}(p_{j})=\emptyset$, we say that the $r$-neighborhoods of $p_{i}$ and $p_{j}$ are {\em independent}.
+
+%Our general strategy will be to create disks in the plane, with each disk containing at least $r$ nodes. Thus, centered at a point $p_{i}$, we consider disks of radius $d_{r}(p_{i})$, which we denote by $D_{r}(p_{i})$. We call two disks $D$ and $D^{\prime}$ independent if the nodes in them do not intersect, that is, $D\cap P \cap D^{\prime} = \emptyset$. 
+
+We let $\G$ denote the set of clusters, at any stage of our algorithm; $\G$ is initialized to $\emptyset$. 
+% NOT USED at the moment: We let $G(p_{i}) \in \G$ denote the cluster that contains node $p_{i}$. 
+We let $c_G$ denote the {\em center} of cluster $G\in \G$; the center $c_G$ may be either a node (in $P$) or another location.
+
+The basic algorithm executes the following steps to construct the set $\G$ of clusters:
+\begin{enumerate}
+\item[M1] At each point $p_{i}\in P$, compute $p_{i}^{(r)}$, $d_{r}(p_{i})$ and $N_{r}(p_{i})$.
+\item[M2] Find a maximal independent subset of neighborhoods from the set $N_{r}(P)$, add each as a cluster in $\G$, and {\em mark} the nodes (as ``clustered'') in these sets.
+\item[M3]  For any unmarked node $p_{i}\in P$, assign $p_{i}$ to the cluster $G\in\G$ whose center, $c_G$, is closest to $p_{i}$.
+%% with the nearest center, that is $\dst\argmin_{G^{j}}{\abs{p_{i}-p_{j}}}$ and mark $i$ as clustered. 
+\end{enumerate}
+
+The nodes that belong to $r$-neighborhoods of cluster centers and added to clusters in step M2 are called {\em canonical} members of the cluster, while nodes that are added in step M3, are called the {\em outer} members. 
+
+
+%In this section, we describe a 4-approximation algorithm for $r$-gather that is less centralized than the 2-approximation in \cite{Aggarwal06achievinganonymity}.  We begin with an algorithm that is not explicitly decentralized and then later detail how to do so.
+
+%Let the $r$-neighborhood of a point $p_i$ or $N_r(p_i)$ denote the set containing $p_i$ and the closest $r-1$ points to $p_i$.  Let $N$ be the set of the $r$-neighborhoods of all points in $P$.  For each $r$-neighborhood, we define a distance $R_i^r = \max_{p_j \in N_r(p_i)}||p_i - p_j||$ and we define a distance $R^r = \max_{1 \leq i \leq n}R_i^r$ among all $r$-neighborhoods.  We first find a maximal independent set $S$ of $r$-neighborhoods.  For an $r$-neighborhood $N_r(p_i)$, we name $p_i$ the center of the cluster and all other points in $N_r(p_i)$ are named the cannonical set.  Each point $p_i$ that is not in a set in $S$ must have at least one point in it's $r$-neighborhood that is in a set in $S$ (otherwise $S$ is not maximal).  We assign $p_i$ to the set of one of these points.  Such a point is named an outer member of its set.  We claim that the resulting clustering $S'$ is a 4-approximation $r$-gather clustering.  
+
+
+Next, we argue that this simple algorithm approximates an optimal clustering. Let $d_{r}^{\max} = \max_{i}{d_{r}(p_{i})}$ be the largest distance from a node to its $r^{th}$ nearest neighbor. Let $D_{OPT}$ be the diameter of the largest cluster in an optimal clustering.  We then observe
+
+\begin{observation}
+%%For any set of nodes in the plane, 
+$D_{OPT}\geq d_{r}^{\max}$.
+\end{observation}
+\begin{proof}
+Suppose $p_{i}\in P$ is a point achieving $d_{r}^{\max}$: $d_{r}(p_{i}) = d_{r}^{\max}$. Since any disk of radius less than $d_{r}^{max}$ centered at $p_{i}$ does not contain $r$ nodes, a disk that contains $p_{i}$ as well as (at least) $r-1$ other nodes must have radius at least $d_{r}^{max}/2$. Thus the diameter $D_{OPT}$ must be at least $d_{r}^{\max}$.
+\end{proof}
+
+\begin{lemma}
+For any cluster $G\in \G$ and any node $p_{i}\in G$, $|p_{i} - c_G| \leq d_r(p_{i})+d_r^{\max}$.   % $ d_r(p_{i})+d_r(c_G)$.
+%%  distance from $x$ to $j$ is bounded by $\abs{p_{x} - p_{j}}\leq d_{r}(p_{j}) + d_{r}(p_{x})$. 
+\label{lem:local-lemma}
+\end{lemma}
+\begin{proof}
+Consider a cluster $G\in\G$, centered at $c_G$, and $p_{i}\in G$. 
+
+If $p_{i}$ was assigned to cluster $G$ in step M2, then we know that $p_{i}\in N_r(c_G)$, implying that $|p_{i} - c_G| \leq d_r(c_G) \leq d_r(p_{i})+ d_r(c_G)$.
+
+% All nodes added to $G$ in step M2 of the algorithm are within a distance $d_{r}(c_G)$ of $c_G$; thus, all nodes in $G$ are within distance $2d_{r}(c_G)$ of each other. 
+
+If $p_{i}$ was not assigned to cluster $G$ in step M2, but was instead assigned to $G$ in step M3, then we know, by maximality of the independent set, that the $r$-neighborhood $N_r(p_i)$ intersects some other $r$-neighborhood, say $N_r(p_j)$, that was a cluster in the maximal independent set in step M2.  (It may or may not be the case that $G=N_r(p_j)$.)  
+Thus, there is a node $p_y \in N_r(p_i)\cap N_r(p_j)$, implying that $|p_i - p_y|\leq d_r(p_i)$ and that $|p_y - p_j|\leq d_r(p_j)$.  The triangle inequality implies then that $|p_i-p_j|\leq |p_i-p_y|+|p_y-p_j|\leq d_r(p_i)+d_r(p_j)\leq d_r(p_i)+d_r^{\max}$.  
+Since $p_i$ is closer to $c_G$ than to the alternative center $p_j$, we get the claimed inequality, 
+$|p_i-c_G|\leq |p_i-p_j|\leq d_r(p_i)+d_r^{\max}$. 
+% Since the disk of radius $d_r(p_i)$ centered at $p_i$ intersects the disk of radius $d_r(p_j)$ centered at $p_j$, and $p_i$ is closer (or at the same distance) to $c_G$ than to $p_j$, we know that the disk of radius $d_r(p_i)$ centered at $p_i$ also intersects the disk of radius $d_r(c_G)$ centered at $c_G$. Thus, there is a point $q$ in the intersection of these two disks (the disk of radius $d_r(p_i)$ centered at $p_i$ and the disk of radius $d_r(c_G)$ centered at $c_G$), implying that $|p_i - q|\leq d_r(p_i)$ and that $|q - c_G|\leq d_r(c_G)$.  The triangle inequality implies then that $|p_i-c_G|\leq |p_i-q|+|q-c_G|\leq d_r(p_i)+d_r(c_G)$.  
+%Now consider a node $p_j\in P$ that is not assigned to a cluster in step M2; $p_j$ is assigned to a cluster in step M3. That $x$ is not clustered implies that one or more nodes in $N_{r}(p_{x})$ belongs to some other neighborhood $N_{r}(p_{j)}$ for a cluster $G^{j}$. Let $y\in N_{r}(p_{x})\cap N_{r}(p_{j})$ be such a node. Then by definition, $\abs{p_{x}-p_{y}}\leq d_{r}(p_{x})$ and $\abs{p_{y} - p_{j}}\leq d_{r}(p_{j})$. Thus, by triangle inequality, $\abs{p_{x} - p_{j}}\leq d_{r}(p_{j}) + d_{r}(x)$.
+\end{proof}
+
+From the above lemma it follows that the algorithm produces a $4$-approximation of the diameter:
+
+\begin{corollary}
+The diameter of any $G\in \G$ is at most $4D_{OPT}$.
+\end{corollary}
+\begin{proof}
+Consider any $p_i,p_j\in G$.  By Lemma~\ref{lem:local-lemma}, 
+$|p_i-c_G|\leq d_r(p_i)+d_r^{\max}\leq 2d_r^{\max}$ and
+$|p_j-c_G|\leq d_r(p_j)+d_r^{\max}\leq 2d_r^{\max}$.
+Thus, by the triangle inequality, $|p_i-p_j|\leq 2d_r^{\max} + 2d_r^{\max} = 4d_r^{\max} \leq 4D_{OPT}$. 
+%Since any $d_{r}(\cdot)\leq d_{r}^{\max}$, it follows using triangle inequality that: \[ \abs{p_{x} - p_{z}}\leq \abs{p_{x}-p_{j}} + \abs{p_{y}-p_{j}}\leq  4D_{OPT}\]
+\end{proof}
+
+%\myparagraph{Randomized algorithm.} 
+The maximal independent subsets in step M2 can be computed rapidly, in time $O(\log n)$, using the randomized parallel algorithm of Alon et al.~\cite{alon1986fast}, applied to compute a maximal independent set in the intersection graph of the neighborhoods $N(P)$ (i.e., in the graph whose nodes are the $r$-neighborhoods $N(p_{i})$ and whose edges link two $r$-neighborhoods that have a nonempty intersection).
+
+%% as follows. We construct a graph $H$ on the set of nodes such that any edge $(i,j)$ exists iff $N_{r}(p_{i})\cap N_{r}(p_{j})\neq \emptyset$. The maximal independent subset of neighborhoods in step M2 is then equivalent to computation of a maximal independent set on this graph $H$. We can then use a randomized computation such as~\cite{alon1986fast} to compute the independent neighborhoods in $O(\log n)$ time.
+
+The algorithm just described guarantees a $4$-approximation overall; however, from the point of view of a particular node this may not be satisfactory. The bound on the diameter for all clusters is dominated by the worst case -- the clusters in the sparsest neighborhood. A node in a densely populated region can justifiably expect to be assigned to a cluster center close to itself, which is not guaranteed by the algorithm above. We thus describe next another algorithm that guarantees geographic coherence of clusters, meaning that the distance of a node $p_{i}$ to its cluster center is bounded by a factor of its distance, $d_{r}(p_{i})$, to its $r^{th}$ nearest neighbor. 
+
+\subsection{Distributed Sweep Algorithm with Coherence Guarantee}
+
+In this strategy we create clusters in the dense regions first, and then move to sparser regions. 
+
+\myparagraph{Finding maximal independent sets.} At each node $p_i$, we consider the function $d_{r}(p_{i})$, and we assume, without loss of generality, that the function values $d_r(p_i)$ are distinct (ties can be broken according to node id numbers).
+% at the node and at its $r$ nearest neighbors. We assume that $d_{r}$ has a unique value at every node, and break ties by node id. 
+Each node $p_i$ maintains two variables:
+\begin{itemize}
+\item Its cluster center pointer, intialized to NULL. When node $p_i$ is assigned a cluster, its cluster center pointer is assigned. 
+\item A decision state, {\em decided/undecided}, to indicate whether $p_i$ is still in contention for becoming a cluster center.
+\end{itemize}
+Each node $p_i$ is initially in contention to become cluster center; we prefer nodes $p_i$ with smaller values of $d_{r}(p_i)$. The algorithm operates in rounds, as follows. In each round:
+
+\begin{enumerate}
+\item Every undecided and unclustered node $p_i$ requests permission from nodes in $N_{r}(p_{i})$ to become cluster center.
+\item If all nodes in $N_{r}(p_{i})$ grant permission, then $p_i$ becomes a cluster center, and all nodes in $N_{r}(p_{i})$ are marked as {\em clustered} and {\em decided}. Additionally, they all set their cluster center pointer to $p_i$. 
+\item If one or more nodes in $N_{r}(p_{i})$ {\em deny} permission for $p_i$ to become cluster center, then $p_i$ marks itself as {\em decided}, implying that it will not try to become cluster center any more.
+\end{enumerate}
+
+Any node $p_j$ that receives a permission request from $p_i$ responds as follows:
+\begin{enumerate}
+\item  If $p_j$ is unclustered {\em and} all {\em undecided} nodes $p_{j'}\in N_{r}(p_{j})$ have values of $d_{r}(p_{j'})$ greater than $d_r(p_i)$, then node $p_j$ gives permission to $p_i$; else, 
+\item if $p_j$ is already clustered, then $p_j$ {\em denies} permission to $p_i$; else, 
+\item if $p_j$ is not clustered, then $p_j$ {\em defers} permission to $p_i$.
+\end{enumerate}
+
+This approach essentially performs a sweep, starting from the densest regions of the network, working towards the less dense regions. The nodes with their $r$ nearest neighbors the closest have a chance to become cluster centers, while other nodes have to wait until these clusters have been formed. Once nodes in dense regions have been clustered into tight clusters, or have decided that they cannot form an independent cluster, nodes in neighboring sparser regions get the chance to become cluster centers. 
+
+Any node left unclustered after the above process is assigned to the cluster of the nearest center, as in step M3. 
+
+\begin{theorem}
+If node $p_i$ belongs to cluster $G$ with center $c_G$, then $|p_{i} - c_G|\leq 2 d_{r}(p_{i})$. 
+\end{theorem}
+\begin{proof}
+If $p_i=c_G$ then the claim is trivially true. If not, then there exists a node $p_y \in N_{r}(p_i)\cap N_{r}(p_j)$ for some cluster center $p_j$. Without loss of generality, suppose $p_j$ is the first such center, that is, the one with smallest $d_{r}(p_j)$. Then, $d_{r}(p_j)\leq d_{r}(p_i)$, since otherwise $p_j$ could not have been a center before $p_i$. Thus $\abs{p_{i}-p_{j}}\leq |p_i-p_y|+|p_y-p_j|\leq d_r(p_i)+d_r(p_j)\leq 2 d_{r}(p_i)$.
+% using Lemma~\ref{lem:local-lemma}. 
+If $p_j=c_G$, then this concludes the proof. If $p_j\neq c_G$, then since in step M3 each node is assigned to the nearest center, we have $\abs{p_{i}-c_G}\leq \abs{p_{i}-p_{j}}\leq 2 d_{r}(p_i)$.
+\end{proof}
+
+This proof implies that the center assigned to any node is at most twice the distance to its $r^{th}$ nearest neighbor, irrespective of locations of rest of the point set. 
+
+
+
+\section{The $r$-Gather Problem in the Mobile Setting}
+
+We continue our investigation of the $r$-gather problem by now considering the dynamic situation in which the points are in motion. There are various models to consider in the mobile setting; in this section, we consider several versions.  In each case, we assume that the trajectories of the mobile agents are piecewise-linear.
+
+\medskip\noindent\textbf{Clustering Trajectories.} In the simplest formulation of $r$-gather in a mobile setting, we are given a set of trajectories over a time period $T$ and we want to cluster the trajectories such that each cluster has at least $r$ trajectories and the largest diameter of each cluster over the entire time period is minimized.  Here we designate the diameter of a cluster at a single point in time to be the distance between the furthest pair of points.  Points are assigned to a single cluster for the entire length of $T$ and do not switch clusters.  We claim that the $2$-approximation strategy in~~\cite{Aggarwal06achievinganonymity} for static $r$-gather in any metric space can also be applied to this problem.  
+%We also claim that 2-inapproximation lower bound from Aggarwal et. al. applies as well \cite{Aggarwal06achievinganonymity}.  
+We use the distance metric defined by Lemma~\ref{lem:distancemetric}.  
+
+\begin{lemma}\label{lem:distancemetric}
+The distance function $d_t(p,q)$ between two trajectories $p$ and $q$ over a time period $T$ is defined as the distance between $p$ and $q$ at time $t \in T$.  Then $d(p,q) = \max_{t \in T}d_t(p,q)$.  The function $d(p,q)$ is a metric.
+\end{lemma}
+\begin{proof}
+The function by definition is symmetric, follows the identity condition, and is always non-negative.  To show that the metric follows the triangle equality, we first assume that there is a pair of trajectories $x$ and $z$ where $d(x,z) > d(x,y) + d(y,z)$ for some $y$.  There is some time $t \in T$, where $d_t(x,z) = d(x,z)$.  By the triangle inequality,
+$$d_t(x,z) \leq d_t(x,y) + d_t(y,z).$$
+In addition, clearly $d_t(x, y) \leq d(x, y)$, and $d_t(y, z)\leq d(y, z)$. 
+This contradicts our assumption and concludes our proof.
+\end{proof}
+
+
+
+
+%\begin{theorem}
+%For the definition of dynamic $r$-gather where all trajectories are clustered once, it is NP-hard to approximate better than a factor of 2 for $r > 6$.
+%\end{theorem}
+
+%\begin{proof}
+%We construct a reduction from the problem 3-SAT where each variable is restricted to 3 clauses.  Our proof is similar to the lower bound proof in \cite{Aggarwal06achievinganonymity}.  Given a boolean formula in 3-CNF form with $m$ clauses $C_j$, $1 \leq j \leq m$, composed of $n$ variables $x_i$, $1 \leq i \leq n$, where $i$ and $j$ are integers, we construct a set of trajectories over a time period $T$.  For every variable $x_i$ and its complement $\bar{x_i}$, we have two points $v_i^T$ and $v_i^F$ and an additional $(r-2)$ points $u_i^k$ for integer $k$, $1 \leq k \leq r-2$.  We will construct trajectories where $d(v_i^T, v_i^F) = d(v_i^T, u_i^k) = d(v_i^F, u_i^k) = 1$, for $1 \leq i \leq n$ and $1 \leq k \leq r-2$ .  In addition, for every cluster $C_j$, we construct another point $w_j$.  We construct trajectories such that the distance between $w_j$ and the points that represent the literals in the clause $C_j$ is 1.  All other distances are 2.
+
+%Constructing the trajectories that obey these distance constraints is simple.  Place all points at the origin on a number line.  For every point $p$, we have one time step that establishes the distance between it and all other points.  In that time step, $p$ moves to 2 on the number line.  At the same time, all other points that must have a distance of 1 to $p$ move to 1 on the number line.  This procedure is repeated for every point.
+
+%We claim, that if there is an $r$-gather clustering of maximum radius 1, then the 3-SAT formula can be satisfied.  Here, for every variable, we have two possibilities for the center of a cluster of radius 1, $v_i^T$ and $v_i^F$.  There are not enough points close to $v_i^T$ and $v_i^F$ to have both as the center of two clusters.  Any cluster with $u_i^k$ as the center will have fewer than $r$ points within a distance of 1 and therefore cannot be a cluster center with radius 1.  Finally, every point $w_j$ has only three other points within a distance of 1.  Therefore, in any $r$-gather clustering with maximum radius 1, there is one cluster for every variable with a center of either $v_i^T$ or $v_i^F$.  This clustering must be done in such a way that for every point $w_j$, at least one of the points that represents a literal in $C_j$ must be chosen as a cluster center.  Thus if an optimal $r$-gather clustering of our trajectories can be found, then we can determine if the corresponding 3-SAT formula is satisfiable.
+%\end{proof}
+
+\medskip\noindent\textbf{Clustering Trajectories with Re-grouping.} Now, we consider the more general setting in which the clusters are allowed to change, via regroupings, during the time period $T$.  We let $k$ be a parameter that specifies the maximum number of regroupings allowed during $T$.  Each regrouping allows all clusters to be modified or changed completely.  The lower bounds for the earlier version of $r$-gather apply here as well, for the same reasons.  We claim that with the assumption that the trajectories are piecewise-linear, we can construct a $2$-approximation solution using dynamic programming.
+
+Let $|T|$ be the number of time steps in the time period $T$.  Each trajectory is a piecewise-linear function that only changes directions at a time step in $T$.  Let $C_{ij}$ denote the max diameter of the $2$-approximation clustering at time $i$ over the time period $[i,j]$, $i<j$.  We can create a $|T| \times |T|$ table $\mathcal{T}$ where entry $\mathcal{T}(i, j) = C_{ij}$.  
+%One clustering takes $O(\frac{1}{\epsilon}kn^2)$ and there are $|T|$ clusterings in total.  However, for each clustering, the max diameter is recalculated for each time step.  The cost of recalculating the max diameter of a clustering is $O(n/r)$.  The total number of times a clustering is recalculated is $O(n|T|/r)$.  The total time it takes to compute the table $\mathcal{T}$ is $O(n|T|^2/r + \frac{1}{\epsilon}k|T|n^2)$.
+
+We formulate a subproblem $S(t,i)$, where $0 \leq t \leq |T|$ and $i \leq k$, for our dynamic program to find the optimal clustering of the points in the time period $[0, t]$ where there are exactly $i$ reclusterings.  Let $l(t,i)$ denote the last time step a reclustering occured for the optimal solution of $S(t,i)$.
+
+The subproblem of our dynamic program is:
+$$S(t,i) = \min( \max_{j<t}(S(j, i), C_{l(t,i)t}), \max_{j<t}(S(j, i-1), C_{tt}) )$$ 
+
+The entry $S(t,i)$ checks $2t$ previous entries and $2t$ entries in the table $\mathcal{T}$.  The entire table takes $k|T|^2$ to execute with the additional preprocessing of the table $\mathcal{T}$.
+
+Our lower bound proofs for static $r$-gather apply here as well.  The points arranged in any of the lower bound proofs can be static points for the duration of $T$ or may move in a fashion where the 
+distances between points do not increase.  Then the arguments for static $r$-gather translate to this simple version of dynamic $r$-gather directly.
+
+\begin{theorem}
+The lower bound results for static $r$-gather apply to any definition of dynamic $r$-gather.  Further, we can approximate mobile $r$-gather, when $k$ clusterings are allowed, within a factor of $2$.
+\end{theorem}
+
+\medskip\noindent\textbf{Number of Changes in Optimal Solution.} Last, we show a lower bound on the number of changes needed if we maintain the \emph{optimal} solution at all times. We show that in this setting, the optimal clustering may change many times, as much as $O(n^3)$ times.  Consider this example: $n/2$ points lie on a line where the points are spaced apart by $1$ and $3$ points are overlapping on the ends.  In this example, $r = 3$.  The optimal clustering of the points on the line is to have three points in a row be in one cluster with a diameter of $2$.  There are three different such clusterings which differ in the parity of the clusterings.  In each clustering, there are $O(n)$ clusters.  If another point travels along the line, when it is within the boundaries of a cluster, it will just join that cluster.  However, when it reaches the boundary of a cluster and exits it, the optimal clustering would be to shift the parity of the clustering.  This results in a change in all of the clusters along the line.  The clustering change every time the point travels a distance of $2$.  Therefore, as the point travels along the line, the number of times the entire clustering changes is $\Omega(n)$ which results in a total of $\Omega(n^2)$ changes to individial clusters.  Since there are $O(n)$ points that travel along the line, the total number of clusters that change is $\Omega(n^3)$.
+
+
+
+
+
+\subsection{Dynamic Algorithm}\label{subsec:dynamic}
+
+In this subsection, we briefly outline the adaptation of the algorithm to mobility of nodes.
+
+\myparagraph{Mobility management.} The challenge in maintaining the clusters in face of mobility is that motion on part of any of the nodes in a cluster requires a possible update on part of the cluster. We assume that a location service such as ~\cite{abraham04LLS} is available. This system works as follows. It divides the plane into a quadtree hierarchy, where a square region is recursively subdivided into four square subregions. Each square at at each level is assigned a location server. The presence of each node is noted at the server for squares at each level containing the node. To avoid excessive updates to the hierarchy, when a node leaves a square $s$ in level $\alpha$, the servers at level $\alpha+1$ are not updated immediately. Instead, they get updated when the node has passed out of the neighborhood of $s$ consisting of $8$ other squares in level $\alpha$. This lazy scheme guarantees a low amortized cost to keep the data up to date. 
+
+\myparagraph{Cluster maintenance in location hierarchy.} We can adapt this scheme to our purposes as follows. Each server maintains a count of the nodes in its square. And for simplicity, we let the location servers perform the computations instead of mobile nodes and become cluster centers. Now, when a server $i$ queries for its $r$-neighborhood, this query propagates up the server hierarchy, at each level $\alpha$, checking the square $s_{\alpha}(i)$ containing $i$, and its eight neighbors, written as $N(s_{\alpha}(i))$ to see if they contain a total of $r$ mobile nodes. Suppose level $\beta$ is the first level where $N(s_{\beta}(i))$ contains $r$ nodes. The radius is this neighborhood is within a constant factor of $d_{r}(i)$. The system then returns the neighborhood $N(s_{\beta+1}(i))$ of the next higher level $\beta+1$ as the level containing at least $r$ nodes. Thus, nodes in this set plays the role of $N_{r}$ neighborhood. And the algorithms from the previous subsections apply as usual. Observe that the radius of $\beta+1$ is also $O(d_{r}(i))$. 
+
+Next, we modify this protocol to adapt to mobility of nodes. Observe that since we take $N(s_{\beta+1}(i))$ neighborhood, a node moving from $N(s_{\beta}(i))$ to a neighboring square does not require an immediate update to $d_{r}(i)$. The update is made only when it passes out of $N(s_{\beta+1}(i))$. Thus, the number of updates caused by the mobility of a node is $O(x\log x)$ when the node has moved a distance $x$ (see~\cite{abraham04LLS}). 
+
+The server $s_{\beta}(i)$ simply updates its nodes count on these events and does not modify cluster, until it detects that number of nodes in its neighborhood has fallen below $r$. in which case it triggers a re-clustering for all clusters with center in the neighborhood $N(s_{\beta+2}(i))$. This guarantees that cluster sizes of $r$ are preserved.
+
+It is possible to conversely trigger re-custering when a server detects a large influx of mobile nodes. Suppose $N(s_{\beta}(i))$ is the current cluster, and  $N(s_{\alpha}(i))\subset N(s_{\beta}(i))$ detects at least $r$ nodes in its domain. Then, if $\beta-\alpha\geq 2$, it triggers a reclustering in $N(s_{\beta}(i))$.
+

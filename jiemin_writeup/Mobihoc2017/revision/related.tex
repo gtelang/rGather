@@ -1,0 +1,20 @@
+%!TEX root = r-gather.tex
+
+\subsection{Related Work}
+
+The $r$-gather problem has been studied for instances in general metric spaces.  Aggarwal et al.~\cite{Aggarwal06achievinganonymity} give a $2$-approximation algorithm and show that, for $r>6$, it is NP-hard to approximate with an approximation ratio better than $2$.  The approximation algorithm first guesses the optimal diameter, then greedily selects clusters with twice the diameter; finally, a flow algorithm is used to assign at least $r$ points to each cluster.  This procedure is repeated until a good choice of diamter is found.  Note that this solution only selects input points as cluster centers.
+
+Armon \cite{armon2011min} extended the result of Aggarwal et al. proving that, for $r>2$, it is NP-hard to approximate with a ratio better than $2$ for the case of general metric spaces.  Armon also considers a generalization of the $r$-gather clustering problem, called the {\em $r$-gathering problem}, which also considers a given set of potential cluster centers (potential ``facility locations''), each having a fixed set-up cost that is included in the objective function. Armon provides a $3$-approximation for the min-max $r$-gathering problem and proves that it is NP-hard to obtain a better approximation factor.  Additional results include various approximation algorithms for the min-max $r$-gathering problem with a {\em proximity requirement} that each point be assigned to its nearest cluster center.
+
+For the case $r = 2$, both \cite{anshelevich2011terminal} and \cite{shalita2010efficient} provide polynomial-time exact algorithms.  Shalita and Zwick's \cite{shalita2010efficient} algorithm runs in $O(mn)$ time, for a graph with $n$ nodes and $m$ edges.
+
+All of these prior algorithms were for the centralized setting, in general metrics; we are not aware of results in the distribtued and dynamic settings, or of results that exploit geometric structure. 
+
+%% Joe added this discussion after submission to INFOCOM:
+A related problem is that of the discrete disk cover: Given a set $S$ of points in a metric space, and a collection ${\cal B}$ of disks whose union covers $S$, find a smallest cardinality subset of ${\cal B}$ that covers $S$.  As a set cover instance, it is well known that the greedy algorithm yields a logarithmic factor approximation.  %%% xxx add a citation?  CLRS?
+In geometric instances, e.g., in low-dimensional Euclidean space, it is known that local search yields a PTAS.  %% xxx cite Mustafa and Ray, and newer papers??
+Since the number of combinatorially distinct disks is polynomial, in any fixed dimension Euclidean space, one could specify ${\cal B}$ to be the set of all (minimal) disks that contain at least $r$ points of $S$ and that have diameter at most some parameter $D$.  Minimizing the number of such disks in a cover of $S$, then, has a PTAS, from known results on discrete disk cover.  However, this problem is not the same as the $r$-gather cluster problem, since it is not partitioning the points of $S$ into clusters; rather, it is covering $S$ with clusters (each of cardinality at least $r$ and of MEB diameter at most $D$), and individual points of $S$ may be in many such clusters.  In fact, the {\em covering} version of the $r$-gather problem is solvable exactly in polynomial time in fixed dimension Euclidean spaces, since we can simply search for a value of $D$ (naively, or with binary search) such that all MEBs of diameter at most $D$, containing at least $r$ points of $S$, covers all of $S$.
+%% Q: what about covering $S$ with the fewest sets each of DIAMETER at most $D$ (instead of MEB diameter), and also possibly containing at least $r$ points??  Can this problem be solved efficiently?  Note that there could be an exponential number of different such sets, but it should suffice to consider only those that are ``maximal'', and these may be polynomial (and computable using DP??)  Good question for CG Group!
+
+
+%\pagebreak

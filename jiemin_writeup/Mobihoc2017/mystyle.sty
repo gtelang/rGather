@@ -1,0 +1,576 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% Li Zhang's style file
+% derived from Jeff Erickson's private style file 
+%
+
+% ============================-*- LaTeX -*-=============================
+%
+%   jeffe.sty -- macros I use everywhere
+%
+%   Most documents will only use a small fraction of these macros.
+%   If a file is being prepared for public distribution (ie, all
+%   \inputs expanded), unused macros should probably be taken out!
+%   [YUCK!]
+%
+% ======================================================================
+
+\usepackage{xspace}
+\hyphenation{co-or-din-ate co-or-din-ates half-space}
+
+\def\textul#1{$\underline{\text{#1}}$}
+\def\strike#1{$\overline{\smash{\text{#1}}}$}   % only within one line?
+
+% ----------------------------------------------------------------------
+%  Common abbreviations and words with accents
+% ----------------------------------------------------------------------
+
+% ---- LATIN ----
+\def\etal{\emph{et~al.}\xspace}
+\def\ie{\emph{i.e.}}
+\def\eg{\emph{e.g.}}
+\def\vitae{vit\ae{}}
+
+% ---- FRENCH ----
+\def\naive{na\"{\i}ve}
+\def\Naive{Na\"{\i}ve}
+\def\naively{na\"{\i}vely}      % Okay, I know, this isn't French.
+\def\Naively{Na\"{\i}vely}
+\def\cafe{caf\'e}
+
+% ---- GERMAN ----
+\def\fur{f\"ur}
+\def\Universitat{Universit\"at}
+\def\Saarbrucken{Saar\-br\"ucken}
+                % ARGH! TeX can't auto-hyphenate words with accents!
+\def\Zurich{Z\"urich}
+
+% ---- PORTUGESE (Hi Jorge!) ----
+\def\Computacao{Computa\c{c}\~ao}
+
+% ---- PROPER NAMES ----
+\def\Benes{Bene\v{s}}
+\def\Bjorner{Bj\"orner}
+\def\Boruvka{Bor\.uvka}
+\def\Bronnimann{Br\"onnimann}   \def\Herve{Herv\'e}
+\def\Chvatal{Chv\'atal}         \def\Vasek{Va\v{s}ek}
+                                \def\Joao{Jo\~ao}       % Comba
+\def\Erdos{Erd\"{o}s}           \def\Pal{P\'al}
+\def\Furedi{F\"uredi}           \def\Zoltan{Zolt\'an}
+\def\Godel{G\"odel}
+\def\Grobner{Gr\"obner}
+\def\Grunbaum{Gr\"unbaum}
+\def\Komlos{Koml\'os}
+\def\Kovari{K\"ov\'ari}
+\def\Lovasz{Lov\'asz}           \def\Laszlo{L\'aszl\'o}
+\def\Matousek{Matou\v{s}ek}     \def\Jiri{Ji\v{r}\'\i}
+\def\Mnev{Mn\"ev}
+\def\Mobius{M\"obius}
+\def\Mucke{M\"ucke}
+\def\ODunliang{\'O'D\'unliang}
+\def\Oleinik{Ole\u{\i}nik}
+\def\Janos{J\'anos}     % Pach
+\def\Palasti{Pal\'asti}
+\def\Petrovskii{Petrovski\u{\i}}
+\def\Plucker{Pl\"ucker}
+\def\Poincare{Poincar\'e}
+\def\Polya{Polya}
+\def\Gunter{G\"unter}   % Rote, Ziegler
+\def\Sos{S\'os}
+\def\Szekely{Sz\'ekely}
+\def\Szemeredi{Szemer\'edi}
+\def\Turan{Tur\'an}
+\def\Ungor{\"Ung\"or}
+
+% ----------------------------------------------------------------------
+%  Simple math stuff
+% ----------------------------------------------------------------------
+
+% ---- SYMBOLS ----
+
+\let\e\varepsilon               % a ``real'' epsilon
+\let\xor\oplus
+
+\def\Real{\mathrm{I\!R}}
+\def\Euc{\mathrm{I\!E}}
+\def\Proj{\mathrm{I\!P}}
+\def\Hyper{\mathrm{I\!H}}
+\def\Integer{\mathsf{Z\hspace{-0.4em}Z}}
+\def\Natural{\mathrm{I\!N}}
+
+\def\A{\mathcal{A}}
+\def\B{\mathcal{B}}
+\def\C{\mathcal{C}}
+\def\D{\mathcal{D}}
+\def\E{\mathcal{E}}
+\def\F{\mathcal{F}}
+\def\G{\mathcal{G}}
+\def\H{\mathcal{H}}
+\def\I{\mathcal{I}}
+\def\J{\mathcal{J}}
+\def\K{\mathcal{K}}
+\def\L{\mathcal{L}}
+\def\M{\mathcal{M}}
+\def\N{\mathcal{N}}
+\def\O{\mathcal{O}}
+\def\P{\mathcal{P}}
+\def\Q{\mathcal{Q}}
+\def\R{\mathcal{R}}
+\def\S{\mathcal{S}}
+\def\T{\mathcal{T}}
+\def\U{\mathcal{U}}
+\def\V{\mathcal{V}}
+\def\W{\mathcal{W}}
+\def\X{\mathcal{X}}
+\def\Y{\mathcal{Y}}
+\def\Z{\mathcal{Z}}
+\def\Prob{\mbox{Prob}}
+\def\GF{\mbox{GF}} % Galois Field 
+%
+%  These two look okay in Computer Modern 11pt, or Concrete Roman
+%  12pt, but they need serious work in other sizes.  I need to figure
+%  out how to draw a vertical bar, or better yet a shallow arc, inside
+%  the bowls.  Or maybe I need to learn METAFONT.
+%
+\def\Complex{\mathrm{\,\raise 0.33ex\hbox{\scriptsize\bf(}\!\!\!C}}
+\def\Rational{\mathrm{\,\raise 0.33ex\hbox{\scriptsize\bf(}\!\!\!Q}}
+
+%
+%  Here are more standard, but uglier, versions of these symbols.
+%  They stick out, because they're all in Times Roman Bold Outline!
+%  I *really* want a Concrete Blackboard or Euler Blackboard font, but
+%  I'd happily settle for Computer Modern Blackboard.
+%
+%\def\Real{\mathbb{R}}
+%\def\Proj{\mathbb{P}}
+%\def\Hyper{\mathbb{H}}
+%\def\Integer{\mathbb{Z}}
+%\def\Natural{\mathbb{N}}
+%\def\Complex{\mathbb{C}}
+%\def\Rational{\mathbb{Q}}
+
+\def\Rd{\Real^d}                % d-space
+\def\Ed{\Euc^d}                % d-space
+\def\RP{\Real\Proj}
+\def\CP{\Complex\Proj}
+\let\Z\Integer
+\let\Q\Rational
+\let\N\Natural
+
+% ---- OPERATORS (require amsmath) ----
+
+\RequirePackage{amsmath,amssymb}
+
+\def\Arr{\operatorname{\mathcal{A}}\nolimits}           % Arrangement
+\def\aff{\operatorname{aff}}
+\def\argmax{\operatorname{arg\,max}\limits}
+\def\argmin{\operatorname{arg\,min}\limits}
+\def\card{\operatorname{card}}
+\def\conv{\operatorname{conv}}
+\def\Hom{\operatorname{Hom}}
+\def\id{\operatorname{id}}
+\def\im{\operatorname{im}}
+\def\poly{\operatorname{poly}}
+\def\loglog{\operatorname{loglog}}
+\def\polylog{\operatorname{polylog}}
+\def\rank{\operatorname{rank}}
+\def\rel{\operatorname{rel\,}}
+\def\sgn{\operatorname{sgn}}
+
+\def\fp#1{^{\underline{#1}}}            % falling powers: $n\fp{d}$
+\def\rp#1{^{\overline{#1}}}             % rising powers:  $n\rp{d}$
+
+\def\Frac#1#2{{\displaystyle\frac{#1}{#2}}}
+\def\Sum{\sum\limits}
+\def\Prod{\prod\limits}
+\def\Union{\bigcup\limits}
+\def\Inter{\bigcap\limits}
+\def\Lor{\bigvee\limits}
+\def\Land{\bigwedge\limits}
+
+% ---- RELATORS ----
+
+\def\deq{\stackrel{\scriptscriptstyle\triangle}{=}}
+\def\mapsfrom{\leftarrow\!\mapstochar\,}
+\let\into\hookrightarrow
+\let\onto\twoheadrightarrow
+
+% ---- DELIMITER PAIRS ----
+
+\def\floor#1{\lfloor#1\rfloor}
+\def\ceil#1{\lceil#1\rceil}
+\def\seq#1{\langle#1\rangle}
+\def\set#1{\{#1\}}
+\def\dset#1#2{\{#1\,|\,#2\}}
+\def\size#1{|#1|}
+\def\prob#1{\mbox{Prob}\{#1\}}
+\def\abs#1{\mathopen|#1\mathclose|}
+\def\len#1{|#1|}
+\def\Lone#1{\|#1\|_1}
+\def\Linf#1{\|#1\|_{\infty}}
+\def\Ltwo#1{\|#1\|_2}
+\def\norm#1{\|#1\|}
+
+\def\Floor#1{\left\lfloor #1 \right\rfloor}
+\def\Ceil#1{\left\lceil #1 \right\rceil}
+\def\Seq#1{\left\langle #1 \right\rangle}
+\def\Set#1{\left\{ #1 \right\}}
+\def\Abs#1{\left| #1 \right|}
+
+%
+%  Macros to typeset sets like {foo|bar} with all three delimiters
+%  correctly scaled to fit.  What I *really* want is a \middle macro
+%  that acts just like \left and \right.  Grumble.
+%
+\def\Bigbar#1{\mathrel{\left|\vphantom{#1}\right.\n@space}}
+\def\Setbar#1#2{\Set{#1 \Bigbar{#1 #2} #2}}
+\def\Seqbar#1#2{\Seq{#1 \Bigbar{#1 #2} #2}}
+
+\def\funcif#1#2#3{#1 \mathbin? #2 \mathbin: #3}
+
+% ---- ``ACCENTS'' ----
+%   NB: Commands equivalent to \lrarrowfill and \overlrarrow are
+%       already defined in amstex!
+%
+\def\lrarrowfill{$\m@th\mathord\leftarrow\mkern-6mu%
+  \cleaders\hbox{$\mkern-2mu\mathord-\mkern-2mu$}\hfill
+  \mkern-6mu\mathord\rightarrow$}
+\def\overlrarrow#1{\vbox{\ialign{##\crcr
+      \lrarrowfill\crcr\noalign{\kern-\p@\nointerlineskip}
+      $\hfil\displaystyle{#1}\hfil$\crcr}}}
+
+\def\Line#1{\overlrarrow{#1}}
+\def\Ray#1{\overrightarrow{\vphantom{1}\,#1\,}}
+\def\Seg#1{\overline{#1}}
+\def\strikethru#1{\overline{\smash{#1}}}
+\def\vect#1{\mathbb{#1}}
+
+% ----------------------------------------------------------------------
+%  \begin{bigabstract}...\end{bigabstract}
+%  For use in documents with title pages.  Use normal-sized text in
+%  the abstract!
+% ----------------------------------------------------------------------
+\newenvironment{bigabstract}%
+{\medskip\noindent\centerline{\textbf{\large\abstractname}}\begin{quotation}}%
+{\end{quotation}}
+
+
+% ----------------------------------------------------------------------
+%  Make captions smaller than the text, make their titles bold.
+%  Arguments:   #1 == figure name: "Figure 5"
+%               #2 == caption: "Papers by \Erdos, 1900--2000 (projected)"
+%  Less space after floats, since captions are smaller
+% ----------------------------------------------------------------------
+\long\def\@makecaption#1#2{
+   \vskip 10pt
+   \setbox\@tempboxa\hbox{{\footnotesize \textbf{#1.} #2}}
+   \ifdim \wd\@tempboxa >\hsize         % IF longer than one line:
+       {\footnotesize \textbf{#1.} #2\par}% THEN set as ordinary paragraph.
+     \else                              %   ELSE  center.
+       \hbox to\hsize{\hfil\box\@tempboxa\hfil}
+   \fi}
+\dbltextfloatsep 18pt plus 2pt minus 4pt   % was 20pt plus 2pt minus 4pt
+\textfloatsep 18pt plus 2pt minus 4pt      % was 20pt plus 2pt minus 4pt
+
+% ----------------------------------------------------------------------
+%  Add a period after the theorem number, and make theorems slanted
+%  instead of italic to help distinguish text from math.
+% ----------------------------------------------------------------------
+\def\@begintheorem#1#2{\trivlist \item[\hskip \labelsep{\bf #1\ #2.}]\sl}
+\def\@opargbegintheorem#1#2#3{\trivlist
+      \item[\hskip \labelsep{\bf #1\ #2\ (#3).}]\sl}
+
+% ----------------------------------------------------------------------
+%  \newproof{type}{text}(style)[post] -- Define a new type of unnumbered
+%  ``theorem'' environment.  The last two arguments are optional; most
+%  environments will not use them.
+%
+%  To change label style, put new style command in label:
+%       \newproof{comment}{\sf Comment}
+% ----------------------------------------------------------------------
+\def\newproof#1#2{\@ifnextchar({\@snproof{#1}{#2}}{\@snproof{#1}{#2}(\rm)}}
+\def\@snproof#1#2(#3){\@ifnextchar[{\@xnproof{#1}{#2}{#3}}
+                                   {\@xnproof{#1}{#2}{#3}[]}}
+
+\def\@xnproof#1#2#3[#4]{\expandafter\@ifdefinable\csname #1\endcsname
+{\global\@namedef{#1}{\@prf{#2}{#3}}\global\@namedef{end#1}{\@endprf{#4}}}}
+
+\def\@prf#1#2{\@ifnextchar[{\@xprf{#1}{#2}}{\@yprf{#1}{#2}}}
+
+\def\@xprf#1#2[#3]{\begin{trivlist}\item[\hskip\labelsep{\bf #1\ (#3):}]#2}
+
+\def\@yprf#1#2{\begin{trivlist}\item[\hskip\labelsep{\bf #1:}]#2}
+
+\def\@endprf#1{#1\end{trivlist}}
+
+% ----------------------------------------------------------------------
+%  Standard proof environment.
+% ----------------------------------------------------------------------
+\@ifundefined{square}{\let\square\Box}{}
+\def\QED{$\boldsymbol{\square}$}
+% Silly version:
+% \def\QED{$\boldsymbol{\square}$\raise 2pt\hbox to 0pt{\hss$\checkmark\,\ $\hss}}
+
+\def\markatright#1{\leavevmode\unskip\nobreak\quad\hspace*{\fill}{#1}}
+\def\qed{\markatright{\QED}}
+%\newproof{proof}{Proof}[\qed]
+
+% ----------------------------------------------------------------------
+%  One-shot theoremish environment.  For named things like ``Zorn's
+%  Lemma'' or ``The Death Leap Principle'' or ``The Zone Theorem''.
+%  To get one-shot proofish environment, put \rm inside.
+% ----------------------------------------------------------------------
+\newenvironment{oneshot}[1]%
+{\begin{trivlist}\item[\hskip\labelsep{\bf #1:}]\sl}%
+{\end{trivlist}}
+
+% ----------------------------------------------------------------------
+%  Algorithm and code environments -- Algorithms are set in normal
+%  text, with 2em indenting, surrounded by a box.  Code is set in
+%  typewriter text, with 4 space indenting, and no box.
+%
+%  NOTE!  The true width of the minipage environment is determined by
+%  the contents of the longest line, but ONLY because the minipage
+%  contains a tabbing environment, and nothing else.
+% ----------------------------------------------------------------------
+\def\begin@lgo{\begin{minipage}{1in}\begin{tabbing}
+        \qquad\=\qquad\=\qquad\=\qquad\=\qquad\=\qquad\=\qquad\=\kill}
+\def\end@lgo{\end{tabbing}\end{minipage}}
+\newenvironment{algorithm}{\begin@lgo}{\end@lgo}
+
+%\def\BEGIN{\textbf{begin} }
+%\def\END{\textbf{end} }
+%\def\FOR{\textbf{for} }
+%\def\TO{\textbf{to} }
+%\def\WHILE{\textbf{while} }
+%\def\IF{\textbf{if} }
+%\def\ELSE{\textbf{else} }
+%\def\FI{\textbf{fi} }
+%\def\OR{\textbf{or} }
+%\def\AND{\textbf{and} }
+%\def\RETURN{\textbf{return} }
+
+\def\beginc@de{\noindent\begin{center}\begin{minipage}{1in}\tt
+        \begin{tabbing}~~~~\=~~~~\=~~~~\=~~~~\=~~~~\=~~~~\=~~~~\=\kill}
+\def\endc@de{\end{tabbing}\end{minipage}\end{center}}
+\newenvironment{code}{\beginc@de}{\endc@de}
+
+\long\def\highlight#1#2{\medskip
+\begin{center}\fbox{
+\begin{minipage}{5.5in}
+  {\small{\centerline{\bf #1}}\medskip #2}
+\end{minipage}}
+\end{center}}
+
+%\newenvironment{highlight}[1]{%\begin{fbox}
+%\begin{small}
+%{\centerline \textbf{#1}}\\}
+%{\end{small}%\end{fbox}
+%}
+
+% ----------------------------------------------------------------------
+%  Include a file verbatim.  Searches the TEXINPUTS path for the file,
+%  even though that's probably not what you really want.  Stolen from
+%  ``verbatimfiles.sty'' by Chris Rowley and others.  [Don't use their 
+%  \vertbatimlisting macro; it has some bizarre side-effects!]
+% ----------------------------------------------------------------------
+\def\verbinput#1{
+\begingroup\@verbatim\frenchspacing\@vobeyspaces\input#1\endgroup
+}
+
+%----------------------------------------------------------------------
+%  Bibliography aliases, so I can use mnemonic citation keys and
+%  geom.bib at the same time.  \bibalias{foo}{bar} makes \cite{foo}
+%  act (almost) exactly like \cite{bar}.
+%----------------------------------------------------------------------
+\def\bibalias#1#2{%
+    \global\@namedef{b@#1}{%
+        {\@ifundefined{b@#2}{\textbf{?}}{}\csname b@#2\endcsname\nocite{#2}}}}
+
+% ----------------------------------------------------------------------
+%  \now         Current time in h:mm AM/PM format
+%  \mdyy        Today's date in m/d/yy format
+% ----------------------------------------------------------------------
+\newcount\timehh\timehh=\time
+\divide\timehh by 60
+\newcount\timemm\timemm=\time
+\count255=\timehh
+\multiply\count255 by -60
+\advance\timemm by \count255
+\newif\iftimePM
+\ifnum\timehh>11 \timePMtrue\else\timePMfalse\fi
+\ifnum\timehh<1 \advance\timehh by 12\fi
+\ifnum\timehh>12 \advance\timehh by -12\fi
+\def\now{\number\timehh:\ifnum\timemm<10 0\fi\number\timemm
+         \iftimePM pm\else am\fi}
+\newcount\mdYY\mdYY=\year
+\count255=\year
+\divide\count255 by 100
+\multiply\count255 by 100
+\advance\mdYY by -\count255
+\def\mdyy{\number\month/\number\day/\number\mdYY}
+
+% ----------------------------------------------------------------------
+%  Notes to myself
+% ----------------------------------------------------------------------
+
+
+% ----------------------------------------------------------------------
+%  Draft notice.  Put \DRAFT on the title page, in place of \date.
+% ----------------------------------------------------------------------
+\def\draftnotice{Preliminary draft --- \mdyy\ --- Not for distribution}
+
+\def\DRAFT{
+\date{\fbox{\note{\draftnotice}}}
+\def\@oddfoot{\hss\fbox{\footnotesize\note{\draftnotice}}\hss}
+\def\@evenfoot{\hss\fbox{\footnotesize\note{\draftnotice}}\hss}
+}
+
+% ----------------------------------------------------------------------
+%  Dingbats from the TeX/METAFONT-book manual font
+% ----------------------------------------------------------------------
+\font\manual=manfnt
+\def\goodcube{{\manual\char28}} % possible cube from MF-book
+\def\badcube{{\manual\char29}}  % impossible cube from MF-book
+\def\starknot{{\manual\char30}} % 2,5 torus knot from MF-book
+\def\target{{\manual\char36}}   % concentric circles from MF-book
+\def\xflower{{\manual\char38}}  % X flower dingbat from MF-book
+\def\tflower{{\manual\char39}}  % + flower dingbat from MF-book
+\def\changeto{{\manual\char121}}% change arrow
+\def\dbend{{\manual\char127}}   % dangerous bend sign
+
+% ----------------------------------------------------------------------
+%  Dangerous bend environments, stolen from TeXbook and slightly
+%  massaged.
+%
+%  Invoke as \begin{[d]danger}...\end{[d]danger}.  The enclosed text
+%  is offset just like any other list (theorem, proof, etc.)  Puts
+%  sign[s] in front of first two lines of first paragraph, which are
+%  (supposedly) never split by a page boundary.  Does NOT shrink or
+%  otherwise modify the text.
+% ----------------------------------------------------------------------
+%  The dangerous bend signs are the correct size to match two lines of
+%  Computer Modern 9pt type.   We really ought to scale them up to
+%  fit whatever size we're using, but we don't.  Unfortunately, manfnt
+%  is actually a 10pt font, so if we want to match 11pt Computer
+%  Modern, we have to scale manfnt to 12.222222pt!  Thanks, Don. 
+% ----------------------------------------------------------------------
+
+% Single danger
+\def\danger{\begin{trivlist}\item[]\noindent%
+\begingroup\hangindent=2.5pc\hangafter=-2\clubpenalty=10000%
+\def\par{\endgraf\endgroup}%
+\hbox to 0pt{\hskip-\hangindent\dbend\hfill}\ignorespaces}
+\def\enddanger{\end{trivlist}}
+
+% Double danger
+\def\ddanger{\begin{trivlist}\item[]\noindent%
+\begingroup\hangindent=4pc\hangafter=-2\clubpenalty=10000%
+\def\par{\endgraf\endgroup}%
+\hbox to 0pt{\hskip-\hangindent\dbend\kern2pt\dbend\hfill}\ignorespaces}
+\def\endddanger{\end{trivlist}}
+
+%----------------------------------------------------------------------
+% 'cramped' list style, stolen from Jeff Vitter
+%----------------------------------------------------------------------
+\def\cramped                                    % "Cramped" list style.
+  {\parskip\@outerparskip\@topsep\parskip       % put after \begin{itemize}
+  \@topsepadd2pt\itemsep0pt                     %
+%  \settowidth{\labelwidth}{\@itemlabel}               %
+%  \advance\leftmargin-\labelsep                        %
+%  \advance\leftmargin-\labelwidth              %
+%  \advance\@totalleftmargin-\leftmargin                %
+%  \advance\linewidth\leftmargin                        %
+%  \parshape1\@totalleftmargin\linewidth                %
+}
+
+\def\cits#1{{\small\cite{#1}}}
+\def\rd{\mbox{${\cal R}^d$}}
+\def\r2{\mbox{${\cal R}^2$}}
+\long\def\commented#1{}
+
+
+%\newtheorem{thm}{Theorem}[section]
+%\newtheorem{thm}{Theorem}[chapter]
+\newtheorem{thm}{Theorem}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{fac}[thm]{Fact}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{exam}[thm]{Example}
+\newtheorem{conj}[thm]{Conjecture}
+\newtheorem{obse}[thm]{Observation}
+\newtheorem{defn}[thm]{Definition}
+
+%full version
+%\newtheorem{theorem}{Theorem}[section]
+
+%\newtheorem{proposition}[theorem]{Proposition}
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{corollary}[theorem]{Corollary}
+%\newtheorem{conjecture}[theorem]{Conjecture}
+%\newtheorem{example}[thm]{Example}
+%\newtheorem{fact}[theorem]{Fact}
+%\newtheorem{observation}[theorem]{Observation}
+%\newtheorem{definition}[theorem]{Definition}
+
+\newtheorem{exc}{Theorem}[section]
+\newtheorem{exercise}[exc]{Exercise}
+
+\newenvironment{Remark}{\noindent\textit{Remark.} }{}
+\newenvironment{rem}{\noindent\textit{Remark.} }{}
+\newenvironment{remark}{\noindent\textit{Remark.} }{}
+
+\newcommand{\picps}[2]{\psfig{figure=#1.ps,width=#2}}
+\newcommand{\piceps}[2]{\leavevmode \epsfxsize=#2 \epsffile{#1.eps}}
+
+\newcommand{\note}[1]{{\marginpar[\hfill$\rhd$]{$\lhd$}$\langle$\textbf{#1}$\rangle$}}
+
+%% Lifted from Leo:
+\def\mathify#1{\ifmmode{#1}\else\mbox{$#1$}\fi} % guarantee math mode
+\def\unmathify#1{\ifmmode\mbox{#1}\else{#1}\fi} % guarantee not math mode
+\def\cbox#1{\centering{\mbox{#1}}}
+
+\def\overrightarrow{\mathpalette\overrightarrowX}
+\def\overrightarrowX#1#2{\vbox{\ialign{$##$\cr
+ #1{-}\mkern-6mu\cleaders\hbox{$#1\mkern-2mu{-}\mkern-2mu$}\hfill
+  \mkern-6mu{\to}\cr\noalign{\kern-0.2ex\nointerlineskip}\hfil#1#2\hfil\cr}}}
+  \let\overarrow\overrightarrow
+
+\newenvironment{ddesc}{\begin{description}%
+\setlength{\itemsep}{-0.1cm}}{\end{description}}
+
+\newenvironment{ditem}{\begin{itemize}%
+\setlength{\itemsep}{-0.1cm}}{\end{itemize}}
+
+\newenvironment{denum}{\begin{enumerate}%
+\setlength{\itemsep}{-0.1cm}}{\end{enumerate}}
+
+\long\def\pa#1{\if\mymode\ispaper #1\fi}
+\long\def\ch#1{\if\mymode\ischapter #1\fi}
+
+\def\knuthldots{\mathinner{\ldotp\ldotp\ldotp}}
+\def\comm#1{\textbf{[[#1]]}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% A lightweighted algorithm environment
+%% the writer has to figure out the indent by himself.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newlength{\algoindent}
+\setlength{\algoindent}{5mm}
+\newenvironment{algo}{\begin{tabbing} %
+\hspace*{\algoindent}\=\hspace*{\algoindent}\= %
+\hspace*{\algoindent}\=\hspace*{\algoindent}\= %
+\hspace*{\algoindent}\=\hspace*{\algoindent}\= %
+\hspace*{\algoindent}\=\hspace*{\algoindent}\=\kill}{\end{tabbing}}
+
+\def\While{\textbf{while}}
+\def\If{\textbf{if}}
+\def\Elseif{\textbf{else if}}
+\def\Else{\textbf{else}}
+\def\For{\textbf{for}}
+\def\Do{\textbf{do}}
+
+
+%\long\def\While#1#2{\textbf{while} (#1) \{ \\ \addtolength{\parindent}{\algoindent} #2 \addtolength{\parindent}{-\algoindent}\\ \}}

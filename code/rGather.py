@@ -690,7 +690,29 @@ class AlgoAggarwalStatic:
   
     #Use the best network to construct the needed clusters. 
     self.computedClusterings = makeClusters( bestRflowDict, bestRCenters, bestRflowNetwork, bestR)
+    #====================================================================================================
+    # Check if all clusters are small enough. i.e. don't have too many points. 
+    largeclusters = [cluster for cluster in self.computedClusterings 
+                             if len(cluster) >= 2*self.r and 
+                                len(cluster) < len(self.pointCloud)]
+    
+    # The important variables here self.nbrTable_dist and self.nbrTable_idx
+    if largeclusters: # A non-empty list evaluates to True. The Pythonic way.
+             # Iterate through each cluster and run the r-Gather algorithm on it. 
+             for cluster in largeclusters:
+    
+                   cluster_size = len(cluster)
+    
+                   if cluster_size >= 2*self.r and cluster_size != len(self.pointCloud):
+    
+                     cluster_pointCloud = [self.pointCloud[i]  for i in cluster]                 
+    
+                     run = AlgoJieminDynamic(r= self.r, pointCloud= cluster_pointCloud, memoizeNbrSearch= True) 
+                     clusterCenters = run.generateClusters() 
+                     print clusterCenters
+                                                  
   
+    #=====================================================================================================
     # Sanity check on the computed clusters. They should all be of size r and should cover the full point set
     assert( all( [ len(cluster) >= self.r for cluster in self.computedClusterings ] ) )
     assert( len( { i for cluster in self.computedClusterings for i in cluster } ) == numPoints   )
@@ -699,11 +721,14 @@ class AlgoAggarwalStatic:
     print "BestRCenters are ", bestRCenters 
   
     # Print the clusters along with their sizes
-    print colored(str(len(self.computedClusterings)) + ' have been computed on ' + \
+    print colored(str(len(self.computedClusterings)) + ' clusters have been computed on ' + \
                   str(len(self.pointCloud)) + ' elements' , 'magenta',  attrs=['bold', 'underline'] )
     for i, cluster in enumerate(self.computedClusterings):
         print "Cluster(", i+1, ") Size:", len(cluster), "  ", np.array( cluster ) 
-   
+  
+    
+    raw_input('Press Enter to continue...')
+  
     return  bestRCenters
 
 

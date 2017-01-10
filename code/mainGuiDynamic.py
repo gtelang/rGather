@@ -1,16 +1,10 @@
 #!/home/gaurish/anaconda2/bin/python2
-# In the paper we show that the 2-approximation rGather problem applies to
-# trajectory data with zero regroupings. When we allow  max of k regroupings
-# there is a nice, Dyanmic programming algorithm which we also implement.
-# The MATLAB file provided by Prof. Gao can be thought of like an Excel sheet:
-# The columns corresponds to cars, and rows corresponds to time.
-# Each entry in the matrix, contains a tuple of x-y coordinates correponding to
-# the positions of taxi-cabs in the R2 plane.
-# As a mnemonic think 'c' for columns/cars and 'r' for rows/record. incase you
-# forget. For the most part you will be focusing only on a submatrix of the
-# full matrix. (Can we use some funky ideas related to core-sets on matrics I had seen before?)
-# Since you will be using the 2Approx metric space algorithm at least for the case of zero regroupings
-# each column correponds to a point in the metric spoce. Clearly, you will have to use list-slicing
+# In the paper we show that the 2-approximation rGather problem applies to trajectory data with zero regroupings. When we allow  max of k regroupings
+# there is a nice, Dyanmic programming algorithm which we also implement. The MATLAB file provided by Prof. Gao can be thought of like an Excel sheet:
+# The columns corresponds to cars, and rows corresponds to time. Each entry in the matrix, contains a tuple of x-y coordinates correponding to
+# the positions of taxi-cabs in the R2 plane. As a mnemonic think 'c' for columns/cars and 'r' for rows/record. incase you forget. For the most part you will
+# be focusing only on a submatrix of the full matrix. (Can we use some funky ideas related to core-sets on matrics I had seen before?) Since you will be using
+# the 2Approx metric space algorithm at least for the case of zero regroupings each column correponds to a point in the metric spoce. Clearly, you will have to use list-slicing
 # in this case. Just make note of that!!!!
 import rGather as rg
 import numpy as np, math
@@ -21,12 +15,11 @@ import matplotlib as mpl, colorsys
 from scipy import io
 import os.path
 from termcolor import colored
-print colored("Script started",'yellow','on_blue')
 import argparse
+print colored("Script started",'yellow','on_blue')
 
 # https://docs.python.org/2/library/argparse.html#module-argparse
 parser = argparse.ArgumentParser(prog='mainGuiDynamic.py',formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-
 parser.add_argument('-memFlag' , type=bool, default=True, help='Memoize the neighbor search')
 parser.add_argument('-range'   , nargs=2  , type=int    , default=[9000, 9050], help='Ending Index from Shenzen data set')
 parser.add_argument('-samples' , type=int , default=20  , help='Number of Samples')
@@ -35,7 +28,7 @@ args = parser.parse_args()
 
 #We can choose an arbitrary subset of cars. Specify the corresponding the column numbers in indicesOfCarsPlotted
 memFlag               = args.memFlag
-indicesOfCarsPlotted  = range(args.range[0], args.range[1])#range(350, 400)
+indicesOfCarsPlotted  = range(args.range[0], args.range[1]) # This can be an arbitrary selection of column indices if you wish
 numSamples            = args.samples # All_lats.shape[0] # Total number of GPS samples for each car. 
 r                     = args.r
 
@@ -112,8 +105,6 @@ for car in range(numCars): # Columns
 trajectories = np.array(trajectories)
 
 
-
-
 # Set the r-parameter and trajectories as points of the metric space.
 run            = rg.AlgoJieminDynamic( r= r, pointCloud= trajectories , memoizeNbrSearch=memFlag) 
 clusterCenters = run.generateClusters() # Generate clusters. Each cluster center itself is a tra1ectory.
@@ -163,7 +154,6 @@ def wrapperkeyPressHandler( fig, ax, keyStack=[] ): # the key-stack argument is 
 		fig.canvas.draw()
 
     return _keyPressHandler
-
 
 keyPress     = wrapperkeyPressHandler(fig, ax)
 fig.canvas.mpl_connect('key_press_event', keyPress   )

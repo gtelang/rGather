@@ -1,0 +1,336 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{00}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{}, \showDOI{}, and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showDOI}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showDOI #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showDOI      \undefined \def \showDOI       #1{{\tt DOI:}\penalty0{#1}\ }
+  \fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       #1{#1}          \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[\protect\citeauthoryear{Abraham, Dolev, and Malkhi}{Abraham
+  et~al\mbox{.}}{2004}]%
+        {abraham04LLS}
+\bibfield{author}{\bibinfo{person}{Ittai Abraham}, \bibinfo{person}{Danny
+  Dolev}, {and} \bibinfo{person}{Dahlia Malkhi}.}
+  \bibinfo{year}{2004}\natexlab{}.
+\newblock \showarticletitle{{LLS}: a locality aware location service for mobile
+  ad hoc networks}. In \bibinfo{booktitle}{{\em DIALM-POMC '04: Proceedings of
+  the 2004 joint workshop on Foundations of mobile computing}}.
+  \bibinfo{pages}{75--84}.
+\newblock
+\showISBNx{1-58113-921-7}
+
+
+\bibitem[\protect\citeauthoryear{Aggarwal, Khuller, and Feder}{Aggarwal
+  et~al\mbox{.}}{2006}]%
+        {Aggarwal06achievinganonymity}
+\bibfield{author}{\bibinfo{person}{Gagan Aggarwal}, \bibinfo{person}{Samir
+  Khuller}, {and} \bibinfo{person}{Tom{\'a}s Feder}.}
+  \bibinfo{year}{2006}\natexlab{}.
+\newblock \showarticletitle{Achieving Anonymity via Clustering}. In
+  \bibinfo{booktitle}{{\em In PODS}}. \bibinfo{pages}{153--162}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Alon, Babai, and Itai}{Alon
+  et~al\mbox{.}}{1986}]%
+        {alon1986fast}
+\bibfield{author}{\bibinfo{person}{Noga Alon}, \bibinfo{person}{L{\'a}szl{\'o}
+  Babai}, {and} \bibinfo{person}{Alon Itai}.} \bibinfo{year}{1986}\natexlab{}.
+\newblock \showarticletitle{A fast and simple randomized parallel algorithm for
+  the maximal independent set problem}.
+\newblock \bibinfo{journal}{{\em Journal of algorithms\/}} \bibinfo{volume}{7},
+  \bibinfo{number}{4} (\bibinfo{year}{1986}), \bibinfo{pages}{567--583}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Anshelevich and Karagiozova}{Anshelevich and
+  Karagiozova}{2011}]%
+        {anshelevich2011terminal}
+\bibfield{author}{\bibinfo{person}{Elliot Anshelevich} {and}
+  \bibinfo{person}{Adriana Karagiozova}.} \bibinfo{year}{2011}\natexlab{}.
+\newblock \showarticletitle{Terminal backup, {3D} matching, and covering cubic
+  graphs}.
+\newblock \bibinfo{journal}{{\it SIAM J. Comput.}} \bibinfo{volume}{40},
+  \bibinfo{number}{3} (\bibinfo{year}{2011}), \bibinfo{pages}{678--708}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Armon}{Armon}{2011}]%
+        {armon2011min}
+\bibfield{author}{\bibinfo{person}{Amitai Armon}.}
+  \bibinfo{year}{2011}\natexlab{}.
+\newblock \showarticletitle{On min--max $r$-gatherings}.
+\newblock \bibinfo{journal}{{\em Theoretical Computer Science\/}}
+  \bibinfo{volume}{412}, \bibinfo{number}{7} (\bibinfo{year}{2011}),
+  \bibinfo{pages}{573--582}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Basagni}{Basagni}{1999}]%
+        {Basagni99distributed}
+\bibfield{author}{\bibinfo{person}{S. Basagni}.}
+  \bibinfo{year}{1999}\natexlab{}.
+\newblock \showarticletitle{Distributed Clustering for Ad Hoc Networks}. In
+  \bibinfo{booktitle}{{\em Proc. 99' International Symp. on Parallel
+  Architectures, Algorithms, and Networks (I-SPAN'99)}}.
+  \bibinfo{pages}{310--315}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Basu, Khan, , and Little}{Basu
+  et~al\mbox{.}}{2001}]%
+        {basu01mobility}
+\bibfield{author}{\bibinfo{person}{Prithwish Basu}, \bibinfo{person}{Naved
+  Khan}, \bibinfo{person}{}, {and} \bibinfo{person}{Thomas~D.C. Little}.}
+  \bibinfo{year}{2001}\natexlab{}.
+\newblock \showarticletitle{A Mobility Based Metric for Clustering in Mobile Ad
+  Hoc Networks}. In \bibinfo{booktitle}{{\em Proc. of IEEE ICDCS 2001 Workshop
+  on Wireless Networks and Mobile Computing}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Blumberg and Eckersley}{Blumberg and
+  Eckersley}{2009}]%
+        {blumberg2009}
+\bibfield{author}{\bibinfo{person}{Andrew~J. Blumberg} {and}
+  \bibinfo{person}{Peter Eckersley}.} \bibinfo{year}{2009}\natexlab{}.
+\newblock \bibinfo{title}{On Locational Privacy, and How to Avoid Losing it
+  Forever}.
+\newblock \bibinfo{howpublished}{EFF whitepaper,
+  https://www.eff.org/files/eff-locational-privacy.pdf}.
+  (\bibinfo{year}{2009}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Chatterjee, Das, and Turgut}{Chatterjee
+  et~al\mbox{.}}{2002}]%
+        {593002}
+\bibfield{author}{\bibinfo{person}{Mainak Chatterjee},
+  \bibinfo{person}{Sajal~K. Das}, {and} \bibinfo{person}{Damla Turgut}.}
+  \bibinfo{year}{2002}\natexlab{}.
+\newblock \showarticletitle{{WCA}: A Weighted Clustering Algorithm for Mobile
+  Ad Hoc Networks}.
+\newblock \bibinfo{journal}{{\em Cluster Computing\/}} \bibinfo{volume}{5},
+  \bibinfo{number}{2} (\bibinfo{year}{2002}), \bibinfo{pages}{193--204}.
+\newblock
+\showISSN{1386-7857}
+\showDOI{%
+\url{http://dx.doi.org/10.1023/A:1013941929408}}
+
+
+\bibitem[\protect\citeauthoryear{Chen and Stojmenovic.}{Chen and
+  Stojmenovic.}{1999}]%
+        {chen99clustering}
+\bibfield{author}{\bibinfo{person}{Geng Chen} {and} \bibinfo{person}{Ivan
+  Stojmenovic.}} \bibinfo{year}{1999}\natexlab{}.
+\newblock \bibinfo{booktitle}{{\em Clustering and Routing in Mobile Wireless
+  Networks}}.
+\newblock \bibinfo{type}{{T}echnical {R}eport} TR-99-05.
+  \bibinfo{institution}{SITE}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Chow and Mokbel}{Chow and Mokbel}{2007}]%
+        {Chow:2007:EPC:1784462.1784477}
+\bibfield{author}{\bibinfo{person}{Chi-Yin Chow} {and}
+  \bibinfo{person}{Mohamed~F. Mokbel}.} \bibinfo{year}{2007}\natexlab{}.
+\newblock \showarticletitle{Enabling Private Continuous Queries for Revealed
+  User Locations}. In \bibinfo{booktitle}{{\em Proceedings of the 10th
+  International Conference on Advances in Spatial and Temporal Databases}} {\em
+  (\bibinfo{series}{SSTD'07})}. \bibinfo{publisher}{Springer-Verlag},
+  \bibinfo{address}{Berlin, Heidelberg}, \bibinfo{pages}{258--273}.
+\newblock
+\showISBNx{978-3-540-73539-7}
+\showURL{%
+\url{http://dl.acm.org/citation.cfm?id=1784462.1784477}}
+
+
+\bibitem[\protect\citeauthoryear{Chow and Mokbel}{Chow and Mokbel}{2011}]%
+        {Chow:2011:TPL:2031331.2031335}
+\bibfield{author}{\bibinfo{person}{Chi-Yin Chow} {and}
+  \bibinfo{person}{Mohamed~F. Mokbel}.} \bibinfo{year}{2011}\natexlab{}.
+\newblock \showarticletitle{Trajectory Privacy in Location-based Services and
+  Data Publication}.
+\newblock \bibinfo{journal}{{\em SIGKDD Explor. Newsl.\/}}
+  \bibinfo{volume}{13}, \bibinfo{number}{1} (\bibinfo{date}{Aug.}
+  \bibinfo{year}{2011}), \bibinfo{pages}{19--29}.
+\newblock
+\showISSN{1931-0145}
+\showDOI{%
+\url{http://dx.doi.org/10.1145/2031331.2031335}}
+
+
+\bibitem[\protect\citeauthoryear{Gao, Guibas, Hershberger, Zhang, and Zhu}{Gao
+  et~al\mbox{.}}{2003}]%
+        {gghzz-dmc-03}
+\bibfield{author}{\bibinfo{person}{J. Gao}, \bibinfo{person}{L. Guibas},
+  \bibinfo{person}{J. Hershberger}, \bibinfo{person}{L. Zhang}, {and}
+  \bibinfo{person}{A. Zhu}.} \bibinfo{year}{2003}\natexlab{}.
+\newblock \showarticletitle{Discrete Mobile Centers}.
+\newblock \bibinfo{journal}{{\em Discrete and Computational Geometry\/}}
+  \bibinfo{volume}{30}, \bibinfo{number}{1} (\bibinfo{year}{2003}),
+  \bibinfo{pages}{45--65}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Gruteser and Grunwald}{Gruteser and
+  Grunwald}{2003}]%
+        {Gruteser:2003:AUL:1066116.1189037}
+\bibfield{author}{\bibinfo{person}{Marco Gruteser} {and} \bibinfo{person}{Dirk
+  Grunwald}.} \bibinfo{year}{2003}\natexlab{}.
+\newblock \showarticletitle{Anonymous Usage of Location-Based Services Through
+  Spatial and Temporal Cloaking}. In \bibinfo{booktitle}{{\em Proceedings of
+  the 1st International Conference on Mobile Systems, Applications and
+  Services}} {\em (\bibinfo{series}{MobiSys '03})}. \bibinfo{publisher}{ACM},
+  \bibinfo{address}{New York, NY, USA}, \bibinfo{pages}{31--42}.
+\newblock
+\showDOI{%
+\url{http://dx.doi.org/10.1145/1066116.1189037}}
+
+
+\bibitem[\protect\citeauthoryear{Lin and Gerla}{Lin and Gerla}{1997}]%
+        {lin97adaptive}
+\bibfield{author}{\bibinfo{person}{Chunhung~Richard Lin} {and}
+  \bibinfo{person}{Mario Gerla}.} \bibinfo{year}{1997}\natexlab{}.
+\newblock \showarticletitle{Adaptive Clustering for Mobile Wireless Networks}.
+\newblock \bibinfo{journal}{{\em IEEE Journal of Selected Areas in
+  Communications\/}} \bibinfo{volume}{15}, \bibinfo{number}{7}
+  (\bibinfo{year}{1997}), \bibinfo{pages}{1265--1275}.
+\newblock
+\showURL{%
+\url{citeseer.ist.psu.edu/lin97adaptive.html}}
+
+
+\bibitem[\protect\citeauthoryear{Mokbel, Chow, and Aref}{Mokbel
+  et~al\mbox{.}}{2006}]%
+        {Mokbel:2006:NCQ:1182635.1164193}
+\bibfield{author}{\bibinfo{person}{Mohamed~F. Mokbel}, \bibinfo{person}{Chi-Yin
+  Chow}, {and} \bibinfo{person}{Walid~G. Aref}.}
+  \bibinfo{year}{2006}\natexlab{}.
+\newblock \showarticletitle{The New Casper: Query Processing for Location
+  Services Without Compromising Privacy}. In \bibinfo{booktitle}{{\em
+  Proceedings of the 32Nd International Conference on Very Large Data Bases}}
+  {\em (\bibinfo{series}{VLDB '06})}. \bibinfo{publisher}{VLDB Endowment},
+  \bibinfo{pages}{763--774}.
+\newblock
+\showURL{%
+\url{http://dl.acm.org/citation.cfm?id=1182635.1164193}}
+
+
+\bibitem[\protect\citeauthoryear{Sarkar and Gao}{Sarkar and Gao}{}]%
+        {Sarkar:2010:forms}
+\bibfield{author}{\bibinfo{person}{Rik Sarkar} {and} \bibinfo{person}{Jie
+  Gao}.}
+\newblock \showarticletitle{Differential forms for target tracking and
+  aggregate queries in distributed networks}. In \bibinfo{booktitle}{{\em ACM
+  MobiCom '10}}. 12.
+\newblock
+\showISBNx{978-1-4503-0181-7}
+\showDOI{%
+\url{http://dx.doi.org/10.1145/1859995.1860038}}
+
+
+\bibitem[\protect\citeauthoryear{Shalita and Zwick}{Shalita and Zwick}{2010}]%
+        {shalita2010efficient}
+\bibfield{author}{\bibinfo{person}{Alon Shalita} {and} \bibinfo{person}{Uri
+  Zwick}.} \bibinfo{year}{2010}\natexlab{}.
+\newblock \showarticletitle{Efficient algorithms for the 2-gathering problem}.
+\newblock \bibinfo{journal}{{\em ACM Transactions on Algorithms (TALG)\/}}
+  \bibinfo{volume}{6}, \bibinfo{number}{2} (\bibinfo{year}{2010}),
+  \bibinfo{pages}{34}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Shin, Ju, Chen, and Hu}{Shin
+  et~al\mbox{.}}{2012}]%
+        {6155874}
+\bibfield{author}{\bibinfo{person}{K.G. Shin}, \bibinfo{person}{Xiaoen Ju},
+  \bibinfo{person}{Zhigang Chen}, {and} \bibinfo{person}{Xin Hu}.}
+  \bibinfo{year}{2012}\natexlab{}.
+\newblock \showarticletitle{Privacy protection for users of location-based
+  services}.
+\newblock \bibinfo{journal}{{\em Wireless Communications, IEEE\/}}
+  \bibinfo{volume}{19}, \bibinfo{number}{1} (\bibinfo{date}{February}
+  \bibinfo{year}{2012}), \bibinfo{pages}{30--39}.
+\newblock
+\showISSN{1536-1284}
+\showDOI{%
+\url{http://dx.doi.org/10.1109/MWC.2012.6155874}}
+
+
+\bibitem[\protect\citeauthoryear{Sweeney}{Sweeney}{2002}]%
+        {Sweeney02}
+\bibfield{author}{\bibinfo{person}{Latanya Sweeney}.}
+  \bibinfo{year}{2002}\natexlab{}.
+\newblock \showarticletitle{$k$-anonymity: a model for protecting privacy}.
+\newblock \bibinfo{journal}{{\em Int. J. Uncertain. Fuzziness Knowl.-Based
+  Syst.\/}}  \bibinfo{volume}{10} (\bibinfo{date}{Oct.} \bibinfo{year}{2002}),
+  \bibinfo{pages}{557--570}.
+\newblock
+\showISSN{0218-4885}
+\showURL{%
+\url{http://portal.acm.org/citation.cfm?id=774544.774552}}
+
+
+\bibitem[\protect\citeauthoryear{Xu and Cai}{Xu and Cai}{2007}]%
+        {Xu:2007:LAC:1341012.1341062}
+\bibfield{author}{\bibinfo{person}{Toby Xu} {and} \bibinfo{person}{Ying Cai}.}
+  \bibinfo{year}{2007}\natexlab{}.
+\newblock \showarticletitle{Location Anonymity in Continuous Location-based
+  Services}. In \bibinfo{booktitle}{{\em Proceedings of the 15th Annual ACM
+  International Symposium on Advances in Geographic Information Systems}} {\em
+  (\bibinfo{series}{GIS '07})}. \bibinfo{publisher}{ACM}, \bibinfo{address}{New
+  York, NY, USA}, Article \bibinfo{articleno}{39}, \bibinfo{numpages}{8}~pages.
+\newblock
+\showISBNx{978-1-59593-914-2}
+\showDOI{%
+\url{http://dx.doi.org/10.1145/1341012.1341062}}
+
+
+\bibitem[\protect\citeauthoryear{Xu and Cai}{Xu and Cai}{2008}]%
+        {4509698}
+\bibfield{author}{\bibinfo{person}{T. Xu} {and} \bibinfo{person}{Ying Cai}.}
+  \bibinfo{year}{2008}\natexlab{}.
+\newblock \showarticletitle{Exploring Historical Location Data for Anonymity
+  Preservation in Location-Based Services}. In \bibinfo{booktitle}{{\em INFOCOM
+  2008. The 27th Conference on Computer Communications. IEEE}}.
+  \bibinfo{pages}{--}.
+\newblock
+\showISSN{0743-166X}
+\showDOI{%
+\url{http://dx.doi.org/10.1109/INFOCOM.2008.103}}
+
+
+\end{thebibliography}

@@ -136,7 +136,7 @@ ax[0].grid( b=True )
 ax[1].grid( b=True )
 
 r = 5
-pointCloud = givePoints('rbox 120 D2')
+pointCloud = givePoints('rbox 60  D2')
 run1 = rg.AlgoAggarwalStaticR2L2(r=r, pointCloud=pointCloud) 
 run2 = rg.AlgoJieminDecentralizedStatic( r=r, pointCloud = pointCloud ) 
 
