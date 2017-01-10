@@ -17,7 +17,7 @@ r            = 5
 # Setting up the input events. 
 fig, ax =  plt.subplots()
 ax.grid(b=True)
-run1 = rg.AlgoJieminDecentralizedStatic(r=r, pointCloud=[]) # Empty shell. 
+run1 = rg.Algo_Static_4APX_R2_L2 (r=r, pointCloud=[]) # Empty shell. 
 
 xlim= [0,1] # Depending on the axes limits, set the radius of the circle. 
 ylim= [0,1]
@@ -128,7 +128,7 @@ def wrapperkeyPressHandler(fig,ax, run, keyStack=[]): # the key-stack argument i
 
            # Call the visualization algorithm here!!!!
            run.r = r
-           run.generateClusters( config={'mis_algorithm':'riksuggestion'}  )
+           run.generateClustersSimple( config={'mis_algorithm':'riksuggestion'}  )
            run.plotClusters(ax, pointSize=140, annotatePoints=False)
 
            applyAxCorrection(ax)

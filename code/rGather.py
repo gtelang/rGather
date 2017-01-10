@@ -1,12 +1,31 @@
 
 #!/usr/bin/python
-import matplotlib as mpl, numpy as np, scipy as sp, sys, math, colorsys 
+import matplotlib as mpl 
 from matplotlib import pyplot as plt, animation 
+import numpy as np
+import scipy as sp
+from scipy import spatial
+import sys
+import math
 import networkx as nx, sklearn as sk
 from abc import ABCMeta, abstractmethod
-from haversine import haversine # https://pypi.python.org/pypi/haversine
+import colorsys 
 from termcolor import colored
+import itertools
+import pprint as pp
+import copy
+import yaml
+from sklearn.neighbors import NearestNeighbors
 
+def getRandomColor():
+    """ Ripped from http://goo.gl/SMlEaU"""
+    h = np.random.rand() 
+    h +=  0.618033988749895 # golden_ratio_conjugate
+    h %= 1.0
+    return colorsys.hsv_to_rgb(h, 0.7, 0.9)
+
+# Here we use the 2-approximation algorithm for general metric spaces 
+# described in the aggarwal paper on r-Gather.
 class AlgoAggarwalStatic:
   __metaclass__ = ABCMeta
 
@@ -91,8 +110,6 @@ class AlgoAggarwalStatic:
                             dist   = self.dist      , 
                             r      = self.r         ):
           """ Marking loop for choosing good cluster centers """
-          import numpy as np
-          from sklearn.neighbors import NearestNeighbors
     
           numPoints               = len( points )
           markers                 = [ False for i in range( numPoints ) ]
@@ -340,7 +357,7 @@ class AlgoAggarwalStatic:
     raw_input('Press Enter to continue...')
   
     return  bestRCenters
-
+   # Abstract class
 
 class AlgoAggarwalStaticR2L2( AlgoAggarwalStatic ):
     
@@ -373,8 +390,6 @@ class AlgoAggarwalStaticR2L2( AlgoAggarwalStatic ):
       k          : The length of the neighbour list to compute. 
       """
       from sklearn.neighbors import NearestNeighbors
-      import numpy as np
-      import sys
       
       X    = np.array(pointCloud)
       nbrs = NearestNeighbors(n_neighbors=k, algorithm='ball_tree').fit(X)
@@ -388,8 +403,6 @@ class AlgoAggarwalStaticR2L2( AlgoAggarwalStatic ):
           Given a point-cloud, return the neighbours within a distance of 'radius'
           for every element of the pointcloud. return the neighbour indices , sorted 
           according to distance. """
-      import numpy as np
-      import sys
       from scipy import spatial
       
       X        = np.array( pointCloud )
@@ -525,399 +538,7 @@ class AlgoAggarwalStaticR2L2( AlgoAggarwalStatic ):
            else:
               pass
    
-    
-
-class AlgoJieminDecentralizedStatic:
-    
-    def __init__(self, r, pointCloud):
-      """  r          : Cluster parameter
-           pointCloud : An n x 2 numpy array where n is the number 
-                        of points in the cloud and each row contains 
-                        the (x,y) coordinates of a point."""
-      
-      self.r                    = r     
-      self.pointCloud           = pointCloud  
-      self.computedClusterings  = []  
-      self.algoName             = 'Decentralized Static r-Gather'
-    
-    
-    
-    def clearAllStates(self):
-      self.r                   = None
-      self.pointCloud          = [] 
-      self.computedClusterings = []
-    
-    
-    def clearComputedClusteringsAndR(self):
-      self.r                   = None
-      self.computedClusterings = []
-    
-    
-    
-    
-    
-    def generateClusters(self, config={'mis_algorithm': 'networkx_random_choose_20_iter_best'}):
-      """ config : Configuration parameters which might be needed 
-                   for the run. 
-      Options recognized are (ALL LOWER-CASE)
-      1. mis_algorithm:
-           A. 'networkx_random_choose_20_iter_best', default 
-           B. 'riksuggestion'
-      """
-    
-    
-      import itertools
-      import numpy as np
-      import pprint as pp
-      import copy
-      
-      def findNearestNeighbours(pointCloud, k):
-        """  pointCloud : 2-d numpy array. Each row is a point
-             k          : The length of the neighbour list to compute. 
-        """
-        from sklearn.neighbors import NearestNeighbors
-        import sklearn
-        import numpy as np
-        import sys
-      
-      
-      
-        X    = np.array(pointCloud)
-        nbrs = NearestNeighbors(n_neighbors=k, algorithm='ball_tree').fit( X )
-        distances, indices = nbrs.kneighbors(X)
-      
-        return distances, indices
-      
-      def findMaximalIndependentOfNeighbourhoods(  nbds , mis_algorithm  ):
-        import networkx as nx
-        G = nx.Graph()
-        G.add_nodes_from(range(len(nbds)))
-      
-        # If two neighbourhoods intersect, draw 
-        # a corresponding edge in the graph. 
-        for i in range(len(nbds)):
-          for j in range(i+1,len(nbds)):
-            intersection_of_nbds_ij = [  val  for val in nbds[i] if val in nbds[j]    ] 
-            if len(intersection_of_nbds_ij) >= 1:
-              G.add_edge(i,j)
-      
-        # Having constructed the neighbourhood, we proceed to find a good MIS
-        # The quality of the solution is affected by the size of the MIS
-        # The larger the maximal independent set, the better it is
-        if mis_algorithm == 'networkx_random_choose_20_iter_best': 
-          candidateSindices = [ nx.maximal_independent_set(G) for i in range(20)  ]
-      
-          #for candidate in candidateSindices: # for debugging
-          #  print candidate
-      
-          sIndices = [] # Start value for finding the maximum
-          for candidate in candidateSindices: # Pick the largest independent set over 10 iterations
-            if len(candidate) > len(sIndices): # Yay! Found a larger independent set!
-              print "Larger set!"
-              sIndices = candidate
-      
-      
-        elif mis_algorithm == 'riksuggestion':
-          
-          # Give cluster centers a special attribute marking it as a center. 
-          distanceFromRthNearestNeighbourDict = {}
-       
-          for nbd, i in zip( nbds, range( len(nbds) )): # Note that each neighbourhood's 0th element is the center, and that the nbd indices are sorted by distance from this zeroth element. So -1 makes sense
-              nbdCenterCoords                      = self.pointCloud[ nbd[0] ] 
-              nbdFarthestNeighbourCoords           = self.pointCloud[ nbd[-1] ]
-              distanceFromRthNearestNeighbourDict[i] = np.linalg.norm( [ nbdCenterCoords[0] - nbdFarthestNeighbourCoords[0] ,
-                                                                         nbdCenterCoords[1] - nbdFarthestNeighbourCoords[1] ]  )# Abstract this away with the distance function later. 
-      
-          nx.set_node_attributes( G, 'distanceFromRthNearestNeighbour', distanceFromRthNearestNeighbourDict )
-      
-          import collections
-          # Generate the order to remove the vertices
-          orderOfVerticesToDelete = collections.deque(sorted(  range(len(nbds)) , key = lambda x: G.node[x][ 'distanceFromRthNearestNeighbour' ]    ))
-          
-          #print orderOfVerticesToDelete
-          #for i in orderOfVerticesToDelete:
-          #  print G.node[i]['distanceFromRthNearestNeighbour']
-          sIndices = [ ]
-      
-      
-          for i in orderOfVerticesToDelete:
-      
-            try:
-               node = orderOfVerticesToDelete[i]
-      
-               nlist = G.neighbors( node )
-      
-               for n in nlist:
-                 try:
-                   G.remove_edge( node, n ) # Remove all edges emanating
-                 except nx.NetworkXError:
-                   continue
-      
-               G.remove_node( node ) # Remove the node itself
-      
-                
-               for n in nlist:
-                 try:
-                   G.remove_node( n ) # Remove all the neighbours.
-                 except nx.NetworkXError:
-                   continue
-      
-               sIndices.append( node ) 
-      
-            except nx.NetworkXError:
-                continue
-      
-      
-          # while( len( orderOfVerticesToDelete ) >= 1 ): # This list changes during the iteration. 
-      
-          #     try:
-          #       node  = orderOfVerticesToDelete[0]
-      
-          #     except nx.NetworkXError:
-          #         print "Removing carcass"
-          #         orderOfVerticesToDelete.popleft()
-      
-          #     else:
-          #       sIndices.append( node ) # The very fact no exception was thrown means that you can freely add it to the independent set
-          #       nlist = G.neighbors( node )
-      
-          #       # Delete all the edges emanating from  elements of nlist. 
-          #       # The fact that this did not throw an exception means 'node' still exists in the graph G
-          #       for n in nlist:
-          #          G.remove_edge( node, n ) # Remove all edges emanating
-      
-          #       G.remove_node( node ) # Remove the node itself
-      
-          #       for n in nlist:
-          #         G.remove_node( n ) # Remove all the neighbours.
-                  
-          #       orderOfVerticesToDelete.popleft()
-      
-        else:
-          import sys
-          print "Maximum independent Set Algorithm option not recognized!"
-          sys.exit()
-      
-      
-        # If two neighbourhoods intersect, draw 
-        # a corresponding edge in the graph. 
-        # print sIndices
-        for i in sIndices:
-           for j in sIndices:
-             if j > i:
-               intersection_of_nbds_ij = [val for val in nbds[i] if val in nbds[j] ]
-               if len(intersection_of_nbds_ij) >= 1:
-                     print "Neighbourhoods intersect!"
-                     sys.exit()
-      
-        # print "Exiting!"
-        # import sys
-        # sys.exit()
-      
-        return [ nbds[s] for s in sIndices ]
-      
-      def extractUniqueElementsFromList( L ):
-          
-          uniqueElements = []
-          for elt in L:
-              if elt not in uniqueElements: # Just discovered a brand new element!!
-                  uniqueElements.append(elt)
-      
-          return uniqueElements
-      
-    
-    
-      NrDistances, Nr = findNearestNeighbours( self.pointCloud, 
-                                               self.r )
-      S               = findMaximalIndependentOfNeighbourhoods( Nr.tolist( ), 
-                                                                config[ 'mis_algorithm' ] )
-    
-      indicesOfPointsCoveredByS = set(list(itertools.chain.from_iterable(S)))
-      indicesOfPointsMissedByS  = set(range(len(self.pointCloud))).difference(indicesOfPointsCoveredByS)
-    
-      assert(indicesOfPointsCoveredByS.union(indicesOfPointsMissedByS ) == set(range(len(self.pointCloud))) )
-    
-      # For each point missed by S, find which elements of its r-neighbourhood lies inside a member of S. 
-      pNrS = {} # A dictionary which maintains this information.  
-      for index in indicesOfPointsMissedByS:
-    
-         pNrS[index] = [] 
-    
-         #Coordinates of the point whose index is 'index'
-         ptIndex     = np.array( self.pointCloud[index] )
-       
-         neighborIndices = Nr[index][1:] 
-    
-         for nbIndex in neighborIndices:
-           for s in S:
-             if nbIndex in s:
-      
-               ptnbIndex = np.array(self.pointCloud[nbIndex])
-    
-               dist = np.linalg.norm( ptIndex - ptnbIndex  ) # Euclidean distance between the points
-               pNrS[index].append(  (s, dist)    )
-               break # since members of S are disjoint there is no reason to continue to iterate over members of S to check containment of nbindex
-                     # Move onto the next member of neighbourIndices. 
-    
-      # print "\nNr   = "     , Nr
-      # print "\nS    = "     , S
-      # print "\npointsMissed", indicesOfPointsMissedByS
-      # print "\npNrS = "     ; pp.pprint(pNrS, width=20 )
-    
-    
-      # Now for each point select the member of S that is closest using this dictionary. 
-      # Edit this dictionary in place, by keeping only the closest neighbourhood. 
-      pNrS_trimmed = {}
-      for (key, value) in pNrS.iteritems():
-          distmin = float("inf") # Positive infinity
-    
-          for (s, dist) in value:
-            if dist<distmin:
-                smin    = s
-                distmin = dist
-                 
-    
-          #pNrS_trimmed[key] = (smin,distmin) # For debugging purposes. 
-          pNrS_trimmed[key] = smin
-    
-      #print "\npNrS_trimmed = "; pp.pprint(pNrS_trimmed, width=1) 
-    
-    
-    
-      # With pNrS_trimmed we obtain the final clustering. Yay!
-      # by "inverting" this key-value mapping
-      augmentedSets = [s for s in S if s not in pNrS_trimmed.values()] # The sets just included are not augmented at all. 
-      
-      pNrS_codomain = extractUniqueElementsFromList(pNrS_trimmed.values())
-     
-      for s in pNrS_codomain:
-        smodified = copy.copy(s) # This copying step is SUPER-CRUCIAL!!! if you just use =, you will just be binding object pointed to by s to smod. Modifying smod, will then modify s, which will trip up your future iterations! I initially implemented it like this and got tripped up 
-        for key, value in pNrS_trimmed.iteritems():
-          if s == value:
-            smodified.append(key) # augmentation step
-    
-        augmentedSets.append(smodified)
-    
-    
-      self.computedClusterings = augmentedSets
-      
-      #print "\nself.computedClusterings = "; pp.pprint(self.computedClusterings,width=1)
-      print   "Numpoints = "                   , len( self.pointCloud )       ,  \
-              " r = "                          , self.r                       ,  \
-              " Number of Clusters Computed = ", len( self.computedClusterings ), \
-              " Algorithm used: "              , self.algoName
-      sys.stdout.flush() 
-    
-    
-    def plotClusters(self,  ax    , 
-                   pointSize=200, 
-                   marker='o'   , 
-                   pointCloudInfo='',
-                   annotatePoints=True):
-        
-    
-          from scipy import spatial
-          import numpy as np, matplotlib as mpl
-          import matplotlib.pyplot as plt
-     
-          # Plot point-cloud 
-          xs = [x for (x,y) in self.pointCloud]
-          ys = [y for (x,y) in self.pointCloud]
-          ax.plot(xs,ys,'bo', markersize=3) 
-          ax.set_aspect(1.0)    
-    
-          if annotatePoints==True:
-                # Annotate each point with a corresponding number. 
-                numPoints = len(xs)
-                labels = ['{0}'.format(i) for i in range(numPoints)]
-                
-                for label, x, y in zip(labels, xs, ys):
-                      ax.annotate(  label                       , 
-                                    xy         = (x, y)         , 
-                                    xytext     = (-3, 0)      ,
-                                    textcoords = 'offset points', 
-                                    ha         = 'right'        , 
-                                    va         = 'bottom')
-                      
-    
-          # Overlay with cluster-groups.
-          for s in self.computedClusterings:
-          
-            clusterColor = getRandomColor()
-            xc = [ xs[i]  for i in s   ]
-            yc = [ ys[i]  for i in s   ]
-    
-            # Mark all members of a cluster with a nice fat dot around it. 
-            #ax.scatter(xc, yc, c=clusterColor, 
-            #           marker=marker, 
-            #           s=pointSize) 
-    
-            #ax.plot(xc,yc, alpha=0.5, markersize=1 , markerfacecolor=clusterColor , linewidth=0)
-            #ax.set_aspect(1.0)
-    
-            # For some stupid reason sp.spatial.ConvexHull requires at least three points for computing the convex hull. 
-            
-            if len(xc) >= 3 : 
-                  hull = spatial.ConvexHull(  np.array(zip(xc,yc)) , qhull_options="QJn" ) # Last option because of this http://stackoverflow.com/q/30132124/505306
-                  hullPoints = np.array( zip( [ xc[i] for i in hull.vertices ],  
-                                              [ yc[i] for i in hull.vertices ] ) )
-                  ax.add_patch( mpl.patches.Polygon(hullPoints, alpha=0.5, 
-                                                    facecolor=clusterColor) )
-           
-    
-            elif len(xc) == 2:
-                   ax.plot( xc,yc, color=clusterColor )
-                
-    
-            ax.set_aspect(1.0)
-            ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':15})
-            ax.set_xlabel('Latitude', fontdict={'fontsize':10})
-            ax.set_ylabel('Longitude',fontdict={'fontsize':10})
-    
-            #ax.get_xaxis().set_ticks( [] ,  fontdict={'fontsize':10})
-            #ax.get_yaxis().set_ticks( [],  fontdict={'fontsize':10} ) 
-    
-            ax.grid(b=True)
-    
-      
-    
-    
-    def plotStatistics(self, axStatsDict ):
-       """ axStatsDict, specifies the mapping of axes objects to the statistic
-           being plotted.""" 
-    
-       def plotConvexHullDiameters(ax):
-          pass
-      
-       def plotMinBoundingCircleDiameters(ax):
-          pass
-    
-       def plotClusterPopulationSizes(ax):
-          barHeights = map(len, self.computedClusterings )
-          numBars    = len(barHeights)
-    
-          ax.bar( range(numBars) ,barHeights, width=1.0, align='center')
-          ax.set_title('Number of points per Cluster', fontdict={'fontsize':30})
-    
-          ax.set_aspect(1.0)
-          ax.grid(b=True)
-    
-       for ax, statistic in axStatsDict.iteritems():
-           
-            if statistic == 'convexHullDiameters': 
-               plotConvexHullDiameters(ax) 
-            
-            elif statistic == 'minBoundingCircleDiameters':
-               plotMinBoundingCircleDiameters(ax)
-    
-            elif statistic == 'clusterPopulationSizes':
-               plotClusterPopulationSizes(ax)
-    
-            else:
-               pass
-    
-    
-
+       # For static points in the euclidean plane with the L2 metric
 class AlgoJieminDynamic( AlgoAggarwalStatic ):
      
     def __init__(self, r,  pointCloud,  memoizeNbrSearch = False, distances_and_indices_file=''):
@@ -1285,15 +906,597 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
        # The draw commands are very important for the animation to be rednered.
        fig.canvas.draw()
        plt.show()
-       #anim.save('shenzen_show.mp4', fps=5, extra_args=['-vcodec', 'libx264'])
+       #anim.save('shenzen_show.mp4', fps=5, extra_args=['-vcodec', 'libx264']) # For trajectories in the euclidean plane with the linifinity-like metric 
 
+# The abstract class has both versions of the 4-approximation
+# algorithm i.e. the simple one and the improved distributed sweep 
+# algorithm described by Prof. Mitchell.
+class Algo_4APX_Metric:
+    __metaclass__ = ABCMeta
 
-def getRandomColor():
-    """ Ripped from http://goo.gl/SMlEaU"""
+    def __init__(self,r,pointCloud):
+      """ Even though this is an abstract class, a subclass is 
+          allowed to call the constructor via super. 
+          However, a user cannot instantiate a class with this 
+          method from his code."""
+      pass 
 
-    golden_ratio_conjugate = 0.618033988749895
+   
+    @abstractmethod
+    def dist(p,q):
+      """ A distance function of a metric space.
+          distance between points p and q. Implemented 
+          by the subclass. """
+      pass
 
-    h = np.random.rand() 
-    h += golden_ratio_conjugate
-    h %= 1.0
-    return colorsys.hsv_to_rgb(h, 0.7, 0.9)
+    @abstractmethod
+    def rangeSearch( pointCloud, radius):
+      """ Given a set of points in the metric space, and a radius value
+          find all the neighbours for a point in 'pointCloud' in a ball of radius, 
+          'radius', for all points in 'points'. Depending on the metric space 
+          an efficient neighbour search routine will use different tricks """ 
+      pass 
+
+    
+    def generateClustersSimple(self, config={'mis_algorithm': 'networkx_random_choose_20_iter_best'}):
+      """ config : Configuration parameters which might be needed 
+                   for the run. 
+      Options recognized are (ALL LOWER-CASE)
+      1. mis_algorithm:
+           A. 'networkx_random_choose_20_iter_best', default 
+           B. 'riksuggestion'
+      """
+      import pprint as pp
+      
+      def findMaximalIndependentOfNeighbourhoods(  nbds , mis_algorithm  ):
+        import networkx as nx
+        G = nx.Graph()
+        G.add_nodes_from(range(len(nbds)))
+      
+        # If two neighbourhoods intersect, draw 
+        # a corresponding edge in the graph. 
+        for i in range(len(nbds)):
+          for j in range(i+1,len(nbds)):
+            intersection_of_nbds_ij = [  val  for val in nbds[i] if val in nbds[j]    ] 
+            if len(intersection_of_nbds_ij) >= 1:
+              G.add_edge(i,j)
+      
+        # Having constructed the neighbourhood, we proceed to find a good MIS
+        # The quality of the solution is affected by the size of the MIS
+        # The larger the maximal independent set, the better it is
+        if mis_algorithm == 'networkx_random_choose_20_iter_best': 
+          candidateSindices = [ nx.maximal_independent_set(G) for i in range(20)  ]
+      
+          #for candidate in candidateSindices: # for debugging
+          #  print candidate
+      
+          sIndices = [] # Start value for finding the maximum
+          for candidate in candidateSindices: # Pick the largest independent set over 10 iterations
+            if len(candidate) > len(sIndices): # Yay! Found a larger independent set!
+              print "Larger set!"
+              sIndices = candidate
+      
+      
+        elif mis_algorithm == 'riksuggestion':
+          
+          # Give cluster centers a special attribute marking it as a center. 
+          distanceFromRthNearestNeighbourDict = {}
+       
+          for nbd, i in zip( nbds, range( len(nbds) )): # Note that each neighbourhood's 0th element is the center, and that the nbd indices are sorted by distance from this zeroth element. So -1 makes sense
+              nbdCenterCoords                      = self.pointCloud[ nbd[0] ] 
+              nbdFarthestNeighbourCoords           = self.pointCloud[ nbd[-1] ]
+              distanceFromRthNearestNeighbourDict[i] = np.linalg.norm( [ nbdCenterCoords[0] - nbdFarthestNeighbourCoords[0] ,
+                                                                         nbdCenterCoords[1] - nbdFarthestNeighbourCoords[1] ]  )# Abstract this away with the distance function later. 
+      
+          nx.set_node_attributes( G, 'distanceFromRthNearestNeighbour', distanceFromRthNearestNeighbourDict )
+      
+          import collections
+          # Generate the order to remove the vertices
+          orderOfVerticesToDelete = collections.deque(sorted(  range(len(nbds)) , key = lambda x: G.node[x][ 'distanceFromRthNearestNeighbour' ]    ))
+          
+          #print orderOfVerticesToDelete
+          #for i in orderOfVerticesToDelete:
+          #  print G.node[i]['distanceFromRthNearestNeighbour']
+          sIndices = [ ]
+      
+      
+          for i in orderOfVerticesToDelete:
+      
+            try:
+               node = orderOfVerticesToDelete[i]
+      
+               nlist = G.neighbors( node )
+      
+               for n in nlist:
+                 try:
+                   G.remove_edge( node, n ) # Remove all edges emanating
+                 except nx.NetworkXError:
+                   continue
+      
+               G.remove_node( node ) # Remove the node itself
+      
+                
+               for n in nlist:
+                 try:
+                   G.remove_node( n ) # Remove all the neighbours.
+                 except nx.NetworkXError:
+                   continue
+      
+               sIndices.append( node ) 
+      
+            except nx.NetworkXError:
+                continue
+      
+      
+          # while( len( orderOfVerticesToDelete ) >= 1 ): # This list changes during the iteration. 
+      
+          #     try:
+          #       node  = orderOfVerticesToDelete[0]
+      
+          #     except nx.NetworkXError:
+          #         print "Removing carcass"
+          #         orderOfVerticesToDelete.popleft()
+      
+          #     else:
+          #       sIndices.append( node ) # The very fact no exception was thrown means that you can freely add it to the independent set
+          #       nlist = G.neighbors( node )
+      
+          #       # Delete all the edges emanating from  elements of nlist. 
+          #       # The fact that this did not throw an exception means 'node' still exists in the graph G
+          #       for n in nlist:
+          #          G.remove_edge( node, n ) # Remove all edges emanating
+      
+          #       G.remove_node( node ) # Remove the node itself
+      
+          #       for n in nlist:
+          #         G.remove_node( n ) # Remove all the neighbours.
+                  
+          #       orderOfVerticesToDelete.popleft()
+      
+        else:
+          import sys
+          print "Maximum independent Set Algorithm option not recognized!"
+          sys.exit()
+      
+      
+        # If two neighbourhoods intersect, draw 
+        # a corresponding edge in the graph. 
+        # print sIndices
+        for i in sIndices:
+           for j in sIndices:
+             if j > i:
+               intersection_of_nbds_ij = [val for val in nbds[i] if val in nbds[j] ]
+               if len(intersection_of_nbds_ij) >= 1:
+                     print "Neighbourhoods intersect!"
+                     sys.exit()
+      
+        # print "Exiting!"
+        # import sys
+        # sys.exit()
+      
+        return [ nbds[s] for s in sIndices ]
+      
+      def extractUniqueElementsFromList( L ):
+          
+          uniqueElements = []
+          for elt in L:
+              if elt not in uniqueElements: # Just discovered a brand new element!!
+                  uniqueElements.append(elt)
+      
+          return uniqueElements
+    
+    
+      NrDistances, Nr = self.findNearestNeighbours( self.pointCloud, 
+                                               self.r )
+      S               = findMaximalIndependentOfNeighbourhoods( Nr.tolist( ), 
+                                                                config[ 'mis_algorithm' ] )
+    
+      indicesOfPointsCoveredByS = set(list(itertools.chain.from_iterable(S)))
+      indicesOfPointsMissedByS  = set(range(len(self.pointCloud))).difference(indicesOfPointsCoveredByS)
+    
+      assert(indicesOfPointsCoveredByS.union(indicesOfPointsMissedByS ) == set(range(len(self.pointCloud))) )
+    
+      # For each point missed by S, find which elements of its r-neighbourhood lies inside a member of S. 
+      pNrS = {} # A dictionary which maintains this information.  
+      for index in indicesOfPointsMissedByS:
+    
+         pNrS[index] = [] 
+    
+         #Coordinates of the point whose index is 'index'
+         ptIndex     = np.array( self.pointCloud[index] )
+       
+         neighborIndices = Nr[index][1:] 
+    
+         for nbIndex in neighborIndices:
+           for s in S:
+             if nbIndex in s:
+      
+               ptnbIndex = np.array(self.pointCloud[nbIndex])
+    
+               dist = np.linalg.norm( ptIndex - ptnbIndex  ) # Euclidean distance between the points
+               pNrS[index].append(  (s, dist)    )
+               break # since members of S are disjoint there is no reason to continue to iterate over members of S to check containment of nbindex
+                     # Move onto the next member of neighbourIndices. 
+    
+      # print "\nNr   = "     , Nr
+      # print "\nS    = "     , S
+      # print "\npointsMissed", indicesOfPointsMissedByS
+      # print "\npNrS = "     ; pp.pprint(pNrS, width=20 )
+    
+    
+      # Now for each point select the member of S that is closest using this dictionary. 
+      # Edit this dictionary in place, by keeping only the closest neighbourhood. 
+      pNrS_trimmed = {}
+      for (key, value) in pNrS.iteritems():
+          distmin = float("inf") # Positive infinity
+    
+          for (s, dist) in value:
+            if dist<distmin:
+                smin    = s
+                distmin = dist
+                 
+    
+          #pNrS_trimmed[key] = (smin,distmin) # For debugging purposes. 
+          pNrS_trimmed[key] = smin
+    
+      #print "\npNrS_trimmed = "; pp.pprint(pNrS_trimmed, width=1) 
+    
+    
+    
+      # With pNrS_trimmed we obtain the final clustering. Yay!
+      # by "inverting" this key-value mapping
+      augmentedSets = [s for s in S if s not in pNrS_trimmed.values()] # The sets just included are not augmented at all. 
+      
+      pNrS_codomain = extractUniqueElementsFromList(pNrS_trimmed.values())
+     
+      for s in pNrS_codomain:
+        smodified = copy.copy(s) # This copying step is SUPER-CRUCIAL!!! if you just use =, you will just be binding object pointed to by s to smod. Modifying smod, will then modify s, which will trip up your future iterations! I initially implemented it like this and got tripped up 
+        for key, value in pNrS_trimmed.iteritems():
+          if s == value:
+            smodified.append(key) # augmentation step
+    
+        augmentedSets.append(smodified)
+    
+    
+      self.computedClusterings = augmentedSets
+      
+      #print "\nself.computedClusterings = "; pp.pprint(self.computedClusterings,width=1)
+      print   "Numpoints = "                   , len( self.pointCloud )       ,  \
+              " r = "                          , self.r                       ,  \
+              " Number of Clusters Computed = ", len( self.computedClusterings ), \
+              " Algorithm used: "              , self.algoName
+      sys.stdout.flush()
+    
+    def generateClustersSweep(self, config={'mis_algorithm': 'networkx_random_choose_20_iter_best'}):
+      """ config : Configuration parameters which might be needed 
+                   for the run. 
+      Options recognized are (ALL LOWER-CASE)
+      1. mis_algorithm:
+           A. 'networkx_random_choose_20_iter_best', default 
+           B. 'riksuggestion'
+      """
+      
+      def findMaximalIndependentOfNeighbourhoods(  nbds , mis_algorithm  ):
+        import networkx as nx
+        G = nx.Graph()
+        G.add_nodes_from(range(len(nbds)))
+      
+        # If two neighbourhoods intersect, draw 
+        # a corresponding edge in the graph. 
+        for i in range(len(nbds)):
+          for j in range(i+1,len(nbds)):
+            intersection_of_nbds_ij = [  val  for val in nbds[i] if val in nbds[j]    ] 
+            if len(intersection_of_nbds_ij) >= 1:
+              G.add_edge(i,j)
+      
+        # Having constructed the neighbourhood, we proceed to find a good MIS
+        # The quality of the solution is affected by the size of the MIS
+        # The larger the maximal independent set, the better it is
+        if mis_algorithm == 'networkx_random_choose_20_iter_best': 
+          candidateSindices = [ nx.maximal_independent_set(G) for i in range(20)  ]
+      
+          #for candidate in candidateSindices: # for debugging
+          #  print candidate
+      
+          sIndices = [] # Start value for finding the maximum
+          for candidate in candidateSindices: # Pick the largest independent set over 10 iterations
+            if len(candidate) > len(sIndices): # Yay! Found a larger independent set!
+              print "Larger set!"
+              sIndices = candidate
+      
+      
+        elif mis_algorithm == 'riksuggestion':
+          
+          # Give cluster centers a special attribute marking it as a center. 
+          distanceFromRthNearestNeighbourDict = {}
+       
+          for nbd, i in zip( nbds, range( len(nbds) )): # Note that each neighbourhood's 0th element is the center, and that the nbd indices are sorted by distance from this zeroth element. So -1 makes sense
+              nbdCenterCoords                      = self.pointCloud[ nbd[0] ] 
+              nbdFarthestNeighbourCoords           = self.pointCloud[ nbd[-1] ]
+              distanceFromRthNearestNeighbourDict[i] = np.linalg.norm( [ nbdCenterCoords[0] - nbdFarthestNeighbourCoords[0] ,
+                                                                         nbdCenterCoords[1] - nbdFarthestNeighbourCoords[1] ]  )# Abstract this away with the distance function later. 
+      
+          nx.set_node_attributes( G, 'distanceFromRthNearestNeighbour', distanceFromRthNearestNeighbourDict )
+      
+          import collections
+          # Generate the order to remove the vertices
+          orderOfVerticesToDelete = collections.deque(sorted(  range(len(nbds)) , key = lambda x: G.node[x][ 'distanceFromRthNearestNeighbour' ]    ))
+          
+          #print orderOfVerticesToDelete
+          #for i in orderOfVerticesToDelete:
+          #  print G.node[i]['distanceFromRthNearestNeighbour']
+          sIndices = [ ]
+      
+      
+          for i in orderOfVerticesToDelete:
+      
+            try:
+               node = orderOfVerticesToDelete[i]
+      
+               nlist = G.neighbors( node )
+      
+               for n in nlist:
+                 try:
+                   G.remove_edge( node, n ) # Remove all edges emanating
+                 except nx.NetworkXError:
+                   continue
+      
+               G.remove_node( node ) # Remove the node itself
+      
+                
+               for n in nlist:
+                 try:
+                   G.remove_node( n ) # Remove all the neighbours.
+                 except nx.NetworkXError:
+                   continue
+      
+               sIndices.append( node ) 
+      
+            except nx.NetworkXError:
+                continue
+      
+      
+          # while( len( orderOfVerticesToDelete ) >= 1 ): # This list changes during the iteration. 
+      
+          #     try:
+          #       node  = orderOfVerticesToDelete[0]
+      
+          #     except nx.NetworkXError:
+          #         print "Removing carcass"
+          #         orderOfVerticesToDelete.popleft()
+      
+          #     else:
+          #       sIndices.append( node ) # The very fact no exception was thrown means that you can freely add it to the independent set
+          #       nlist = G.neighbors( node )
+      
+          #       # Delete all the edges emanating from  elements of nlist. 
+          #       # The fact that this did not throw an exception means 'node' still exists in the graph G
+          #       for n in nlist:
+          #          G.remove_edge( node, n ) # Remove all edges emanating
+      
+          #       G.remove_node( node ) # Remove the node itself
+      
+          #       for n in nlist:
+          #         G.remove_node( n ) # Remove all the neighbours.
+                  
+          #       orderOfVerticesToDelete.popleft()
+      
+        else:
+          import sys
+          print "Maximum independent Set Algorithm option not recognized!"
+          sys.exit()
+      
+      
+        # If two neighbourhoods intersect, draw 
+        # a corresponding edge in the graph. 
+        # print sIndices
+        for i in sIndices:
+           for j in sIndices:
+             if j > i:
+               intersection_of_nbds_ij = [val for val in nbds[i] if val in nbds[j] ]
+               if len(intersection_of_nbds_ij) >= 1:
+                     print "Neighbourhoods intersect!"
+                     sys.exit()
+      
+        # print "Exiting!"
+        # import sys
+        # sys.exit()
+      
+        return [ nbds[s] for s in sIndices ]
+      
+      def extractUniqueElementsFromList( L ):
+          
+          uniqueElements = []
+          for elt in L:
+              if elt not in uniqueElements: # Just discovered a brand new element!!
+                  uniqueElements.append(elt)
+      
+          return uniqueElements
+      pass 
+       # Abstract class
+class Algo_Static_4APX_R2_L2 (Algo_4APX_Metric):
+    
+    def __init__(self, r, pointCloud):
+      """  r          : Cluster parameter
+           pointCloud : An n x 2 numpy array where n is the number 
+                        of points in the cloud and each row contains 
+                        the (x,y) coordinates of a point."""
+      
+      self.r                    = r     
+      self.pointCloud           = pointCloud  
+      self.computedClusterings  = []  
+      self.algoName             = 'Decentralized Static r-Gather'
+    
+    
+    
+    def clearAllStates(self):
+      self.r                   = None
+      self.pointCloud          = [] 
+      self.computedClusterings = []
+    
+    
+    def clearComputedClusteringsAndR(self):
+      self.r                   = None
+      self.computedClusterings = []
+    
+    
+    def dist(self, p,q):
+          """ Euclidean distance between points p and q in R^2 """
+          return np.linalg.norm( [ p[0]-q[0] , 
+                                   p[1]-q[1] ]  )
+    
+    
+    def findNearestNeighbours(self, pointCloud, k):
+      """  pointCloud : 2-d numpy array. Each row is a point
+           k          : The length of the neighbour list to compute. 
+      """
+    
+      X    = np.array(pointCloud)
+      nbrs = NearestNeighbors(n_neighbors=k, algorithm='ball_tree').fit( X )
+      distances, indices = nbrs.kneighbors(X)
+    
+      return distances, indices
+    
+    
+    def rangeSearch(self, pointCloud, radius):
+          """ A wrapper for a good neighbour search routine provided by Scipy.
+              Given a point-cloud, return the neighbours within a distance of 'radius'
+              for every element of the pointcloud. return the neighbour indices , sorted 
+              according to distance. """
+          
+          X        = np.array( pointCloud )
+          mykdtree = spatial.KDTree( X )
+          nbrlists = list( mykdtree.query_ball_point( X, radius) )
+         
+    
+          distances = []
+          for index  in  range(len(nbrlists)):
+    
+             def fn_index( i ): # Distance function local to this iteration of the loop
+                return np.linalg.norm(  [  X[i][0] - X[index][0]   , 
+                                           X[i][1] - X[index][1]    ]    )
+    
+             # Replace the unsorted array with the sorted one. 
+             nbrlists[index]  = sorted( nbrlists[index], key = fn_index  ) 
+    
+             # Get corresponding distances, which will now naturally be in sorted order. 
+             distances.append( map( fn_index, nbrlists[ index ] ) ) 
+     
+    
+          indices = nbrlists # Just a hack, too lazy to change nbrlists to the name indices above. 
+    
+          return distances, indices 
+    
+    
+    
+    
+    
+    def plotClusters(self,  ax    , 
+                   pointSize=200, 
+                   marker='o'   , 
+                   pointCloudInfo='',
+                   annotatePoints=True):
+        
+    
+          from scipy import spatial
+          import numpy as np, matplotlib as mpl
+          import matplotlib.pyplot as plt
+     
+          # Plot point-cloud 
+          xs = [x for (x,y) in self.pointCloud]
+          ys = [y for (x,y) in self.pointCloud]
+          ax.plot(xs,ys,'bo', markersize=3) 
+          ax.set_aspect(1.0)    
+    
+          if annotatePoints==True:
+                # Annotate each point with a corresponding number. 
+                numPoints = len(xs)
+                labels = ['{0}'.format(i) for i in range(numPoints)]
+                
+                for label, x, y in zip(labels, xs, ys):
+                      ax.annotate(  label                       , 
+                                    xy         = (x, y)         , 
+                                    xytext     = (-3, 0)      ,
+                                    textcoords = 'offset points', 
+                                    ha         = 'right'        , 
+                                    va         = 'bottom')
+                      
+    
+          # Overlay with cluster-groups.
+          for s in self.computedClusterings:
+          
+            clusterColor = getRandomColor()
+            xc = [ xs[i]  for i in s   ]
+            yc = [ ys[i]  for i in s   ]
+    
+            # Mark all members of a cluster with a nice fat dot around it. 
+            #ax.scatter(xc, yc, c=clusterColor, 
+            #           marker=marker, 
+            #           s=pointSize) 
+    
+            #ax.plot(xc,yc, alpha=0.5, markersize=1 , markerfacecolor=clusterColor , linewidth=0)
+            #ax.set_aspect(1.0)
+    
+            # For some stupid reason sp.spatial.ConvexHull requires at least three points for computing the convex hull. 
+            
+            if len(xc) >= 3 : 
+                  hull = spatial.ConvexHull(  np.array(zip(xc,yc)) , qhull_options="QJn" ) # Last option because of this http://stackoverflow.com/q/30132124/505306
+                  hullPoints = np.array( zip( [ xc[i] for i in hull.vertices ],  
+                                              [ yc[i] for i in hull.vertices ] ) )
+                  ax.add_patch( mpl.patches.Polygon(hullPoints, alpha=0.5, 
+                                                    facecolor=clusterColor) )
+           
+    
+            elif len(xc) == 2:
+                   ax.plot( xc,yc, color=clusterColor )
+                
+    
+            ax.set_aspect(1.0)
+            ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':15})
+            ax.set_xlabel('Latitude', fontdict={'fontsize':10})
+            ax.set_ylabel('Longitude',fontdict={'fontsize':10})
+    
+            #ax.get_xaxis().set_ticks( [] ,  fontdict={'fontsize':10})
+            #ax.get_yaxis().set_ticks( [],  fontdict={'fontsize':10} ) 
+    
+            ax.grid(b=True)
+    
+      
+    
+    
+    def plotStatistics(self, axStatsDict ):
+       """ axStatsDict, specifies the mapping of axes objects to the statistic
+           being plotted.""" 
+    
+       def plotConvexHullDiameters(ax):
+          pass
+      
+       def plotMinBoundingCircleDiameters(ax):
+          pass
+    
+       def plotClusterPopulationSizes(ax):
+          barHeights = map(len, self.computedClusterings )
+          numBars    = len(barHeights)
+    
+          ax.bar( range(numBars) ,barHeights, width=1.0, align='center')
+          ax.set_title('Number of points per Cluster', fontdict={'fontsize':30})
+    
+          ax.set_aspect(1.0)
+          ax.grid(b=True)
+    
+       for ax, statistic in axStatsDict.iteritems():
+           
+            if statistic == 'convexHullDiameters': 
+               plotConvexHullDiameters(ax) 
+            
+            elif statistic == 'minBoundingCircleDiameters':
+               plotMinBoundingCircleDiameters(ax)
+    
+            elif statistic == 'clusterPopulationSizes':
+               plotClusterPopulationSizes(ax)
+    
+            else:
+               pass
+    
+        # For points in the euclidean plane with the L2 metric
+ # for trajectories in the euclidean plane with the linifinity-like metric

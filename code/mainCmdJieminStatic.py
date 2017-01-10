@@ -18,9 +18,9 @@ ax[0].set_aspect(1.0)
 
 
 
-run = rg.AlgoJieminDecentralizedStatic( r=r, pointCloud = pointCloud )
+run = rg.Algo_Static_4APX_R2_L2( r=r, pointCloud = pointCloud )
 
-run.generateClusters( config = {'mis_algorithm': 'riksuggestion' })
+run.generateClustersSimple( config = {'mis_algorithm': 'riksuggestion' })
 
 run.plotClusters(ax[0],pointSize=40, annotatePoints=False)
 run.plotStatistics( { ax[1]:'clusterPopulationSizes' })

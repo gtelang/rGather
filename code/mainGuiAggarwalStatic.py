@@ -20,8 +20,8 @@ fig, ax =  plt.subplots( 1, 2  )
 ax[0].grid( b=True )
 ax[1].grid( b=True )
 
-run1 = rg.AlgoAggarwalStaticR2L2(r=r, pointCloud=[]) # Empty shell.
-run2 = rg.AlgoJieminDecentralizedStatic( r=r, pointCloud = [] ) # Empty shell
+run1 = rg.AlgoAggarwalStaticR2L2(r=r, pointCloud= []) # Empty shell.
+run2 = rg.Algo_Static_4APX_R2_L2(r=r, pointCloud= []) # Empty shell
 
 
 xlim= [0,1] # Depending on the axes limits, set the radius of the circle. 
