@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>r-Gather Programs</title>
-<!-- 2017-01-04 Wed 22:55 -->
+<!-- 2017-01-09 Mon 21:03 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Gaurish" />
@@ -88,7 +88,6 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
-<style>pre.src {background-color: #0d0d0d; color: #e5e5e5;} </style>
 <link rel="stylesheet" type="text/css" href="/home/gaurish/Dropbox/MyWiki/codes/Haskell/LiterateHaskell/org-style.css"/>
 
 <script type="text/javascript" src="/home/gaurish/Dropbox/MyWiki/codes/Haskell/LiterateHaskell/org-info.js">
@@ -1688,7 +1687,10 @@ same changes in both classes.
 
   #Use the best network to construct the needed clusters. 
   self.computedClusterings = makeClusters( bestRflowDict, bestRCenters, bestRflowNetwork, bestR)
+  #====================================================================================================
+  &lt;&lt;RECURSE_BLOCK&gt;&gt;
 
+  #=====================================================================================================
   # Sanity check on the computed clusters. They should all be of size r and should cover the full point set
   assert( all( [ len(cluster) &gt;= self.r for cluster in self.computedClusterings ] ) )
   assert( len( { i for cluster in self.computedClusterings for i in cluster } ) == numPoints   )
@@ -1697,12 +1699,43 @@ same changes in both classes.
   print "BestRCenters are ", bestRCenters 
 
   # Print the clusters along with their sizes
-  print colored(str(len(self.computedClusterings)) + ' have been computed on ' + \
+  print colored(str(len(self.computedClusterings)) + ' clusters have been computed on ' + \
                 str(len(self.pointCloud)) + ' elements' , 'magenta',  attrs=['bold', 'underline'] )
   for i, cluster in enumerate(self.computedClusterings):
       print "Cluster(", i+1, ") Size:", len(cluster), "  ", np.array( cluster ) 
 
+
+  raw_input('Press Enter to continue...')
+
   return  bestRCenters
+</pre>
+</div>
+
+<p>
+The following adds recursive capabilities to the routine so that the cluster size, in terms of number, goes down. 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-python"># Check if all clusters are small enough. i.e. don't have too many points. 
+largeclusters = [cluster for cluster in self.computedClusterings 
+                         if len(cluster) &gt;= 2*self.r and 
+                            len(cluster) &lt; len(self.pointCloud)]
+
+
+if largeclusters: # A non-empty list evaluates to True. The Pythonic way.
+         # Iterate through each cluster and run the r-Gather algorithm on it. 
+         for cluster in largeclusters:
+
+               cluster_size = len(cluster)
+
+               if cluster_size &gt;= 2*self.r and cluster_size != len(self.pointCloud):
+
+                 cluster_pointCloud = [self.pointCloud[i]  for i in cluster]                 
+
+                 run = AlgoJieminDynamic(r= self.r, pointCloud= cluster_pointCloud, memoizeNbrSearch= True) 
+                 clusterCenters = run.generateClusters() 
+                 print clusterCenters
 </pre>
 </div>
 
@@ -2057,7 +2090,7 @@ when trying to do the animation with generators as documented <a href="https://g
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Gaurish</p>
-<p class="date">Created: 2017-01-04 Wed 22:55</p>
+<p class="date">Created: 2017-01-09 Mon 21:03</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

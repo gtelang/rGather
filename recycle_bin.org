@@ -1,0 +1,576 @@
+* From the 4-approximation section
+#+BEGIN_COMMENT 
+Try doing this for the dynamic setting with only a few cars and refreshing the algorithm at each 
+step. It will be useful in post-verification I presume. 
+
+The actual data has a lot of out-liers. You might want to remove them or reimplement the r epsilon-
+cellular clustering 
+
+- Steps
+
+ Part 1. 
+- [ ] Let N = { r-nearest neighbour hood of p  | p is a point in the data.   }
+- [ ] Construct the map  maxNbdDist : N_i --> R
+
+Part 2. 
+- [ ] Find maximal independent set of S r-Neighbourhoods: This is the graph constructed on N with respect to intersection. This S is almost the clustering/ 
+- [ ] Find points missed Pmissed = by S. For that Do P \ Union of all elements of S. So we will get a set
+- [ ] For each point Q in Pmissed check if it is in a set in S. So total operations will be size of P's neighbourhood multiplied by the number of sets in 
+      S. So we will have to be able to check if a member belongs to a set quickly. 
+
+  HOFs used
+  maps, 
+  mins,
+  list comprehensions
+
+   Make sets proper sets and not multisets!!!!
+
+  Operations used
+      Is element of the set 
+      Union
+      Complement. of a set   
+      Intersection of the set for graph building. We will have to test the sets for intersections pairwise. This could be inefficient, for a large number of points? 
+           abstract this step into a function!!! since it will have a lot of inefficiencies looks like?       
+           The problem here is that we just have the vertices i,e, we have a set V and a predicate to test if two members of V intersect.  ie have an ede between them. 
+           So we don't have the edges before hand....Althought we can do it during the sequential algorithm itself. Currently I will stick to the inefficent routine.   
+           The routine will accept just a set os sets N here and then pass them along to network X. Again remember, constriciton of MIS is not the problem here: 
+           it is the construction of the graph before you pass it on to the MIS routine. The neighbourhood of the point must be constructed. 
+           The post-optimization can be done very easily on this though.But something to keep in mind. 
+           The maximal independent set should be as maximum as possible. Remember the star graph? hitting the central point is a bad idea.
+           You might want to construct a greedy algorithm. And this thing maybe unavoidable. We are not interested in a race-off though as far
+           as implementation is concerned.  You might want to run the maximal independent set generator a few times if it is 
+           running in a probabilistic fashion to squeeze the maximum out of it. 
+
+
+
+
+       The parameter r should also obviously be passed tp the algorithm's class constructor. 
+        
+I will call the algorithm as if I were constructing a class. While constructing the algorithm is run 
+and the clustering computed and stored in the variable state. How does that help? It allows, us to 
+make several runs of the same algorithm and save the inputs, outputs. Plotting can be done easily, 
+we don't need to store the plots separately.
+so we can do sth like this 
+
+# Always call like this, makes your intention far more explicit than I had imagined!!
+run1 = algojiemindecentralizedStatic( r=1,  points = [ (0,0), (1,0), (2,5)  ] )   
+run2 = algojiemindecentralizedStatic( r=2 , points = [ (9,7), (4,3), (2,1)  ] )
+.
+.
+.
+.
+So we can have multiple runs for multiple point clouds and multiple radii. 
+Since we will be doing comparitive analysis here. 
+
+
+Pass the ax[i][j] for grid plotting!! No need for fig, since it can be added later I guess. 
+After having made several runs (two columns one for Jiemin/ one for aggarwal) we can them 
+visualize them in parallel, infact, even if we want to do the dynamic thing. just fo kix. 
+
+Thus imagine computing it like this 
+
+1. run1.animateState(ax=ax\[4]\[2])
+2. run2.animateState(ax=ax\[0]\[0])
+3. run3........you get the picture....
+
+This will be very useful for a comparitive analysis yo! Comparing between 
+aggarwal and jiemin's for different runs. you might want to have key-press 
+events with 'n' or 'p' which cycles through multiple states. http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.cla
+USe the cla function to do the plotting and a key-press to cycle through multiple 
+kinds of states.  You can clear axes at a time or all axes on a figure at a time.  
+
+We should pass in the list of points as a frozenset because we will not be changing it. 
+
+ 
+TODO list
+- [ ] Sets
+- [ ] Intersecting sets
+- [ ] Union Sets
+- [ ] Set difference sets
+- [ ]  ITerating over a set
+- [ ] List Comprehension Python
+- [ ] Network X --->
+  - [ ] Representing a graph
+  - [ ] Finding maximal independent sets of vertices in the graph. 
+
+Yayayayay! Sets and frozen sets are builtin types! You hav many nice operations listed here: 
+https://docs.python.org/2/library/stdtypes.html#set-types-set-frozenset
+
+Dictionaries: a brief review
+They dont have a left-right ordering! Most most important!!!
+Curly braces are used. If a key does not exist you get a KeyError
+There is no set-order okay?
+
+They are mutable and accessible by keys. 
+
+
+NetworkX is easy
+You will be working with 
+1. Graph construction
+2. Algorithms max independent set from networkx.algorithms module
+   It returns a random set which is maximal. So good chance of being near optimal.  
+   The full set of algorithms are given here: https://networkx.github.io/documentation/networkx-1.9.1/reference/algorithms.html
+3. The nodes of Networkx can be arbitrari;y complex, hashable objects....in this case, it will be sets. 
+   Make nodes out of these sets. 
+
+
+We split the run-time into the following steps. 
+1. Generate the relevant containers containing the data
+2. Run the algorithm on the data. The class becomes a namespace 
+   for functions which interact with each other. Would you call member 
+   variables as global variables for a namespace?
+   
+   Any way for this specific, case we will have data, state generators and functions. 
+   The statistics of a specific algorithm can be stored in a dictionary like variable
+   That is not too important right now. 
+
+   For knearest neighbours we have scikit learn which is a
+   machine learning toolkit available outof the box with 
+   python. 
+
+
+   You will have to make point coordinates for such static input 
+   and dynamic input. 
+
+   It will be part of the preprocessing after reading in the input. 
+   You have many input points to choose from. Choose any time-slice.(ie row) 
+   or any number of columns ie cars. 
+
+   So the main function becomes really messy to say the least where we will be 
+   massaging the data in various ways to behave properly. Are you sure then, 
+   that you want to write main.py there? Why not write it separately and 
+    rGather as a module? Looks far more sensible no? 
+
+   Okay let's do that. But for that I will have to know how to deal with modules.  
+    
+   So have a text file open where you will keep punching in various kinds of main.py 
+   and then this file, where you will hack on an algorithm one chunk at a time. 
+
+   Makes sense don't ya think? So you send in a main.py and a rGather.py  module.
+
+
+   Anyway, you might want to test your algorithm on a random cloud of points first. 
+
+   Brief recap: so far, I have not had to step outside the Anaconda environment
+   and so it should be runable on all the systems I send to.  
+
+   Question: Where must plt.show go? We need to give options to either save to disk 
+   or actually do the display hmm....?? Maybe stuff a plt.show at the end.
+
+Give input parameters to the algorithm.
+We can construct several, algorithm runs
+for comparitive analysis. Maybe later you
+could call the main algo within the constructor
+iself. A and B are totally different!
+In any case, you can add the method call separately!
+
+This is an interesting phenomenon here!!!
+What is it? You can give the actual input parameter
+to the constructor and the configuration parameters of
+an algorithm's run to the arguments of gencluster.
+maybe the other-way round depending on which one you
+feel comfortable with. That's interesting huh?
+Configurations can be passed as a dictionary!!!!
+This is a good design principle in general. i.e.
+for things like Ant-colony algorithms we pass parameters 
+in that. Any logging that you need to perform during the run , 
+can be added to the object itself in the form of another 
+dictionary. You might want to explicitly label the 
+configuratiuon dictioanry as config in the call to 
+the actual algorithm.
+
+Make the configuration dictionary via the kwargs 
+argument. Ahah it will be very useful here! 
+But again not too important this is preoptimization
+But it is good you noticed this!  
+
+Next remember, plt.show() will never be called by 
+the guy writing the visualization function. 
+plt.show() is a blocking call. it wont go ahead 
+til you close the window. You want the user to 
+decide explicitly when to plot. 
+
+In any case, have a look at this: http://stackoverflow.com/a/458295/505306
+This is also useful! Does not seem to work on my platform
+ 
+Anyhoo, rmember plt.show() runs an infinite loop as mentioned here
+ http://stackoverflow.com/a/2311326/505306
+ If you want to render the progress of an algorithm, you might want to consider 
+writing your own XML / YAML file which contains tags. Then make Python run in a 
+concurrent thread, by making it read the output files. 
+
+You see those subfunctions here? Throw them into nowbe format and work 
+on them separately documenting why you might have take the decitions that 
+you did. Thus you can now take the bloody thing apart. They can contain
+other kinds of images too.  
+      """ Plot the r-Gather clustering 
+          computed by genrateClusters
+      Things to do: 
+      1. Plot cluster centers. 
+      2. For each cluster compute the convex 
+      hull and plot that too should be 
+      in transluscent and filled completely. 
+      3, Plot the time taken for the computation. swh. 
+      4. Indicate teh intput and the output states. 
+      """
+
+Start thinking about doing lasso selection for static r-Gather. 
+During the input point phase. r=2 and r=3 case. what to do? 
+
+
+#+END_COMMENT
+
+
+
+* GENERATE_CLUSTERS_AGGARWAL_BKP 				    :ARCHIVE:
+The following is a possibly buggy routine I was using, to get the results for the paper. It is also slower
+because the dijhalfsfiltered should have been sorted from the get-go. Saves a lot of computations. I was also 
+using R instead of bestR in the call to ~makeclusters~. It is possible I may have done this deliberately, but 
+I have made the change in the above block for the sake of comparison purposes.
+
+#+BEGIN_SRC python :noweb-ref GENERATE_CLUSTERS_AGGARWAL_BKP :exports yes 
+  def generateClusters(self):
+    from   colorama import Fore, Style 
+    import pprint as pp 
+    import networkx as nx, numpy as np, random, time 
+    import scipy as sp
+    import matplotlib.pyplot as plt
+    import sys
+    points    = self.pointCloud # a conveninent alias 
+    numPoints = len( self.pointCloud )
+
+    <<FIRST_CONDITION_PREDICATE>>
+    <<MAKE_CLUSTER_CENTERS>> # There are two such assumptions. 
+    <<MAKE_FLOW_NETWORK>>
+    <<MAKE_AGGARWAL_CLUSTERS>>
+
+    print "Started filtering!"
+
+    #print "The points are ", points   
+    #print "Number of points are", numPoints
+
+    #import sys
+    #sys.exit()
+
+    dijHalfs = [0.5 * self.dist( points[ i ], points[ j ] ) 
+                      for i in range( numPoints ) 
+                      for j in range( i+1, numPoints ) ]
+    # Find all dijs satisfying condition 1 on page 4
+
+    print "dijhalfs computed", len(dijHalfs)
+    dijHalfsFiltered =  filter( firstConditionPredicate, dijHalfs )  #smallest to highest
+    print "dijHalfsFiltered done!"
+
+    # 'FOR' Loop to find the minimum 'R' from these filtered dijs satisfying 
+    #  condition 2 on page 4 of the paper. 
+    bestR, bestRflowNetwork, bestRflowDict = float( 'inf' ), nx.DiGraph(), {} 
+    bestRCenters = []
+
+    from termcolor import colored
+
+    for R in dijHalfsFiltered : # The first R that goes through the else block is the required R
+     
+      print colored(str(R) + 'is being tested', 'red', 'on_white', ['underline', 'bold'])
+      clusterCenters = makeClusterCenters( R )
+      flowNetwork    = makeFlowNetwork( R, clusterCenters )
+
+      try: # Check if a feasible flow exists in the constructed network.  
+            flowDict = nx.min_cost_flow( flowNetwork )
+
+      except nx.NetworkXUnfeasible:# If not, try the next R
+            print Fore.RED, "Unfeasible R detected: R= ", R, Style.RESET_ALL
+            continue 
+      else: # Found a feasible R.  
+          print "Found a feasible R! R= ", R
+          if R < bestR: # Yippee a smaller and feasible R! Update bestR. 
+              print Fore.RED, " In fact, it is the best thus far ", Style.RESET_ALL 
+              bestR            = R
+              bestRflowNetwork = flowNetwork
+              bestRflowDict    = flowDict
+              bestRCenters     = clusterCenters
+
+
+    #Use the best network to construct the needed clusters. 
+    self.computedClusterings = makeClusters( bestRflowDict, bestRCenters, bestRflowNetwork, R)
+
+    # Sanity check on the computed clusters. They should all be of size r and should cover the full point set
+    assert( all( [ len(cluster) >= self.r for cluster in self.computedClusterings ] ) )
+    assert( len( { i for cluster in self.computedClusterings for i in cluster } ) == numPoints   )
+    print Fore.YELLOW, "Yay All points Covered!!", Style.RESET_ALL
+   
+    print "BestRCenters are ", bestRCenters 
+    return  bestRCenters
+#+END_SRC
+
+
+
+#+BEGIN_SRC python :noweb-ref MAKE_CLUSTER_CENTERS_JUL29_WORKING_FOR_R2L2_BUT_BUGGY :exports no
+  def makeClusterCenters( R,
+                          points = self.pointCloud, 
+                          dist   = self.dist      , 
+                          r      = self.r         ):
+        """ Marking loop for choosing good cluster centers """
+
+        from scipy import spatial
+
+        numPoints               = len( points )
+        markers                 = [ False for i in range( numPoints ) ]
+        potentialClusterCenters = [ ] # Populated in the while loop below.  
+    
+        # For fast neighbour search in the while loop below. 
+        mykdtree = spatial.KDTree( self.pointCloud )
+        
+        # See note above. It might be very important! 
+        # The following while loop replacement to the confusing tangle spelled out in the Aggarwal 
+        # paper was suggested by Jie and Jiemin in the email thread with Rik, after I cried for help. 
+        while( all( markers ) !=  True ): 
+             
+            unmarkedIndices =  [ index for ( index,boolean ) 
+                                       in zip( range( numPoints ), markers) 
+                                       if boolean == False ]
+         
+            randomIndex = random.choice ( unmarkedIndices ) 
+
+            # WARNING: THE INDICES ARE NOT SORTED ACCORDING TO THE DISTANCE FROM the RANDOMINDEX point
+            ball2R_neighbor_list = mykdtree.query_ball_point( points[randomIndex] , 2*R)
+            
+            #ball2R_neighbor_list = [ index for index in range( numPoints ) 
+            #                               if dist( points[ randomIndex ], points[ index ]) <= 2*R ] 
+
+            # Mark all the neighbours including the point itself. 
+            for nbrIndex in ball2R_neighbor_list:
+                   markers[ nbrIndex ] = True 
+    
+            potentialClusterCenters.append( ( randomIndex, ball2R_neighbor_list ) ) 
+
+
+        print " All points marked! "
+        # Cluster centers are those which have atleast r points in their neighbourhood. 
+        clusterCenters = [ index for ( index, ball2R_neighbor_list ) in potentialClusterCenters 
+                            if len( ball2R_neighbor_list ) >= r  ]
+
+
+        # Having marked all the points, return the cluster centers. 
+        return clusterCenters
+#+END_SRC
+
+#+BEGIN_SRC python :noweb-ref MAKE_CLUSTER_CENTERS_MY_ASSUMPTION :exports none 
+  def makeClusterCenters( R,
+                          points = self.pointCloud, 
+                          dist   = self.dist      , 
+                          r      = self.r         ):
+      """ Marking loop for choosing good cluster centers """
+      
+      numPoints      = len( points )
+      markers        = [ False for i in range( numPoints ) ]
+      clusterCenters = [ ] # Populated in the while loop below.  
+   
+      # See note above. It might be very important! 
+      while( all( markers ) !=  True ): 
+           
+          unmarkedIndices =  [ index for ( index,boolean ) 
+                                 in zip( range( numPoints ), markers) 
+                                 if boolean == False ]
+       
+          randomIndex = random.choice ( unmarkedIndices ) 
+
+          ball2R_unmarked_neighbors_list = [ index  for index 
+                                              in range( numPoints ) 
+                                              if dist( points[ randomIndex ], points[ index ]) <= 2*R 
+                                              and index in unmarkedIndices] 
+
+          if ( len( ball2R_unmarked_neighbors_list ) >= r ): # The random point chosen requires atleast r unmarked neighbours for being a cluster center. 
+
+               # Cluster centers are guaranteed to have r points in the 2*R ball
+               clusterCenters.append( randomIndex ) 
+               # Mark all the neighbours including the point itself. 
+               for nbrIndex in ball2R_unmarked_neighbors_list:
+                   markers[ nbrIndex ] = True 
+          else: # Just mark the point but not the neighbours. This is one hack around the infinite loop. Second would be to detect the infinite loop and add it to the cluster center list.
+               markers[ randomIndex ] = True # Even though we mark it here, WE DON'T INCLUDE it as a cluster center. 
+   
+      print "Yay! While Loop Cleared!  \n\n"
+      # Having marked all the points, return the cluster centers. 
+      return clusterCenters
+#+END_SRC
+* Scrap notes :ARCHIVE:
+:PROPERTIES:
+:tangle: no
+:mkdirp: no
+:END:
+ - Selecting an arbitrary submatrix of numpy. 
+
+#+BEGIN_SRC python
+In [18]: matrix
+Out[18]: 
+array([[ 0,  1,  2,  3,  4,  5],
+       [ 6,  7,  8,  9, 10, 11],
+       [12, 13, 14, 15, 16, 17],
+       [18, 19, 20, 21, 22, 23],
+       [24, 25, 26, 27, 28, 29],
+       [30, 31, 32, 33, 34, 35]])
+In [19]: matrixslice = matrix[ np.ix_ (  [0,4,5] , [0,2,5]   )   ] # A convenience function provided by numpy
+
+In [20]: 
+
+In [20]: 
+
+In [20]: matrixslice
+Out[20]: 
+array([[ 0,  2,  5],
+       [24, 26, 29],
+       [30, 32, 35]])
+#+END_SRC
+
+** Animation in Python
+For pulleys I did not use the animation module. Here we do since we need to understand the decision the algorithm
+makes as the cars move along the trajectories.m 
+
+
+*** animation.FuncAnimation (...)
+Generate the ith frame of an animation sequence. Thus you could say, its signature is ~Int -> IO Frame~ where 
+Frame is the final picture returned.  
+
+#+BEGIN_SRC python :results output
+"""
+A simple example of an animated plot
+"""
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
+fig, ax = plt.subplots()
+
+x = np.arange(0, 2*np.pi, 0.01)
+line, = ax.plot(x, np.sin(x))
+
+
+def animate(i):
+    line.set_ydata(np.sin(x + i/10.0))  # update the data
+    return line,
+
+
+# Init only required for blitting to give a clean slate.
+def init():
+    #line.set_ydata(np.ma.array(x, mask=True))
+    return line,
+
+ani = animation.FuncAnimation(fig, animate, np.arange(1, 200), init_func=init,
+                              interval=25, blit=True)
+plt.show()
+
+#+END_SRC
+
+
+MAtplotlib can save video as an html5 video!! Basically all you need to do is provide an .mp4 or .ogg video
+in the h264 encoding HTML5 format. It spits out a long hexadecimal like string.  
+Then every browser (major ones atleast) will be able to play that video 
+with their own media player which comes inbult. This means you don't need to distribute copies of vlc to other
+people, neither upload that video to youtube and then emebed it. Yay!! 
+See this video to customize the embedding: https://www.youtube.com/watch?v=9pN7UT5S64I
+
+
+Essentially you surround the video link in the video tag, with some extra attributes. See here for a classic example! 
+See the browser support table in the middle of this page: http://www.w3schools.com/html/html5_video.asp 
+Plays on iPhone/iPad devices too!
+
+See this for more on MATPLOTLIB html5 embedding: http://yt-project.org/doc/cookbook/embedded_webm_animation.html
+
+*** Data structures
+Each trajectory shuld be a class. 
+There should a distance function between two trajectories accepting them
+
+* Types and Typeclasses :ARCHIVE:
+
+I'll use Haskell syntax to succinctly specify the dramatis personae of this program. I'll then use  
+abstract base classes and inheritance  to emulate their relationships in Python. 
+
+
+- Typeclasses :: 
+  - *~MetricSpace~*: A minimum complete definition will contain
+    - *A Distance function* satisfying properties of a metric.
+      [fn:prop-check: You should provide a property-checker for the metric using [[https://hypothesis.readthedocs.io/en/latest/][Hypothesis]]. 
+      [[http://developers.redhat.com/blog/tag/python/#post-424075][Here]] is a fantastic 30 minute overview of various features of this library. It is heavily 
+      inspired by Haskell's Quickcheck  ]
+     
+     
+- Types ::
+   - *~data Point = Point Double Double~*  
+       - This type models points in $\mathbb{R}^2$ with the Euclidean metric. 
+       - *_Instances_*
+         -  MetricSpace
+
+   - *~data Trajectory = Trajectory [ Point ]~*
+       - This type models piece-wise linear trajectories in $\mathbb{R}^2$. 
+       - *_Instances_*
+         -  MetricSpace  [fn:jiemin-metric: For trajectories $T_1$, and $T_2$, the function $d(T1,T2) = \max_{p \in T_1, q \in T_2} d(p,q)$ is a metric] 
+
+* Scrap :ARCHIVE:
+   # # Select cluster centers in a greedy manner. Just mark all neighbours. 
+      # # Don't care if the neighbours are marked or unmarked as described in the 
+      # # paper. Requires clusterCenters to be a dictionary. 
+      # while( all(markers) != True ):  # unmarked means uncovered
+         
+      #     # Indices of uncovered points 
+      #     unmarkedIndices =  [ index for ( index,boolean ) 
+      #                           in zip( range( numPoints ), markers) 
+      #                           if boolean == False ]
+       
+      #     # Choose a random point not already chosen to be a cluster center
+      #     choice_list = [ index for index in range( numPoints ) if index not in clusterCenters.keys()]
+      #     randomIndex = random.choice ( choice_list ) 
+   
+      #     # Get all neighbours within distance 2R
+      #     ball2R_list = [ index  for index 
+      #                            in range( numPoints ) 
+      #                            if dist( points[ randomIndex ], points[ index ]  )  <= 2*R ]
+
+      #     # Assertion should not fail, since we have cleared condition 1. 
+      #     assert ( len( ball2R_list ) >= r ) # Seems to be working under my new hypothesis 
+             
+      #     clusterCenters[ randomIndex ] = ball2R_list
+
+      #     # Mark the points covered. 
+      #     for nbrIndex in ball2R_list:
+      #          markers[ nbrIndex ] = True 
+     
+      # print "Yay! While Loop Cleared!  \n\n"
+
+      # # Having marked all the points, return the cluster centers. 
+      # return clusterCenters
+
+* Things to do for the dynamic rGather program :ARCHIVE:
+- [X] Make a main file from the animation file
+- [X] Go through the visualization routine. Adapt it to the visualization 
+      for this case. 
+- [X] Add another class which derives from the metric space class
+- [ ] Implement the 0 regroupings allowed. k passed as a parameter. 
+- [ ] Visualize the trajectories statically. Trajectories in a cluster are colored with the same color.
+- [ ] Use the Delaunay triangulation heuristic for the r=3 case
+  - [ ] Learn how to use delauny triangulation. Scipy has a routine
+  - [ ] I know how to use Linear Programming already. Just replace it with 
+        a linear program. USeful to understand the LP relaxation of it though. 
+        But if needed you can directly use your LP setcover heuristic that 
+        you implemented in here. 
+- [ ] Implement the epsilon kernel routine. 
+  - [ ] It would be extremely useful to make a gridding function. 
+        You had implemented a similar one, in C++ some time back. 
+        Basically I think you would perform bucketing. *Add this to pointLib.py*
+        the library you wrote which handles interactive stuff, and can be appended 
+        to algorithms. 
+  - [ ] This is a very simple algorithm. The only complex 
+        part is setting the parmaters
+  - [ ] The epsilon kernel routine is implemented as part of 
+        a new aproximate rGather algorithm with the same 
+        structure as wht you did before. The only twist, 
+        would be that you generate the clusters, by passing an 
+        additional parameter, which is the approximation parameter 
+        called epsilon. 
+  - [ ] Have statistics to record the statistics of the sizes of the 
+        coresets, and other such trivia. 
+- [ ] Get properties of the proposed rGather coreset algorithm 
+     which uses onion layers.
+- [ ] This can be easily implemented in an interactive frame 
+      by adapting the routine AlgoJieminDecentralizedStatic.
+- [ ] The recursive improvement step, I think will be crucial to 
+      get improved results. Don't neglect the importance of this step. 
