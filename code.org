@@ -1696,7 +1696,7 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
                          
                       else: # else if plot is 2d
 	                 line, = ax.plot(xdata, ydata, 'o-')
-                         print type(ax)
+                         #print type(ax)
                       # Every line in a cluster gets a unique color	
                       line.set_color(clusterColor)
                       line.set_markeredgecolor('k')
