@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>code</title>
-<!-- 2017-01-11 Wed 09:33 -->
+<!-- 2017-01-11 Wed 09:29 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Gaurish" />
@@ -1238,7 +1238,7 @@ The following concrete class inheriting from <b><code>AlgoAggarwalStatic</code><
 <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>      <span style="color: #0000FF;">self</span>.r                    = r     
 <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>      <span style="color: #0000FF;">self</span>.pointCloud           = pointCloud <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Should be of type  [ [(Double,Double)] ] </span>
 <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>      <span style="color: #0000FF;">self</span>.computedClusterings  = []  
-<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>      <span style="color: #0000FF;">self</span>.algoName             = <span style="color: #008000;">'2-APX for trajectory clustering'</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>      <span style="color: #0000FF;">self</span>.algoName             = <span style="color: #008000;">'r-Gather for trajectory clustering'</span>
 <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>      <span style="color: #0000FF;">self</span>.superSlowBruteForce  = <span style="color: #D0372D;">False</span>
 
 <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>      <span style="color: #0000FF;">if</span> memoizeNbrSearch :
@@ -1623,7 +1623,7 @@ The following concrete class inheriting from <b><code>AlgoAggarwalStatic</code><
 <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>      <span style="color: #0000FF;">self</span>.r                    = r     
 <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>      <span style="color: #0000FF;">self</span>.pointCloud           = pointCloud <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Should be of type  [ [(Double,Double)] ] </span>
 <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>      <span style="color: #0000FF;">self</span>.computedClusterings  = []  
-<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>      <span style="color: #0000FF;">self</span>.algoName             = <span style="color: #008000;">'4-APX for trajectory clustering'</span>
+<span style="color: #9B9B9B; background-color: #EDEDED;"> </span>      <span style="color: #0000FF;">self</span>.algoName             = <span style="color: #008000;">'r-Gather for trajectory clustering'</span>
 <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>      <span style="color: #0000FF;">self</span>.superSlowBruteForce  = <span style="color: #D0372D;">False</span>
 
 <span style="color: #9B9B9B; background-color: #EDEDED;"> </span>      <span style="color: #0000FF;">if</span> memoizeNbrSearch :
@@ -1961,7 +1961,7 @@ The following concrete class inheriting from <b><code>AlgoAggarwalStatic</code><
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Gaurish</p>
-<p class="date">Created: 2017-01-11 Wed 09:33</p>
+<p class="date">Created: 2017-01-11 Wed 09:29</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

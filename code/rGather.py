@@ -556,7 +556,7 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
        self.r                    = r     
        self.pointCloud           = pointCloud # Should be of type  [ [(Double,Double)] ] 
        self.computedClusterings  = []  
-       self.algoName             = 'r-Gather for trajectory clustering'
+       self.algoName             = '2-APX for trajectory clustering'
        self.superSlowBruteForce  = False
 
        if memoizeNbrSearch :
@@ -1503,7 +1503,7 @@ class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
        self.r                    = r     
        self.pointCloud           = pointCloud # Should be of type  [ [(Double,Double)] ] 
        self.computedClusterings  = []  
-       self.algoName             = 'r-Gather for trajectory clustering'
+       self.algoName             = '4-APX for trajectory clustering'
        self.superSlowBruteForce  = False
 
        if memoizeNbrSearch :

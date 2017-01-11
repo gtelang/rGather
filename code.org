@@ -1085,7 +1085,7 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
          self.r                    = r     
          self.pointCloud           = pointCloud # Should be of type  [ [(Double,Double)] ] 
          self.computedClusterings  = []  
-         self.algoName             = 'r-Gather for trajectory clustering'
+         self.algoName             = '2-APX for trajectory clustering'
          self.superSlowBruteForce  = False
 
          if memoizeNbrSearch :
@@ -1462,7 +1462,7 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
          self.r                    = r     
          self.pointCloud           = pointCloud # Should be of type  [ [(Double,Double)] ] 
          self.computedClusterings  = []  
-         self.algoName             = 'r-Gather for trajectory clustering'
+         self.algoName             = '4-APX for trajectory clustering'
          self.superSlowBruteForce  = False
 
          if memoizeNbrSearch :
