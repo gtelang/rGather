@@ -14,11 +14,12 @@ mpl.rcParams['legend.fontsize'] = 10
 
 # https://docs.python.org/2/library/argparse.html#module-argparse
 parser = argparse.ArgumentParser(prog='mainGuiDynamic.py',formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('-memFlag' , type=bool, default=True, help='Memoize the neighbor search')
-parser.add_argument('-range'   , nargs=2  , type=int    , default=[9000, 9020], help='Ending Index from Shenzen data set')
-parser.add_argument('-samples' , type=int , default=20  , help='Number of Samples')
-parser.add_argument('-r'       , type=int , default=2   , help='Minimum number of elements per cluster')
-parser.add_argument('-algo'    , type=str , default='4apx'   , help='The algorithm for clustering trajectories')
+parser.add_argument('-memFlag' , type=bool, default=True    , help='Memoize the neighbor search')
+# parser.add_argument('-plotxyt' , type=bool, default=True    , help='Plot in xy-t space. Yes or no') #### TODO: Fix this. somehow the parser does not acept this.
+parser.add_argument('-range'   , nargs=2  , type=int        , default=[9000, 9020], help='Ending Index from Shenzen data set')
+parser.add_argument('-samples' , type=int , default=20      , help='Number of Samples')
+parser.add_argument('-r'       , type=int , default=2       , help='Minimum number of elements per cluster')
+parser.add_argument('-algo'    , type=str , default='4apx'  , help='The algorithm for clustering trajectories')
 args = parser.parse_args()
 
 #We can choose an arbitrary subset of cars. Specify the corresponding the column numbers in indicesOfCarsPlotted
@@ -27,11 +28,22 @@ indicesOfCarsPlotted  = range(args.range[0], args.range[1]) # This can be an arb
 numSamples            = args.samples # All_lats.shape[0] # Total number of GPS samples for each car. 
 r                     = args.r
 algo                  = args.algo
+plotxyt               = False
 
-# Colour all trajectories in one group with the same colour. 
-fig = plt.figure()
-ax  = fig.gca(projection='3d') # key-step!
+if plotxyt == True: # plot in xy-t space
+	
+   fig = plt.figure()
+   ax  = fig.gca(projection='3d') # key-step!
+   print "plotting xy-t"
+   
+elif plotxyt == False:# plot in xy space
+   fig, ax = plt.subplots()
+   print "plotting xy"
 
+else:
+    print "Please mention if you want to plot in xyt space or xy space."
+    sys.exit()
+   
 numCars = len(indicesOfCarsPlotted) # Total number of cars selected to run the data on.
 
 # Trajectory data from Shenzhen
@@ -76,7 +88,7 @@ else:
     sys.exit()
 
 
-run.plotClusters( ax, trajThickness=2 , plot_xytspace = True) 
+run.plotClusters( ax, trajThickness=2 , plot_xytspace = plotxyt) 
 ax.legend()
 ax.set_axis_on()
 plt.show()

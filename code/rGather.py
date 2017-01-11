@@ -1737,7 +1737,7 @@ class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
                        
                     else: # else if plot is 2d
                        line, = ax.plot(xdata, ydata, 'o-')
-                       print type(ax)
+                       #print type(ax)
                     # Every line in a cluster gets a unique color     
                     line.set_color(clusterColor)
                     line.set_markeredgecolor('k')
