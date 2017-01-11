@@ -78,5 +78,5 @@ else:
 
 run.plotClusters( ax, trajThickness=2 , plot_xytspace = True) 
 ax.legend()
-ax.set_axis_off()
+ax.set_axis_on()
 plt.show()

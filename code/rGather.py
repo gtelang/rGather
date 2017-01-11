@@ -810,9 +810,10 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
                     #     line.set_markevery(3)
                     
         ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':20})
-        ax.set_xlabel('Latitude', fontdict={'fontsize':15})
-        ax.set_ylabel('Longitude',fontdict={'fontsize':15})
-
+        ax.set_xlabel('Latitude', fontdict={'fontsize':23})
+        ax.set_ylabel('Longitude',fontdict={'fontsize':23})
+        if plot_xytspace == True:
+             ax.set_zlabel('Time', fontdict={'fontsize':23})
 
     def animateClusters(self, ax, fig, lats, longs,
                      interval_between_frame=200,
@@ -1742,9 +1743,10 @@ class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
                     line.set_markeredgecolor('k')
 
         ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':20})
-        ax.set_xlabel('Latitude', fontdict={'fontsize':15})
-        ax.set_ylabel('Longitude',fontdict={'fontsize':15})
-
+        ax.set_xlabel('Latitude', fontdict={'fontsize':22})
+        ax.set_ylabel('Longitude',fontdict={'fontsize':22})
+        if plot_xytspace:
+              ax.set_zlabel('Time', fontdict={'fontsize':22})
 
     def animateClusters(self, ax, fig, lats, longs,
                      interval_between_frame=200,
@@ -1833,4 +1835,4 @@ class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
        # The draw commands are very important for the animation to be rednered.
        fig.canvas.draw()
        plt.show()
-       anim.save('shenzen_show_scratch.mp4', fps=5, extra_args=['-vcodec', 'libx264']) ; print "Animation saved" # for trajectories in the euclidean plane with the linifinity-like metric
+       #anim.save('shenzen_show_scratch.mp4', fps=5, extra_args=['-vcodec', 'libx264']) ; print "Animation saved" # for trajectories in the euclidean plane with the linifinity-like metric
