@@ -809,7 +809,7 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
                     #     line.set_markeredgecolor('k')
                     #     line.set_markevery(3)
                     
-        ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':20})
+        ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':24})
         ax.set_xlabel('Latitude', fontdict={'fontsize':23})
         ax.set_ylabel('Longitude',fontdict={'fontsize':23})
         if plot_xytspace == True:
@@ -1742,7 +1742,7 @@ class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
                     line.set_color(clusterColor)
                     line.set_markeredgecolor('k')
 
-        ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':20})
+        ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':24})
         ax.set_xlabel('Latitude', fontdict={'fontsize':22})
         ax.set_ylabel('Longitude',fontdict={'fontsize':22})
         if plot_xytspace:
