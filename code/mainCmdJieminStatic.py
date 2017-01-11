@@ -5,8 +5,8 @@ import matplotlib as mpl
 import sys
 import argparse
 
-r           = 5
-numCars     = 1000
+r           = 2
+numCars     = 10
 lats        = np.random.rand(numCars)
 longs       = np.random.rand(numCars)
 pointCloud  = zip(lats,longs)

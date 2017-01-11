@@ -479,8 +479,9 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
         for index  in  range(len(nbrlists)):
 
            def fn_index( i ): # Distance function local to this iteration of the loop
-              return np.linalg.norm(  [  X[i][0] - X[index][0]   , 
-                                         X[i][1] - X[index][1]    ]    )
+              #return np.linalg.norm(  [  X[i][0] - X[index][0]   , 
+              #                           X[i][1] - X[index][1]    ]    )
+              return self.dist(X[i], X[index])
 
            # Replace the unsorted array with the sorted one. 
            nbrlists[index]  = sorted( nbrlists[index], key = fn_index  ) 
@@ -569,8 +570,9 @@ the class. This is by design to gain extra flexibility during experimental analy
     <<EXTRACT_UNIQUE_ELMENTS_FROM_LIST>>
 
 
-    NrDistances, Nr = self.findNearestNeighbours( self.pointCloud, 
-                                             self.r )
+    NrDistances, Nr = self.findNearestNeighbours( self.pointCloud, self.r )
+
+    Nr              = np.array(Nr) # if Nr is a list, convert to an np.array. Note that np.array function is idempotent.
     S               = findMaximalIndependentOfNeighbourhoods( Nr.tolist( ), 
                                                               config[ 'mis_algorithm' ] )
 
@@ -596,7 +598,7 @@ the class. This is by design to gain extra flexibility during experimental analy
     
              ptnbIndex = np.array(self.pointCloud[nbIndex])
 
-             dist = np.linalg.norm( ptIndex - ptnbIndex  ) # Euclidean distance between the points
+             dist = self.dist(ptIndex , ptnbIndex) 
              pNrS[index].append(  (s, dist)    )
              break # since members of S are disjoint there is no reason to continue to iterate over members of S to check containment of nbindex
                    # Move onto the next member of neighbourIndices. 
@@ -716,8 +718,7 @@ For that, I construct a graph where
       for nbd, i in zip( nbds, range( len(nbds) )): # Note that each neighbourhood's 0th element is the center, and that the nbd indices are sorted by distance from this zeroth element. So -1 makes sense
           nbdCenterCoords                      = self.pointCloud[ nbd[0] ] 
           nbdFarthestNeighbourCoords           = self.pointCloud[ nbd[-1] ]
-          distanceFromRthNearestNeighbourDict[i] = np.linalg.norm( [ nbdCenterCoords[0] - nbdFarthestNeighbourCoords[0] ,
-                                                                     nbdCenterCoords[1] - nbdFarthestNeighbourCoords[1] ]  )# Abstract this away with the distance function later. 
+          distanceFromRthNearestNeighbourDict[i] = self.dist(nbdCenterCoords, nbdFarthestNeighbourCoords)
 
       nx.set_node_attributes( G, 'distanceFromRthNearestNeighbour', distanceFromRthNearestNeighbourDict )
 
@@ -800,10 +801,6 @@ For that, I construct a graph where
            if len(intersection_of_nbds_ij) >= 1:
                  print "Neighbourhoods intersect!"
                  sys.exit()
-
-    # print "Exiting!"
-    # import sys
-    # sys.exit()
 
     return [ nbds[s] for s in sIndices ]
 
@@ -897,8 +894,9 @@ of the _input_ numpy array *pointCloud*: each row in pointCloud corresponds to a
         for index  in  range(len(nbrlists)):
 
            def fn_index( i ): # Distance function local to this iteration of the loop
-              return np.linalg.norm(  [  X[i][0] - X[index][0]   , 
-                                         X[i][1] - X[index][1]    ]    )
+              #return np.linalg.norm(  [  X[i][0] - X[index][0]   , 
+              #                           X[i][1] - X[index][1]    ]    )
+              return self.dist(X[i], X[index])
 
            # Replace the unsorted array with the sorted one. 
            nbrlists[index]  = sorted( nbrlists[index], key = fn_index  ) 
@@ -1374,8 +1372,8 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
          trajectories = []
          for clusIdx, cluster in enumerate(self.computedClusterings):
              print "Setting line"
-             linecolor = colors[clusIdx]
-             linecolor = ( linecolor[0], linecolor[1], linecolor[2] , lineTransparency) # Augment with a transparency
+             linecolor   = colors[clusIdx]
+             linecolor   = ( linecolor[0], linecolor[1], linecolor[2] , lineTransparency) # Augment with a transparency
              markercolor = (linecolor[0], linecolor[1], linecolor[2], markerTransparency)
          
              for traj in cluster:
@@ -1438,7 +1436,7 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
          # The draw commands are very important for the animation to be rednered.
 	 fig.canvas.draw()
          plt.show()
-         #anim.save('shenzen_show.mp4', fps=5, extra_args=['-vcodec', 'libx264'])
+         #anim.save('shenzen_show_scrap.mp4', fps=5, extra_args=['-vcodec', 'libx264']) ; print "Animation saved!"
 #+END_SRC
 
 
@@ -1447,8 +1445,8 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
 ==============================================================================================================================================================================================================
 
 * 4-APX Dynamic $r$-Gather
-#+BEGIN_SRC python :noweb-ref  DYNAMIC_4APX_R2_LINF_ :exports yes
-  class Algo_STATIC_4APX_R2_Linf ( Algo_4APX_Metric ):
+#+BEGIN_SRC python :noweb-ref  DYNAMIC_4APX_R2_LINF :exports yes
+  class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
        
       def __init__(self, r,  pointCloud,  memoizeNbrSearch = False, distances_and_indices_file=''):
          """ Initialize the AlgoJieminDynamic
@@ -1706,16 +1704,16 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
                       line.set_markeredgecolor('k')
 
                       # Cluster center i.e. cluster[0] is made bolder and thicker. Think of it as a highway
-                      isClusterCenter = (carIdx == cluster[0])
-                      line.set_linewidth(trajThickness + 3*isClusterCenter)
-                      line.set_alpha(0.5 + 0.5*isClusterCenter)
+                      #isClusterCenter = (carIdx == cluster[0])
+                      #line.set_linewidth(trajThickness + 3*isClusterCenter)
+                      #line.set_alpha(0.5 + 0.5*isClusterCenter)
    
                       # Only highways are marked with markers 
-                      if isClusterCenter:
-                           line.set_marker( next(marker_pool) )
-                           line.set_markersize(14)
-                           line.set_markeredgewidth(2)
-                           line.set_markeredgecolor('k')
+                      #if isClusterCenter:
+                      #     line.set_marker( next(marker_pool) )
+                      #     line.set_markersize(14)
+                      #     line.set_markeredgewidth(2)
+                      #     line.set_markeredgecolor('k')
                            #line.set_markevery(3)
                       
 
@@ -1813,5 +1811,5 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
          # The draw commands are very important for the animation to be rednered.
 	 fig.canvas.draw()
          plt.show()
-         #anim.save('shenzen_show.mp4', fps=5, extra_args=['-vcodec', 'libx264'])
+         anim.save('shenzen_show_scratch.mp4', fps=5, extra_args=['-vcodec', 'libx264']) ; print "Animation saved"
 #+END_SRC

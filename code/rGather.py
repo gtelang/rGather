@@ -414,8 +414,9 @@ class AlgoAggarwalStaticR2L2( AlgoAggarwalStatic ):
       for index  in  range(len(nbrlists)):
 
          def fn_index( i ): # Distance function local to this iteration of the loop
-            return np.linalg.norm(  [  X[i][0] - X[index][0]   , 
-                                       X[i][1] - X[index][1]    ]    )
+            #return np.linalg.norm(  [  X[i][0] - X[index][0]   , 
+            #                           X[i][1] - X[index][1]    ]    )
+            return self.dist(X[i], X[index])
 
          # Replace the unsorted array with the sorted one. 
          nbrlists[index]  = sorted( nbrlists[index], key = fn_index  ) 
@@ -842,8 +843,8 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
        trajectories = []
        for clusIdx, cluster in enumerate(self.computedClusterings):
            print "Setting line"
-           linecolor = colors[clusIdx]
-           linecolor = ( linecolor[0], linecolor[1], linecolor[2] , lineTransparency) # Augment with a transparency
+           linecolor   = colors[clusIdx]
+           linecolor   = ( linecolor[0], linecolor[1], linecolor[2] , lineTransparency) # Augment with a transparency
            markercolor = (linecolor[0], linecolor[1], linecolor[2], markerTransparency)
        
            for traj in cluster:
@@ -906,7 +907,7 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
        # The draw commands are very important for the animation to be rednered.
        fig.canvas.draw()
        plt.show()
-       #anim.save('shenzen_show.mp4', fps=5, extra_args=['-vcodec', 'libx264']) # For trajectories in the euclidean plane with the linifinity-like metric 
+       #anim.save('shenzen_show_scrap.mp4', fps=5, extra_args=['-vcodec', 'libx264']) ; print "Animation saved!" # For trajectories in the euclidean plane with the linifinity-like metric 
 
 # The abstract class has both versions of the 4-approximation
 # algorithm i.e. the simple one and the improved distributed sweep 
@@ -985,8 +986,7 @@ class Algo_4APX_Metric:
           for nbd, i in zip( nbds, range( len(nbds) )): # Note that each neighbourhood's 0th element is the center, and that the nbd indices are sorted by distance from this zeroth element. So -1 makes sense
               nbdCenterCoords                      = self.pointCloud[ nbd[0] ] 
               nbdFarthestNeighbourCoords           = self.pointCloud[ nbd[-1] ]
-              distanceFromRthNearestNeighbourDict[i] = np.linalg.norm( [ nbdCenterCoords[0] - nbdFarthestNeighbourCoords[0] ,
-                                                                         nbdCenterCoords[1] - nbdFarthestNeighbourCoords[1] ]  )# Abstract this away with the distance function later. 
+              distanceFromRthNearestNeighbourDict[i] = self.dist(nbdCenterCoords, nbdFarthestNeighbourCoords)
       
           nx.set_node_attributes( G, 'distanceFromRthNearestNeighbour', distanceFromRthNearestNeighbourDict )
       
@@ -1070,10 +1070,6 @@ class Algo_4APX_Metric:
                      print "Neighbourhoods intersect!"
                      sys.exit()
       
-        # print "Exiting!"
-        # import sys
-        # sys.exit()
-      
         return [ nbds[s] for s in sIndices ]
       
       def extractUniqueElementsFromList( L ):
@@ -1086,8 +1082,9 @@ class Algo_4APX_Metric:
           return uniqueElements
     
     
-      NrDistances, Nr = self.findNearestNeighbours( self.pointCloud, 
-                                               self.r )
+      NrDistances, Nr = self.findNearestNeighbours( self.pointCloud, self.r )
+    
+      Nr              = np.array(Nr) # if Nr is a list, convert to an np.array. Note that np.array function is idempotent.
       S               = findMaximalIndependentOfNeighbourhoods( Nr.tolist( ), 
                                                                 config[ 'mis_algorithm' ] )
     
@@ -1113,7 +1110,7 @@ class Algo_4APX_Metric:
       
                ptnbIndex = np.array(self.pointCloud[nbIndex])
     
-               dist = np.linalg.norm( ptIndex - ptnbIndex  ) # Euclidean distance between the points
+               dist = self.dist(ptIndex , ptnbIndex) 
                pNrS[index].append(  (s, dist)    )
                break # since members of S are disjoint there is no reason to continue to iterate over members of S to check containment of nbindex
                      # Move onto the next member of neighbourIndices. 
@@ -1213,8 +1210,7 @@ class Algo_4APX_Metric:
           for nbd, i in zip( nbds, range( len(nbds) )): # Note that each neighbourhood's 0th element is the center, and that the nbd indices are sorted by distance from this zeroth element. So -1 makes sense
               nbdCenterCoords                      = self.pointCloud[ nbd[0] ] 
               nbdFarthestNeighbourCoords           = self.pointCloud[ nbd[-1] ]
-              distanceFromRthNearestNeighbourDict[i] = np.linalg.norm( [ nbdCenterCoords[0] - nbdFarthestNeighbourCoords[0] ,
-                                                                         nbdCenterCoords[1] - nbdFarthestNeighbourCoords[1] ]  )# Abstract this away with the distance function later. 
+              distanceFromRthNearestNeighbourDict[i] = self.dist(nbdCenterCoords, nbdFarthestNeighbourCoords)
       
           nx.set_node_attributes( G, 'distanceFromRthNearestNeighbour', distanceFromRthNearestNeighbourDict )
       
@@ -1298,10 +1294,6 @@ class Algo_4APX_Metric:
                      print "Neighbourhoods intersect!"
                      sys.exit()
       
-        # print "Exiting!"
-        # import sys
-        # sys.exit()
-      
         return [ nbds[s] for s in sIndices ]
       
       def extractUniqueElementsFromList( L ):
@@ -1373,8 +1365,9 @@ class Algo_Static_4APX_R2_L2 (Algo_4APX_Metric):
           for index  in  range(len(nbrlists)):
     
              def fn_index( i ): # Distance function local to this iteration of the loop
-                return np.linalg.norm(  [  X[i][0] - X[index][0]   , 
-                                           X[i][1] - X[index][1]    ]    )
+                #return np.linalg.norm(  [  X[i][0] - X[index][0]   , 
+                #                           X[i][1] - X[index][1]    ]    )
+                return self.dist(X[i], X[index])
     
              # Replace the unsorted array with the sorted one. 
              nbrlists[index]  = sorted( nbrlists[index], key = fn_index  ) 
@@ -1499,4 +1492,369 @@ class Algo_Static_4APX_R2_L2 (Algo_4APX_Metric):
                pass
     
         # For points in the euclidean plane with the L2 metric
- # for trajectories in the euclidean plane with the linifinity-like metric
+class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
+     
+    def __init__(self, r,  pointCloud,  memoizeNbrSearch = False, distances_and_indices_file=''):
+       """ Initialize the AlgoJieminDynamic
+ 
+           memoizeNbrSearch = this computes the table in the constructor itself. no need for a file. The file option below, is only useful for large runs.
+           distances_and_indices_file = must be a string identifer for the file-name on disk. 
+                                        containing the pairwise-distances and corresponding index numbers
+                                        between points. I had to appeal to this hack, since sklearn's algorithm to search in arbitrary metric spaces does not work for my case. 
+                                        Also the brute-force computation, which I initially implemented took far too long. 
+                                        Since  don't know how to do the neighbor computation for arbitrary metric spaces, I just precompute 
+                                        everything into a table, stored in a YAML file.
+       """
+
+
+       # len(trajectories) = number of cars
+       # len(trajectories[i]) = number of GPS samples taken for the ith car. For shenzhen data set this is
+       # constant for all cars.
+
+       self.r                    = r     
+       self.pointCloud           = pointCloud # Should be of type  [ [(Double,Double)] ] 
+       self.computedClusterings  = []  
+       self.algoName             = 'r-Gather for trajectory clustering'
+       self.superSlowBruteForce  = False
+
+       if memoizeNbrSearch :
+             numpts     = len(self.pointCloud)
+             (self.nbrTable_dist, self.nbrTable_idx) = ([], [])
+
+             for i in range(numpts):
+
+                     print colored ('Calculating distance from '+str(i), 'white', 'on_magenta',['underline','bold']) 
+                     traj_i = pointCloud[i]
+                     distances_and_indices = []
+
+                     for j in range(numpts):
+              
+                          traj_j = pointCloud[j]
+                          dij = self.dist( traj_i, traj_j)
+                          distances_and_indices.append((dij,j))
+                          print '......to j= '  , j, '  dij= ', dij
+                   
+                     # Now sort the distances of all points from point i. 
+                     distances_and_indices.sort(key=lambda tup: tup[0]) # http://tinyurl.com/mf8yz5b
+                     self.nbrTable_dist.append( [ d   for (d,idx) in distances_and_indices ]  )
+                     self.nbrTable_idx.append ( [ idx for (d,idx) in distances_and_indices ]  )
+
+       elif distances_and_indices_file != '': # Non empty file name passed
+
+             print colored("Started reading neighbor file", 'white','on_magenta',['bold','underline'])              
+             stream       = open(distances_and_indices_file,'r')
+             filecontents = yaml.load(stream) # This will be a dictionary
+             print colored("Finished reading neighbor file", 'white','on_green',['bold','underline'])              
+
+             self.nbrTable_dist = filecontents['Distances']
+             self.nbrTable_idx  = filecontents['Indices']
+
+       else:
+             self.superSlowBruteForce = True
+
+
+    def clearAllStates(self):
+          self.r                   = None
+          self.pointCloud          = [] 
+          self.computedClusterings = []
+          
+    def clearComputedClusteringsAndR(self):
+             self.r                   = None
+             self.computedClusterings = []
+
+    def dist(self, p,q):
+       """ distance between two trajectories p and q. The trajectories form a metric space under this distance 
+       If you visualize the given table as a microsoft excel sheet, where each column represents the trajectory 
+       of a car, then the distance between two trajectories is the max of L infinity norm of the difference of two 
+       columns. 
+
+       p,q :: [ [Double,Double] ]. The length of p or q, indicates the number of GPS samples taken
+       
+       """
+       #print "Inside distance function"
+       #print "p is ", p.shape, ' ' , p
+       #print "q is ", q.shape, ' ' , q
+
+       dpq = 0
+       for t in range(len(p)):
+            # M is the euclidean distance between two points at time t.  
+            M = np.sqrt( abs( (p[t][0]-q[t][0])**2 + (p[t][1]-q[t][1])**2 ) ) 
+            if M > dpq:
+                dpq = M
+       
+       #print p, q, dpq, ' ' , np.sqrt( (p[0][0]-q[0][0])**2 + (p[0][1]-q[0][1])**2)
+       #from termcolor import colored 
+       #print colored( str(dpq) , 'white', 'on_red', ['bold'] ) # This to make sure that dpq being returned is a sane number.
+       return dpq
+
+
+    def findNearestNeighbours(self, pointCloud, k):
+       """Return the k-nearest nearest neighbours"""
+       import numpy as np, itertools as it
+       from termcolor import colored 
+       numpts = len(pointCloud)
+
+       # Calling sklearn works only on R2L2 case for some reason. So for the moment, the only option is to use brute-force techniques.
+       if self.superSlowBruteForce : 
+                  print colored('Calling Super-slow brute Force kNN' , 'white', 'on_magenta', ['bold'])
+                  
+                  distances, indices = ([], [])
+                  for i in range(numpts):
+                           traj_i = pointCloud[i]
+                           distances_and_indices = []
+
+                           for j in range(numpts):
+                      
+                                  traj_j = pointCloud[j]
+                                  dij = self.dist( traj_i, traj_j)
+                                  distances_and_indices.append((dij,j))
+                
+                           # Now sort the distances of all points from point i. 
+                           distances_and_indices.sort(key=lambda tup: tup[0]) # http://tinyurl.com/mf8yz5b
+                           distances.append( [ d   for ( d,  _ ) in distances_and_indices[0:k] ]  )
+                           indices.append  ( [ idx for ( _, idx) in distances_and_indices[0:k] ]  )
+       
+                  #print "Distance matrix is ", np.array(distances) 
+                  #print "Index matrix is  "  , np.array(indices) 
+                  print colored('Finished Super-slow brute Force' , 'white', 'on_green', ['bold', 'underline'])
+                  return distances, indices
+
+       else: # This means the table has already been computed or read in from a file in the constructor itself
+                  print colored('Calling  Memoized brute Force kNN' , 'white', 'on_magenta', ['bold'])
+                  
+                  #zipDistIdx = zip (self.nbrTable_dist, self.nbrTable_idx)
+                  #print zipDistIdx[0][0:k]
+
+                  distances = [ [d   for d   in self.nbrTable_dist[i][0:k]] for i in range(numpts)]        
+                  indices   = [ [idx for idx in self.nbrTable_idx[i][0:k] ] for i in range(numpts)]        
+
+                  #print "Distance matrix is ", np.array(distances) 
+                  #print "Index matrix is  "  , np.array(indices) 
+                  print colored('Finished Memoized brute Force kNN' , 'white', 'on_green', ['bold', 'underline'])
+                  return distances, indices
+
+
+
+
+
+    def rangeSearch(self, pointCloud, radius):
+          """ A range search routine.
+          Given a point-cloud, return the neighbours within a distance of 'radius'
+          for every element of the pointcloud. return the neighbour indices , sorted 
+          according to distance. """
+          import numpy as np
+          from termcolor import colored 
+          import itertools as it
+          import sys, time
+
+          print colored("Inside trajectory rangeSearch",'white', 'on_magenta',['bold'])
+
+
+          numpts              = len(pointCloud)
+
+
+          if self.superSlowBruteForce:
+                
+                distances, indices = ([], [])
+                for i in range(numpts):
+                     traj_i = pointCloud[i]
+                     distances_and_indices = []
+
+                     for j in range(numpts):
+                      
+                          traj_j = pointCloud[j]
+                          dij = self.dist( traj_i, traj_j)
+                          if dij < radius: # We are doing range search 
+                                distances_and_indices.append((dij,j))
+               
+                     # Now sort the distances of all points from point i. 
+                     distances_and_indices.sort(key=lambda tup: tup[0]) # http://tinyurl.com/mf8yz5b
+
+                     distances.append([d   for (d, _ ) in distances_and_indices])
+                     indices.append  ([idx for (_,idx) in distances_and_indices])
+       
+                #print "Radius specified was ", colored(str(radius), 'white', 'on_green', ['bold'])
+                #print "Distance matrix is \n", np.array(distances) 
+                #print "Index matrix is  \n"  , np.array(indices) 
+                print colored('Finished rangeSearch Neighbors', 'magenta', 'on_grey', ['bold', 'underline'])
+                return distances, indices
+
+          else: # This means the table has already been computed or read in from a file in the constructor itself
+                print colored('Calling  Memoized brute Force rangeSearch' , 'yellow', 'on_magenta', ['bold'])
+                  
+                start = time.time()
+                distances, indices = ([], [])
+                       
+                for i in range(numpts):
+                       d_npbr   = np.array(self.nbrTable_dist[i])
+                       idx_npbr = np.array(self.nbrTable_idx[i], dtype=int)
+                       distances_and_indices = zip ( d_npbr, idx_npbr  )
+
+                       #################################### Bench
+                       tmpd   = []
+                       tmpidx = []
+                       for (d, idx) in distances_and_indices:
+                              if d<radius:
+                                    tmpd.append(d)
+                                    tmpidx.append(idx)
+
+                       distances.append(tmpd)
+                       indices.append(tmpidx)                
+
+                       ######################################### Gold : But this compares distance twice 
+                       #distances.append([d   for (d ,  _ ) in distances_and_indices if d<radius ])  
+                       #indices.append  ([idx for (d , idx) in distances_and_indices if d<radius ])
+
+                end = time.time()       
+                print "Time taken for Range Search is ", end-start
+                #print "Distance matrix is ", np.array(distances) 
+                #print "Index matrix is  "  , np.array(indices) 
+                print colored('Finished Memoized brute Force rangeSearch' , 'yellow', 'on_blue', ['bold', 'underline'])
+                return distances, indices
+   
+    def plotClusters(self,  ax            , 
+                     trajThickness  = 10 , 
+                     marker         = 'o' , 
+                     pointCloudInfo = ''  ,
+                     annotatePoints = False):
+        """ Plot the trajectory clusters computed by the algorithm."""
+
+        from scipy import spatial
+        import numpy as np, matplotlib as mpl
+        import matplotlib.pyplot as plt
+        import colorsys
+        import itertools as it
+
+        trajectories = self.pointCloud
+        numCars      = len(trajectories)
+        numClusters  = len(self.computedClusterings)
+
+        # Generate equidistant colors
+        colors       = [(x*1.0/numClusters, 0.5, 0.5) for x in range(numClusters)]
+        colors       = map(lambda x: colorsys.hsv_to_rgb(*x), colors)
+
+        # An iterator tht creates an infinite list.Ala Haskell's cycle() function.
+        marker_pool  =it.cycle (["o", "v", "s", "D", "h", "x"])
+         
+
+        for clusIdx, cluster in enumerate(self.computedClusterings):
+             clusterColor = colors[clusIdx]  # np.random.rand(3,1)
+
+             for carIdx in cluster:
+                    xdata = [point[0] for point in trajectories[carIdx]]
+                    ydata = [point[1] for point in trajectories[carIdx]]
+
+                    # Every line in a cluster gets a unique color     
+                    line, = ax.plot(xdata, ydata, 'o-')
+                    line.set_color(clusterColor)
+                    line.set_markeredgecolor('k')
+
+                    # Cluster center i.e. cluster[0] is made bolder and thicker. Think of it as a highway
+                    #isClusterCenter = (carIdx == cluster[0])
+                    #line.set_linewidth(trajThickness + 3*isClusterCenter)
+                    #line.set_alpha(0.5 + 0.5*isClusterCenter)
+ 
+                    # Only highways are marked with markers 
+                    #if isClusterCenter:
+                    #     line.set_marker( next(marker_pool) )
+                    #     line.set_markersize(14)
+                    #     line.set_markeredgewidth(2)
+                    #     line.set_markeredgecolor('k')
+                         #line.set_markevery(3)
+                    
+
+
+        ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':20})
+        ax.set_xlabel('Latitude', fontdict={'fontsize':15})
+        ax.set_ylabel('Longitude',fontdict={'fontsize':15})
+        #ax.grid(b=True)
+
+
+    def animateClusters(self, ax, fig, lats, longs,
+                     interval_between_frame=200,
+                     lineTransparency   = 0.55,
+                     markerTransparency = 1.0,
+                     saveAnimation=False):
+       """Instead of viewing the trajectories like a bowl of spaghetti, watch them 
+       evolve in time. Each cluster gets assigned a unique color just like in plotClusters
+       interval_between_frames is in milliseconds.
+       """ 
+       print lats, longs
+       numCars      = len(self.pointCloud)
+       numClusters  = len(self.computedClusterings)
+       numSamples   = len(self.pointCloud[0])
+       
+       # Generate equidistant colors
+       colors       = [(x*1.0/numClusters, 0.5, 0.5) for x in range(numClusters)]
+       colors       = map(lambda x: colorsys.hsv_to_rgb(*x), colors)
+       
+       
+       # For each car create a trajectory object. 
+       trajectories = []
+       for clusIdx, cluster in enumerate(self.computedClusterings):
+           print "Setting line"
+           linecolor = colors[clusIdx]
+           linecolor = ( linecolor[0], linecolor[1], linecolor[2] , lineTransparency) # Augment with a transparency
+           markercolor = (linecolor[0], linecolor[1], linecolor[2], markerTransparency)
+       
+           for traj in cluster:
+               print "---< Line Set"
+               line, = ax.plot([],[], lw=3, markerfacecolor=markercolor, markersize=5)
+               line.set_marker('o')
+               line.set_c(linecolor)
+       
+               trajectories.append(line)
+       
+       #ax.set_title('r= ' + str(self.r) + + ' Clusters= ', str(numClusters), fontdict={'fontsize':40})
+       ax.set_xlabel('Latitude', fontdict={'fontsize':20})
+       ax.set_ylabel('Longitude', fontdict={'fontsize':20})
+       
+       # A special dumb initial function.
+       # Absolutely essential if you do blitting
+       # otherwise it will call the generator as an
+       # initial function, leading to trouble
+       def init():
+           #global ax
+           print "Initializing "
+           return ax.lines
+       
+       # Update the state of rGather
+       def rGather():
+           """ Run the online r-gather algorithm as the cars
+           move around. TODO: Make this function itself call
+           another generator which is revealing the data piece
+           by piece. Generators all the way down! Chaining of
+           several functions and lazy evaluation!!
+           """
+           for i in range(numSamples):
+               for car in range(numCars):
+                   xdata = lats [0:i+1,car]
+                   ydata = longs[0:i+1,car]
+                   trajectories[car].set_data( xdata, ydata )
+       
+               yield trajectories, i
+       
+       
+       # Separating the animateData and the rGather generator function allows
+       def animateData(state, fig, ax):
+           """ Render the trajectories rendered by the rGather algorithms
+           and add fancy effects.
+           """
+           trajectories = state[0] # All trajectories
+           currentTime  = state[1] # The time at which to animate
+       
+           if currentTime > 1:
+               for car in range(len(trajectories)):
+                   trajectories[car].set_markevery(  (currentTime,currentTime)  )
+       
+           return trajectories
+       
+       # Call the animator.  blit=True means only re-draw the parts that have changed.
+       # Ensures better speed
+       
+       anim = animation.FuncAnimation(fig, animateData, rGather(),
+                                      init_func=init, interval=200, blit=False, fargs=(fig,ax))
+       # The draw commands are very important for the animation to be rednered.
+       fig.canvas.draw()
+       plt.show()
+       anim.save('shenzen_show_scratch.mp4', fps=5, extra_args=['-vcodec', 'libx264']) ; print "Animation saved" # for trajectories in the euclidean plane with the linifinity-like metric
