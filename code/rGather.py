@@ -56,9 +56,6 @@ class AlgoAggarwalStatic:
     from   colorama import Fore, Style 
     import pprint as pp 
     import networkx as nx, numpy as np, random, time 
-    import scipy as sp
-    import matplotlib.pyplot as plt
-    import sys
     points    = self.pointCloud # a conveninent alias 
     numPoints = len( self.pointCloud )
   
@@ -438,11 +435,6 @@ class AlgoAggarwalStaticR2L2( AlgoAggarwalStatic ):
                   pointCloudInfo='',
                   annotatePoints=True):
        
-   
-         from scipy import spatial
-         import numpy as np, matplotlib as mpl
-         import matplotlib.pyplot as plt
-    
          # Plot point-cloud 
          xs = [x for (x,y) in self.pointCloud]
          ys = [y for (x,y) in self.pointCloud]
@@ -766,12 +758,10 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
                      trajThickness  = 10 , 
                      marker         = 'o' , 
                      pointCloudInfo = ''  ,
-                     annotatePoints = False):
+                     annotatePoints = False,
+                     plot_xytspace = False):
         """ Plot the trajectory clusters computed by the algorithm."""
 
-        from scipy import spatial
-        import numpy as np, matplotlib as mpl
-        import matplotlib.pyplot as plt
         import colorsys
         import itertools as it
 
@@ -784,7 +774,7 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
         colors       = map(lambda x: colorsys.hsv_to_rgb(*x), colors)
 
         # An iterator tht creates an infinite list.Ala Haskell's cycle() function.
-        marker_pool  =it.cycle (["o", "v", "s", "D", "h", "x"])
+        #marker_pool  =it.cycle (["o", "v", "s", "D", "h", "x"])
          
 
         for clusIdx, cluster in enumerate(self.computedClusterings):
@@ -794,30 +784,34 @@ class AlgoJieminDynamic( AlgoAggarwalStatic ):
                     xdata = [point[0] for point in trajectories[carIdx]]
                     ydata = [point[1] for point in trajectories[carIdx]]
 
+                    if plot_xytspace == True:
+                       timeStamps = np.linspace(0, 1, len(xdata))
+                       #print "TimeStamps are : ", timeStamps
+                       line, = ax.plot(xdata, ydata, timeStamps, 'o-')
+
+                    else:
+                         line, = ax.plot(xdata, ydata, 'o-')
+   
                     # Every line in a cluster gets a unique color     
-                    line, = ax.plot(xdata, ydata, 'o-')
                     line.set_color(clusterColor)
                     line.set_markeredgecolor('k')
 
                     # Cluster center i.e. cluster[0] is made bolder and thicker. Think of it as a highway
-                    isClusterCenter = (carIdx == cluster[0])
-                    line.set_linewidth(trajThickness + 3*isClusterCenter)
-                    line.set_alpha(0.5 + 0.5*isClusterCenter)
+                    #isClusterCenter = (carIdx == cluster[0])
+                    #line.set_linewidth(trajThickness + 3*isClusterCenter)
+                    #line.set_alpha(0.5 + 0.5*isClusterCenter)
  
                     # Only highways are marked with markers 
-                    if isClusterCenter:
-                         line.set_marker( next(marker_pool) )
-                         line.set_markersize(14)
-                         line.set_markeredgewidth(2)
-                         line.set_markeredgecolor('k')
-                         #line.set_markevery(3)
+                    #if isClusterCenter:
+                    #     line.set_marker( next(marker_pool) )
+                    #     line.set_markersize(14)
+                    #     line.set_markeredgewidth(2)
+                    #     line.set_markeredgecolor('k')
+                    #     line.set_markevery(3)
                     
-
-
         ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':20})
         ax.set_xlabel('Latitude', fontdict={'fontsize':15})
         ax.set_ylabel('Longitude',fontdict={'fontsize':15})
-        #ax.grid(b=True)
 
 
     def animateClusters(self, ax, fig, lats, longs,
@@ -1390,11 +1384,6 @@ class Algo_Static_4APX_R2_L2 (Algo_4APX_Metric):
                    pointCloudInfo='',
                    annotatePoints=True):
         
-    
-          from scipy import spatial
-          import numpy as np, matplotlib as mpl
-          import matplotlib.pyplot as plt
-     
           # Plot point-cloud 
           xs = [x for (x,y) in self.pointCloud]
           ys = [y for (x,y) in self.pointCloud]
@@ -1716,12 +1705,10 @@ class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
                      trajThickness  = 10 , 
                      marker         = 'o' , 
                      pointCloudInfo = ''  ,
-                     annotatePoints = False):
+                     annotatePoints = False,
+                     plot_xytspace = False):
         """ Plot the trajectory clusters computed by the algorithm."""
 
-        from scipy import spatial
-        import numpy as np, matplotlib as mpl
-        import matplotlib.pyplot as plt
         import colorsys
         import itertools as it
 
@@ -1729,13 +1716,9 @@ class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
         numCars      = len(trajectories)
         numClusters  = len(self.computedClusterings)
 
-        # Generate equidistant colors
+        # Generate equidistant, hence maximally dispersed colors.
         colors       = [(x*1.0/numClusters, 0.5, 0.5) for x in range(numClusters)]
         colors       = map(lambda x: colorsys.hsv_to_rgb(*x), colors)
-
-        # An iterator tht creates an infinite list.Ala Haskell's cycle() function.
-        marker_pool  =it.cycle (["o", "v", "s", "D", "h", "x"])
-         
 
         for clusIdx, cluster in enumerate(self.computedClusterings):
              clusterColor = colors[clusIdx]  # np.random.rand(3,1)
@@ -1743,31 +1726,24 @@ class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
              for carIdx in cluster:
                     xdata = [point[0] for point in trajectories[carIdx]]
                     ydata = [point[1] for point in trajectories[carIdx]]
+                             
+                    # if plot is three d.
+                    if plot_xytspace == True:
 
+                       timeStamps = np.linspace(0, 1, len(xdata))
+                       #print "TimeStamps are : ", timeStamps
+                       line, = ax.plot(xdata, ydata, timeStamps, marker='o')
+                       
+                    else: # else if plot is 2d
+                       line, = ax.plot(xdata, ydata, 'o-')
+                       print type(ax)
                     # Every line in a cluster gets a unique color     
-                    line, = ax.plot(xdata, ydata, 'o-')
                     line.set_color(clusterColor)
                     line.set_markeredgecolor('k')
-
-                    # Cluster center i.e. cluster[0] is made bolder and thicker. Think of it as a highway
-                    #isClusterCenter = (carIdx == cluster[0])
-                    #line.set_linewidth(trajThickness + 3*isClusterCenter)
-                    #line.set_alpha(0.5 + 0.5*isClusterCenter)
- 
-                    # Only highways are marked with markers 
-                    #if isClusterCenter:
-                    #     line.set_marker( next(marker_pool) )
-                    #     line.set_markersize(14)
-                    #     line.set_markeredgewidth(2)
-                    #     line.set_markeredgecolor('k')
-                         #line.set_markevery(3)
-                    
-
 
         ax.set_title( self.algoName + '\n r=' + str(self.r), fontdict={'fontsize':20})
         ax.set_xlabel('Latitude', fontdict={'fontsize':15})
         ax.set_ylabel('Longitude',fontdict={'fontsize':15})
-        #ax.grid(b=True)
 
 
     def animateClusters(self, ax, fig, lats, longs,
