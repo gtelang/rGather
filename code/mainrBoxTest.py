@@ -100,7 +100,7 @@ def wrapperkeyPressHandler( fig, ax, run1, run2, keyStack=[] ): # the key-stack 
 
 
            run2.r = r
-           run2.generateClusters()
+           run2.generateClustersSimple()
            run2.plotClusters(ax[1], pointSize=140, annotatePoints=False)
            applyAxCorrection(ax[1])
 
@@ -136,9 +136,9 @@ ax[0].grid( b=True )
 ax[1].grid( b=True )
 
 r = 5
-pointCloud = givePoints('rbox 60  D2')
-run1 = rg.AlgoAggarwalStaticR2L2(r=r, pointCloud=pointCloud) 
-run2 = rg.AlgoJieminDecentralizedStatic( r=r, pointCloud = pointCloud ) 
+pointCloud = givePoints('rbox 100  D2 W0.2')
+run1 = rg.AlgoAggarwalStaticR2L2( r=r, pointCloud=pointCloud) 
+run2 = rg.Algo_Static_4APX_R2_L2( r=r, pointCloud = pointCloud ) 
 
 
 xlim= [-1,1] # Depending on the axes limits, set the radius of the circle. 

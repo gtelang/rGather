@@ -1,0 +1,7 @@
+What does it mean to make an animation? 
+
+1. The same thing you have done. Except that you improve the visual appearance of your animation. 
+   Don't do that gif thing of restarting everything when the end has-reached. The media player on 
+   the appropriate platform can do that. 
+
+2. To the animation video, pass command-line parameters indicating framerate, blitting/noblitting and other goodness.

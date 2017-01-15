@@ -28,7 +28,7 @@ indicesOfCarsPlotted  = range(args.range[0], args.range[1]) # This can be an arb
 numSamples            = args.samples # All_lats.shape[0] # Total number of GPS samples for each car. 
 r                     = args.r
 algo                  = args.algo
-plotxyt               = False
+plotxyt               = True
 
 if plotxyt == True: # plot in xy-t space
 	

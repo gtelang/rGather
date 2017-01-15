@@ -88,3 +88,47 @@ Things to do <2016-07-30 Sat>
         2  Max, 90p, maxrnearest (Jbig)
         3. Max, 90p, maxrnearest (JAsmall)
         4. Max, 90p, maxrnearest (JAsmall) 
+
+
+
+
+
+---------------------------------------------------------------------------
+
+
+- [ ] Show xyt screen-cast
+- [ ] Show clustering for r= 20, 40, 60, 80  cars = 300
+      for 2-Approximation
+      for 4-Approximation
+
+
+- [] Important minor things
+  - [X] Why is the argparse module failing to parse booleans
+  - [X] Make a list of font-properties like font-size, font-type 
+        image-type etc. The images should be saved to disk. 
+  - [X] Make a dedicated MobiHOC 2017 folder and start including 
+    rGather module into it. There must be a way for modules to do it. 
+  - [ ] Make a dedicated scrript to start the analysis. Much of it 
+    will be rehashed. Make a literate program of it so that it becomes 
+    editable. 
+      - [ ] Extract lats and longs from trajectory data of point-cloud
+      - [ ] Make animation parameters tunable. framerate, codec, fileformat etc, where it is saved etc.
+
+
+ For making the video, add lots of command-line options to tinker with 
+ with plot appearance. Do this as much as you cna. *Be warned that you need to be careful with boolean flags. see the stack overflow answer.*
+ 
+
+ This script makes cleat the type of trajectory clustering we are performing.
+ It compares two kinds of clustering.
+ Type 1. The static clustering yielded by the 4-approximation algorithms. 
+ Type 2. The clustering yielded when we redo the clustering at every time-step.
+ Both type1 and type2 will show similar motion. Only the colors will be different.
+ However, the plots will be far better.
+ The trajectories will be bold
+ The trajectories will be opaque
+ They will have markers only at the front.
+ In the second-case, either I show the polygon's changing.
+ or I show just colored dots moving around. 
+ See this : to make the movie high-resolution.
+

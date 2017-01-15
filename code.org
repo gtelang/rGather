@@ -194,7 +194,29 @@ I do this via the ~getNeighbors/.py~ code in the DynamicInput folder
     #Use the best network to construct the needed clusters. 
     self.computedClusterings = makeClusters( bestRflowDict, bestRCenters, bestRflowNetwork, bestR)
     #====================================================================================================
-    <<RECURSE_BLOCK>>
+    #<<RECURSE_BLOCK>>
+
+    # Things to do: 
+    # ---. Abstract recursion as a function with the larger clusters.
+    # candidateClusters  = makeClusters (<blah-blah>)
+    # largeClusters   = [cluster for cluster in candidateClusters  if len(cluster) >= 2*self.r and len(cluster) < len(self.pointCloud)] # When this is empty, function will return.
+    # smallClusters   = Take complement. 
+    # refinedClusters = refineLargeClusters (largeclusters, self.pointCloud) # refer to the large clusters of the pointcloud 
+    # self.computedClusterings,  = smallClusters + refinedClusters # (+) is indeed the concatenation operator.
+    # coordinatesActualExtractopn = using self.computedClusterings extract it. This will be necessary when passing on to run.
+    # return coOrdinatesActualExtraction, centers # if you don't really want them, the callee will not store them. He will be interested  in the self.computedClusterings variable.
+
+    # all the magic happens in the refineLargeClusters function, INCLUDING the list-flattening operation. Have a dedicated list-flattener also! Defined
+
+    # makeClusters just returns indices. self.computedClusterings are then extracted/set as actual trajectories
+    # Another option, possibly better will be for makeClusters to return both indexes and coordinates. 
+    # Then we can use pattern-matching _,blah and blah,_ style sth.
+    # This will support both recursive and non-recursive variants.
+    # plotClusters function will then need to be changed at some points
+
+    # that supports making , the clusters, and solving the neighbor problem
+    # now for the most important: how do we return????, that is implement the splitting? 
+    # certainly, just before returning you will have to flatten the list.
 
     #=====================================================================================================
     # Sanity check on the computed clusters. They should all be of size r and should cover the full point set
@@ -211,7 +233,7 @@ I do this via the ~getNeighbors/.py~ code in the DynamicInput folder
         print "Cluster(", i+1, ") Size:", len(cluster), "  ", np.array( cluster ) 
 
     
-    raw_input('Press Enter to continue...')
+    #raw_input('Press Enter to continue...')
 
     return  bestRCenters
 #+END_SRC
@@ -219,11 +241,10 @@ I do this via the ~getNeighbors/.py~ code in the DynamicInput folder
 The following adds recursive capabilities to the routine so that the cluster size, in terms of number, goes down. 
 #+BEGIN_SRC python :noweb-ref RECURSE_BLOCK :exports yes 
 # Check if all clusters are small enough. i.e. don't have too many points. 
-largeclusters = [cluster for cluster in self.computedClusterings 
-                         if len(cluster) >= 2*self.r and 
-                            len(cluster) < len(self.pointCloud)]
+largeclusters = [cluster for cluster in self.computedClusterings  if len(cluster) >= 2*self.r and len(cluster) < len(self.pointCloud)]
 
-
+print largeclusters
+sys.exit()
 if largeclusters: # A non-empty list evaluates to True. The Pythonic way.
          # Iterate through each cluster and run the r-Gather algorithm on it. 
          for cluster in largeclusters:
@@ -232,11 +253,11 @@ if largeclusters: # A non-empty list evaluates to True. The Pythonic way.
 
                if cluster_size >= 2*self.r and cluster_size != len(self.pointCloud):
 
-                 cluster_pointCloud = [self.pointCloud[i]  for i in cluster]                 
+                 cluster_pointCloud = [self.pointCloud[i]  for i in cluster]  # bingo, this is why point-cloud has to be passed to refineLargeClusters !!! finally!              
 
                  run = AlgoJieminDynamic(r= self.r, pointCloud= cluster_pointCloud, memoizeNbrSearch= True) 
                  clusterCenters = run.generateClusters() 
-                 print clusterCenters
+                 #print clusterCenters
                                               
 #+END_SRC
 The noweb-reference makeClusterCenters expands to the function definition given below. Neighbours of a point within
@@ -547,20 +568,21 @@ class Algo_4APX_Metric:
 #+END_SRC
 
 
-*** Generate Clusters: The Simple Version
+*** Generate Clusters
 
 The algorithm. Finally! Note that this method is NOT called by the constructor when initializing 
 the class. This is by design to gain extra flexibility during experimental analyses. 
 
 #+BEGIN_SRC python :noweb-ref GENERATE_CLUSTERS_4APX_SIMPLE :exports yes 
 
-  def generateClustersSimple(self, config={'mis_algorithm': 'networkx_random_choose_20_iter_best'}):
+  def generateClusters(self, config={'mis_algorithm': 'networkx_random_choose_20_iter_best'}):
     """ config : Configuration parameters which might be needed 
                  for the run. 
     Options recognized are (ALL LOWER-CASE)
     1. mis_algorithm:
          A. 'networkx_random_choose_20_iter_best', default 
          B. 'riksuggestion'
+         C. 'sweep'
     """
     import pprint as pp
     <<FIND_MAXIMAL_INDEPENDENT_SET_NEIGHBOURHOODS>>
@@ -571,8 +593,11 @@ the class. This is by design to gain extra flexibility during experimental analy
 
     Nr              = np.array(Nr) # if Nr is a list, convert to an np.array. Note that np.array function is idempotent.
     S               = findMaximalIndependentOfNeighbourhoods( Nr.tolist( ), 
-                                                              config[ 'mis_algorithm' ] )
-
+                                                              config[ 'mis_algorithm' ])
+ 
+    #print Nr # Nr is of type [[Int]] where [Int] here refers to a neighborhood.
+    #print S  # S should be a subset of Nr
+    #sys.exit()
     indicesOfPointsCoveredByS = set(list(itertools.chain.from_iterable(S)))
     indicesOfPointsMissedByS  = set(range(len(self.pointCloud))).difference(indicesOfPointsCoveredByS)
 
@@ -648,25 +673,13 @@ the class. This is by design to gain extra flexibility during experimental analy
             " Number of Clusters Computed = ", len( self.computedClusterings ), \
             " Algorithm used: "              , self.algoName
     sys.stdout.flush()
+
+
+  generateClustersSimple = generateClusters # Hack for backward compatibility. Had not read fact that only M2 needed to be modified.
+
 #+END_SRC
 
-*** Generate Clusters: The Sweep Version
 
-#+BEGIN_SRC python :noweb-ref GENERATE_CLUSTERS_4APX_SWEEP :exports yes 
-
-  def generateClustersSweep(self, config={'mis_algorithm': 'networkx_random_choose_20_iter_best'}):
-    """ config : Configuration parameters which might be needed 
-                 for the run. 
-    Options recognized are (ALL LOWER-CASE)
-    1. mis_algorithm:
-         A. 'networkx_random_choose_20_iter_best', default 
-         B. 'riksuggestion'
-    """
-    <<FIND_MAXIMAL_INDEPENDENT_SET_NEIGHBOURHOODS>>
-    <<EXTRACT_UNIQUE_ELMENTS_FROM_LIST>>
-    pass 
-
-    #+END_SRC
 
 *** Maximal Independent Set  // Unique Extraction From List
 Given a collection of point-sets in the plane, we can use networkX to extract a large maximally independent -- wrt intersection--
@@ -722,18 +735,13 @@ For that, I construct a graph where
       import collections
       # Generate the order to remove the vertices
       orderOfVerticesToDelete = collections.deque(sorted(  range(len(nbds)) , key = lambda x: G.node[x][ 'distanceFromRthNearestNeighbour' ]    ))
-      
-      #print orderOfVerticesToDelete
-      #for i in orderOfVerticesToDelete:
-      #  print G.node[i]['distanceFromRthNearestNeighbour']
       sIndices = [ ]
 
 
       for i in orderOfVerticesToDelete:
 
         try:
-           node = orderOfVerticesToDelete[i]
-
+           node  = orderOfVerticesToDelete[i]
            nlist = G.neighbors( node )
 
            for n in nlist:
@@ -757,36 +765,15 @@ For that, I construct a graph where
             continue
 
 
-      # while( len( orderOfVerticesToDelete ) >= 1 ): # This list changes during the iteration. 
+    # Hard-hat area! Here be dragons.
+    elif mis_algorithm == 'sweep':
+      pass 
 
-      #     try:
-      #       node  = orderOfVerticesToDelete[0]
 
-      #     except nx.NetworkXError:
-      #         print "Removing carcass"
-      #         orderOfVerticesToDelete.popleft()
-
-      #     else:
-      #       sIndices.append( node ) # The very fact no exception was thrown means that you can freely add it to the independent set
-      #       nlist = G.neighbors( node )
-
-      #       # Delete all the edges emanating from  elements of nlist. 
-      #       # The fact that this did not throw an exception means 'node' still exists in the graph G
-      #       for n in nlist:
-      #          G.remove_edge( node, n ) # Remove all edges emanating
-
-      #       G.remove_node( node ) # Remove the node itself
-
-      #       for n in nlist:
-      #         G.remove_node( n ) # Remove all the neighbours.
-              
-      #       orderOfVerticesToDelete.popleft()
 
     else:
-      import sys
-      print "Maximum independent Set Algorithm option not recognized!"
+      print "Maximum independent Set Algorithm option ", mis_algorithm ," not recognized!"
       sys.exit()
-
 
     # If two neighbourhoods intersect, draw 
     # a corresponding edge in the graph. 
@@ -1063,7 +1050,7 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
 #+BEGIN_SRC python :noweb-ref  DYNAMIC_2APX_R2_LINF  :exports yes
   class AlgoJieminDynamic( AlgoAggarwalStatic ):
        
-      def __init__(self, r,  pointCloud,  memoizeNbrSearch = False, distances_and_indices_file=''):
+      def __init__(self, r,  pointCloud,  memoizeNbrSearch = True, distances_and_indices_file=''):
          """ Initialize the AlgoJieminDynamic
  
              memoizeNbrSearch = this computes the table in the constructor itself. no need for a file. The file option below, is only useful for large runs.
@@ -1346,14 +1333,15 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
 
       def animateClusters(self, ax, fig, lats, longs,
                        interval_between_frame=200,
-                       lineTransparency   = 0.55,
+                       lineTransparency   = 1.0,
                        markerTransparency = 1.0,
                        saveAnimation=False):
          """Instead of viewing the trajectories like a bowl of spaghetti, watch them 
          evolve in time. Each cluster gets assigned a unique color just like in plotClusters
          interval_between_frames is in milliseconds.
          """ 
-	 print lats, longs
+       
+
          numCars      = len(self.pointCloud)
          numClusters  = len(self.computedClusterings)
          numSamples   = len(self.pointCloud[0])
@@ -1443,7 +1431,7 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
 #+BEGIN_SRC python :noweb-ref  DYNAMIC_4APX_R2_LINF :exports yes
   class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
        
-      def __init__(self, r,  pointCloud,  memoizeNbrSearch = False, distances_and_indices_file=''):
+      def __init__(self, r,  pointCloud,  memoizeNbrSearch = True, distances_and_indices_file=''):
          """ Initialize the AlgoJieminDynamic
  
              memoizeNbrSearch = this computes the table in the constructor itself. no need for a file. The file option below, is only useful for large runs.
@@ -1680,6 +1668,9 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
           colors       = [(x*1.0/numClusters, 0.5, 0.5) for x in range(numClusters)]
           colors       = map(lambda x: colorsys.hsv_to_rgb(*x), colors)
 
+
+          print "Plot colors are", colors 
+
           for clusIdx, cluster in enumerate(self.computedClusterings):
                clusterColor = colors[clusIdx]  # np.random.rand(3,1)
 
@@ -1708,50 +1699,23 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
                 ax.set_zlabel('Time', fontdict={'fontsize':22})
 
       def animateClusters(self, ax, fig, lats, longs,
-                       interval_between_frame=200,
-                       lineTransparency   = 0.55,
+                       interval_between_frames=500,
+                       lineTransparency   = 1.0,
                        markerTransparency = 1.0,
                        saveAnimation=False):
          """Instead of viewing the trajectories like a bowl of spaghetti, watch them 
          evolve in time. Each cluster gets assigned a unique color just like in plotClusters
          interval_between_frames is in milliseconds.
          """ 
-	 print lats, longs
-         numCars      = len(self.pointCloud)
-         numClusters  = len(self.computedClusterings)
-         numSamples   = len(self.pointCloud[0])
-         
-         # Generate equidistant colors
-         colors       = [(x*1.0/numClusters, 0.5, 0.5) for x in range(numClusters)]
-         colors       = map(lambda x: colorsys.hsv_to_rgb(*x), colors)
-         
-         
-         # For each car create a trajectory object. 
-         trajectories = []
-         for clusIdx, cluster in enumerate(self.computedClusterings):
-             print "Setting line"
-             linecolor = colors[clusIdx]
-             linecolor = ( linecolor[0], linecolor[1], linecolor[2] , lineTransparency) # Augment with a transparency
-             markercolor = (linecolor[0], linecolor[1], linecolor[2], markerTransparency)
-         
-             for traj in cluster:
-                 print "---< Line Set"
-                 line, = ax.plot([],[], lw=3, markerfacecolor=markercolor, markersize=5)
-                 line.set_marker('o')
-                 line.set_c(linecolor)
-         
-                 trajectories.append(line)
-         
-         #ax.set_title('r= ' + str(self.r) + + ' Clusters= ', str(numClusters), fontdict={'fontsize':40})
-         ax.set_xlabel('Latitude', fontdict={'fontsize':20})
-         ax.set_ylabel('Longitude', fontdict={'fontsize':20})
-         
+ 
+         import colorsys
+         import itertools as it
+
          # A special dumb initial function.
          # Absolutely essential if you do blitting
          # otherwise it will call the generator as an
          # initial function, leading to trouble
          def init():
-             #global ax
              print "Initializing "
              return ax.lines
          
@@ -1763,11 +1727,32 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
              by piece. Generators all the way down! Chaining of
              several functions and lazy evaluation!!
              """
+             
+             numCars      = len(self.pointCloud)
+             numClusters  = len(self.computedClusterings)
+             numSamples   = len(self.pointCloud[0])
+
+             # Generate equidistant, hence maximally dispersed colors.
+             colors       = [(x*1.0/numClusters, 0.5, 0.5) for x in range(numClusters)]
+             colors       = map(lambda x: colorsys.hsv_to_rgb(*x), colors)
+
+
+
              for i in range(numSamples):
-                 for car in range(numCars):
-                     xdata = lats [0:i+1,car]
-                     ydata = longs[0:i+1,car]
-                     trajectories[car].set_data( xdata, ydata )
+                 ax.lines = [] 
+                 # Set trajectories to be a bundle of empty lines, with all colors set.
+                 trajectories = []
+                 for clusIdx, cluster in enumerate(self.computedClusterings):
+                     clusterColor = colors[clusIdx]  # np.random.rand(3,1)
+                 
+                     for carIdx in cluster:
+                          
+                          xdata = lats [0:i+1,carIdx]
+                          ydata = longs[0:i+1,carIdx]
+	                  line, = ax.plot(xdata, ydata, 'o-')
+                          line.set_color(clusterColor)
+                          line.set_markeredgecolor('k')
+                          trajectories.append(line) # Add the reference to the line object.
          
                  yield trajectories, i
          
@@ -1779,23 +1764,65 @@ The following concrete class inheriting from *~AlgoAggarwalStatic~* is implement
              """
              trajectories = state[0] # All trajectories
              currentTime  = state[1] # The time at which to animate
-         
-             if currentTime > 1:
-                 for car in range(len(trajectories)):
-                     trajectories[car].set_markevery(  (currentTime,currentTime)  )
-         
+             ax.set_title( self.algoName + '\n r=' + str(self.r) + '  ' + str(currentTime) + '/' + str(len(self.pointCloud[0])-1), 
+                           fontdict={'fontsize':24})
+             ax.set_xlabel('Latitude', fontdict={'fontsize':22})
+             ax.set_ylabel('Longitude',fontdict={'fontsize':22})
+
+
+             print colored(str(currentTime) +  ' ' + str(len(ax.lines)), 'cyan')
              return trajectories
          
          # Call the animator.  blit=True means only re-draw the parts that have changed.
          # Ensures better speed
          
          anim = animation.FuncAnimation(fig, animateData, rGather(),
-                                        init_func=init, interval=200, blit=False, fargs=(fig,ax))
+                                        init_func=init, interval=interval_between_frames, blit=False, fargs=(fig,ax))
          # The draw commands are very important for the animation to be rednered.
+         #anim.save('scratch.mp4', fps=5, extra_args=['-vcodec', 'libx264']) ; print "Animation saved"
 	 fig.canvas.draw()
          plt.show()
-         #anim.save('shenzen_show_scratch.mp4', fps=5, extra_args=['-vcodec', 'libx264']) ; print "Animation saved"
 #+END_SRC
 
 #+RESULTS:
 
+* Appendix
+Some helper functions. 
+
+** Extracting the non-empty leaves of a tree
+
+I want this: L = [[1,2], [[], [], [], [[]]], [[3,4], [5,6,7]], [[5,6,45], [7,8], [[12,13], [14,15], [[12,7,8,3]]]] , [9,10] , [ [[6,5,3,4]],[8,5,6,4,3] ]    ,  [3], [[[[8,9], [12,14]]]]]
+To be converted to *[[1, 2], [3, 4], [5, 6, 7], [5, 6, 45], [7, 8], [12, 13], [14, 15], [12, 7, 8, 3], [9, 10], [6, 5, 3, 4], [8, 5, 6, 4, 3], [3], [8, 9], [12, 14]]*
+
+#+BEGIN_SRC python :tangle code/rGather.py
+def flattenNestedLists ( L, E):
+      """ Make sure, that inside the rGather code, you always call this with E = [].
+      I am NOT using a default value of E=[] inside because of soemthing Guido warned against
+      mutable arguments being used as default arguments. My impression is, it tends to behave 
+      quite like the static key-word in C inside functions. 
+     
+      Here L is the nested list, which looks like the example above.
+      """ 
+      for elt in L:
+		print "Looking at", elt
+		if isinstance(elt,list):
+			for eltt in elt:
+			      if isinstance(eltt,list):
+			     	   flattenNestedLists(eltt,E)
+			      else:
+				   E.append(elt)
+				   break
+		else:
+			E.append(L)
+			break
+
+#+END_SRC
+
+** Refine Large Clusters.
+
+#+BEGIN_SRC python :tangle code/rGather.py
+# Types would have been invaluable here!!
+def refineLargeClusters(pointCloud, largeClusters):
+    pass 
+
+#+END_SRC

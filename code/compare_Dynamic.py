@@ -26,33 +26,7 @@ r                     = args.r
 
 
 # Colour all trajectories in one group with the same colour. 
-fig, ax = plt.subplots()
-
-def checkTriangleInequality(points, distFn):
-	""" Check if the triangle inequality is satisfied.
-	pairwise for the given points. Iterate through all 
-        (N,3) combinations using the python;s combinatorics module.
-        """
-        import itertools as it
-        from termcolor import colored 
-
-	numpts = len(points)
-	d      = distFn
-
-	for (i,j,k) in it.permutations(range(numpts), 3):
-		(u,v,w) = (points[i], points[j], points[k])
-		triangle_ineq_verify = d(u,w)  < d(u,v) + d(v,w)
-
-                if triangle_ineq_verify == False:
-
-			print colored('Failure','white','on_red',['bold'])
-			print 'Points are ', u,v,w
-			sys.exit()
-                else:
-		    # The last three should be zero.
-		    print str([i,j,k]), '  ', d(u,w), ' ' , (d(u,v) + d(v,w)), ' ' , d(u,u),  ' ' , d(v,v), ' ', d(w,w)
-
-
+fig, ax = plt.subplots(1,2)
 
 numCars = len(indicesOfCarsPlotted) # Total number of cars selected to run the data on.
 
@@ -67,10 +41,6 @@ all_longs = data.get('long') # Longitudes of ALL cars in the data
 lats  = all_lats  [ np.ix_( range(0, numSamples), indicesOfCarsPlotted) ]
 longs = all_longs [ np.ix_( range(0, numSamples), indicesOfCarsPlotted) ]
 
-
-# Traverse the excel sheet column by column
-# The set of trajectories is [ [(Double,Double)] ] i.e. list of lists of tuples. 
-# number of GPS samples taken for the ith car. For shenzhen data set this is constant for all cars.
 trajectories = []
 for car in range(numCars): # Columns
     trajectories.append([]) # Create an empty entry which will contain the (x,y) coordinates of the trajectories of the car of the current loop
@@ -83,17 +53,24 @@ trajectories = np.array(trajectories)
 
 
 # Set the r-parameter and trajectories as points of the metric space.
-run            = rg.AlgoJieminDynamic( r= r, pointCloud= trajectories , memoizeNbrSearch=memFlag) 
-clusterCenters = run.generateClusters() # Generate clusters. Each cluster center itself is a tra1ectory.
-#print run.computedClusterings
-run.plotClusters( ax, trajThickness=2 ) 
+# The two approximation algorithm
+run1            = rg.AlgoJieminDynamic( r= r, pointCloud= trajectories , memoizeNbrSearch=memFlag) 
+clusterCenters  = run1.generateClusters() # Generate clusters. Each cluster center itself is a tra1ectory.
+run1.plotClusters( ax[0], trajThickness=2 ) 
+
+# The 4-approximation decentralized algorithm
+run2            = rg.Algo_Dynamic_4APX_R2_Linf ( r= r, pointCloud= trajectories, memoizeNbrSearch=memFlag) 
+clusterCenters  = run2.generateClusters() 
+run2.plotClusters( ax[1], trajThickness=2 ) 
+
 
 #--------------------------------Plotting area
 def wrapperkeyPressHandler( fig, ax, keyStack=[] ): # the key-stack argument is mutable! I am using this hack to my advantage.
     def _keyPressHandler(event):
         if event.key in ['r', 'R']: # Signal to start entering an r-value
 
-            run.clearComputedClusteringsAndR() # Neighbor map remain intact.
+            run1.clearComputedClusteringsAndR() # Neighbor map remain intact.
+            run2.clearComputedClusteringsAndR() # Neighbor map remain intact.
             keyStack.append('r')
 
         elif event.key in ['0','1','2','3','4','5','6','7','8','9'] and \
@@ -117,18 +94,16 @@ def wrapperkeyPressHandler( fig, ax, keyStack=[] ): # the key-stack argument is 
            keyStack[:] = [] # Empty for further integers.
 
            # Run the algorithm again, with the new r. 
-           run.r = r
-           clusterCenters = run.generateClusters() # Generate clusters. Each cluster center itself is a trajectory.
+           run1.r = r
+	   run2.r = r
+           clusterCenters = run1.generateClusters() # Generate clusters. Each cluster center itself is a trajectory.
+	   run2.generateClusters()
 	   #print run.computedClusterings
-	   ax.cla() # Clear the previous canvas
-           run.plotClusters( ax, trajThickness=2 ) 
-
+	   ax[0].cla() # Clear the previous canvas
+	   ax[1].cla()
+           run1.plotClusters( ax[0], trajThickness=2 ) 
+           run2.plotClusters( ax[1], trajThickness=2 ) 
            fig.canvas.draw()
-
-        elif event.key == 'a': # Animate the clusters
-		ax.cla()
-		run.animateClusters(ax, fig, lats, longs)
-		fig.canvas.draw()
 
     return _keyPressHandler
 
