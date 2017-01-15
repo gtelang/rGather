@@ -25,10 +25,10 @@ clusterCenters = run.generateClusters()
 
 
 # Set up plots with the resulting output data.
-fig, ax = plt.subplots(1,2)
-run.plotClusters( ax[0], trajThickness=2 ) 
+fig, ax = plt.subplots()
+run.plotClusters( ax, trajThickness=2, markersize=5 ) 
 
 
-keyPress     = ut.wrapperkeyPressHandler(fig, ax, run, lats, longs)
+keyPress     = ut.wrapperkeyPressHandler(fig, ax, run, lats, longs, interval_between_frames = 800)
 fig.canvas.mpl_connect('key_press_event', keyPress   )
 plt.show()

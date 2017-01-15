@@ -1567,6 +1567,7 @@ class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
     def plotClusters(self,  ax            , 
                      trajThickness  = 10 , 
                      marker         = 'o' , 
+                     markersize     = 15,
                      pointCloudInfo = ''  ,
                      annotatePoints = False,
                      plot_xytspace = False):
@@ -1598,10 +1599,10 @@ class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
 
                        timeStamps = np.linspace(0, 1, len(xdata))
                        #print "TimeStamps are : ", timeStamps
-                       line, = ax.plot(xdata, ydata, timeStamps, marker='o')
+                       line, = ax.plot(xdata, ydata, timeStamps, marker='o', markersize=markersize)
                        
                     else: # else if plot is 2d
-                       line, = ax.plot(xdata, ydata, 'o-')
+                       line, = ax.plot(xdata, ydata, 'o-', markersize=markersize)
                        #print type(ax)
                     # Every line in a cluster gets a unique color     
                     line.set_color(clusterColor)
@@ -1617,6 +1618,7 @@ class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
                      interval_between_frames=500,
                      lineTransparency   = 1.0,
                      markerTransparency = 1.0,
+                     markersize =15,
                      saveAnimation=False):
        """Instead of viewing the trajectories like a bowl of spaghetti, watch them 
        evolve in time. Each cluster gets assigned a unique color just like in plotClusters
@@ -1664,9 +1666,101 @@ class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
                         
                         xdata = lats [0:i+1,carIdx]
                         ydata = longs[0:i+1,carIdx]
-                        line, = ax.plot(xdata, ydata, 'o-')
+                        line, = ax.plot(xdata, ydata, 'o-', markersize=markersize)
                         line.set_color(clusterColor)
                         line.set_markeredgecolor('k')
+                        line.set_alpha(lineTransparency)
+                        trajectories.append(line) # Add the reference to the line object.2
+       
+               yield trajectories, i
+       
+       
+       # Separating the animateData and the rGather generator function allows
+       def animateData(state, fig, ax):
+           """ Render the trajectories rendered by the rGather algorithms
+           and add fancy effects.
+           """
+           trajectories = state[0] # All trajectories
+           currentTime  = state[1] # The time at which to animate
+           ax.set_title( self.algoName + '\n r=' + str(self.r) + '  ' +  ' Dynamic Algorithm ' + str(currentTime) + '/' + str(len(self.pointCloud[0])-1), 
+                         fontdict={'fontsize':24})
+           ax.set_xlabel('Latitude', fontdict={'fontsize':22})
+           ax.set_ylabel('Longitude',fontdict={'fontsize':22})
+
+           for line in ax.lines:
+                line.set_markevery((currentTime, currentTime))
+
+           print colored(str(currentTime) +  ' ' + str(len(ax.lines)), 'cyan')
+           return trajectories
+       
+       # Call the animator.  blit=True means only re-draw the parts that have changed.
+       # Ensures better speed
+       
+       anim = animation.FuncAnimation(fig, animateData, rGather(),
+                                      init_func=init, interval=interval_between_frames, blit=False, fargs=(fig,ax))
+       # The draw commands are very important for the animation to be rednered.
+       fig.canvas.draw()
+       plt.show()
+       anim.save('dynamic_clustering.mp4', fps=5, extra_args=['-vcodec', 'libx264']) ; print "Animation saved"
+
+
+    def mkClustersEveryTimeStep( self, ax, fig, lats, longs, 
+                                 interval_between_frames=500,
+                                 lineTransparency   = 1.0,
+                                 markerTransparency = 1.0,
+                                 markersize =15,
+                                 saveAnimation=False):
+       import colorsys
+       import itertools as it
+
+       # A special dumb initial function.
+       # Absolutely essential if you do blitting
+       # otherwise it will call the generator as an
+       # initial function, leading to trouble
+       def init():
+           print "Initializing "
+           return ax.lines
+       
+       # Update the state of rGather
+       def rGather():
+           """ Run the static online r-gather algorithm at each time-step as the cars
+           move around. 
+           """
+           
+           numCars      = len(self.pointCloud)
+           numSamples   = len(self.pointCloud[0])
+
+           for i in range(numSamples):
+               ax.lines = [] 
+
+               currentPositions = []
+               for trajectory in self.pointCloud:
+                       x, y = trajectory[i][0], trajectory[i][1]
+                       currentPositions.append([x,y])                 
+
+               #print np.array(currentPositions)
+               #print np.array(currentPositions).shape
+               tmprun_static = Algo_Static_4APX_R2_L2( r= self.r, pointCloud= np.array(currentPositions))
+               tmprun_static.generateClusters( config ={'mis_algorithm':'networkx_random_choose_20_iter_best' }  ) 
+               numClusters = len(tmprun_static.computedClusterings)
+
+               # Generate equidistant, hence maximally dispersed colors.
+               colors       = [(x*1.0/numClusters, 0.5, 0.5) for x in range(numClusters)]
+               colors       = map(lambda x: colorsys.hsv_to_rgb(*x), colors)
+
+               # Set trajectories to be a bundle of empty lines, with all colors set.
+               trajectories = []
+               for clusIdx, cluster in enumerate(tmprun_static.computedClusterings):
+                   clusterColor = colors[clusIdx]  # np.random.rand(3,1)
+               
+                   for carIdx in cluster:
+                        
+                        xdata = lats [0:i+1,carIdx]
+                        ydata = longs[0:i+1,carIdx]
+                        line, = ax.plot(xdata, ydata, 'o-', markersize=markersize)
+                        line.set_color(clusterColor)
+                        line.set_markeredgecolor('k')
+                        line.set_alpha(lineTransparency)
                         trajectories.append(line) # Add the reference to the line object.
        
                yield trajectories, i
@@ -1679,13 +1773,15 @@ class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
            """
            trajectories = state[0] # All trajectories
            currentTime  = state[1] # The time at which to animate
-           ax.set_title( self.algoName + '\n r=' + str(self.r) + '  ' + str(currentTime) + '/' + str(len(self.pointCloud[0])-1), 
+           ax.set_title( self.algoName + '\n r=' + str(self.r) + '  ' +  str('  Static Repeat  ') + str(currentTime) + '/' + str(len(self.pointCloud[0])-1) , 
                          fontdict={'fontsize':24})
            ax.set_xlabel('Latitude', fontdict={'fontsize':22})
            ax.set_ylabel('Longitude',fontdict={'fontsize':22})
 
+           for line in ax.lines:
+                line.set_markevery((currentTime, currentTime))
 
-           print colored(str(currentTime) +  ' ' + str(len(ax.lines)), 'cyan')
+           print colored(str(currentTime) + ' ' + str(len(ax.lines)), 'cyan')
            return trajectories
        
        # Call the animator.  blit=True means only re-draw the parts that have changed.
@@ -1694,9 +1790,10 @@ class Algo_Dynamic_4APX_R2_Linf ( Algo_4APX_Metric ):
        anim = animation.FuncAnimation(fig, animateData, rGather(),
                                       init_func=init, interval=interval_between_frames, blit=False, fargs=(fig,ax))
        # The draw commands are very important for the animation to be rednered.
-       #anim.save('scratch.mp4', fps=5, extra_args=['-vcodec', 'libx264']) ; print "Animation saved"
        fig.canvas.draw()
-       plt.show() # for trajectories in the euclidean plane with the linifinity-like metric
+       plt.show()
+       anim.save('static_repeat.mp4', fps=5, extra_args=['-vcodec', 'libx264']) ; print "Animation saved"
+ # for trajectories in the euclidean plane with the linifinity-like metric
 
 def flattenNestedLists ( L, E):
       """ Make sure, that inside the rGather code, you always call this with E = [].

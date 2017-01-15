@@ -56,7 +56,7 @@ def  interpretCommandLineArguments(args, inputFile='../DynamicInput/finalShenzhe
 
 
 
-def wrapperkeyPressHandler( fig, ax, run, lats, longs, keyStack=[] ): # the key-stack argument is mutable! I am using this hack to my advantage.
+def wrapperkeyPressHandler( fig, ax, run, lats, longs, interval_between_frames, keyStack=[] ): # the key-stack argument is mutable! I am using this hack to my advantage.
     def _keyPressHandler(event):
         if event.key in ['r', 'R']: # Signal to start entering an r-value
 
@@ -87,16 +87,23 @@ def wrapperkeyPressHandler( fig, ax, run, lats, longs, keyStack=[] ): # the key-
            run.r = r
            run.generateClustersSimple( config ={'mis_algorithm':'networkx_random_choose_20_iter_best' } ) # Generate clusters. Each cluster center itself is a trajectory.
 	   print "Computed Clusterings are ", run.computedClusterings
-	   ax[0].cla() # Clear the previous canvas
-           run.plotClusters( ax[0], trajThickness=2 ) 
+	   ax.cla() # Clear the previous canvas
+           run.plotClusters( ax, trajThickness=2, markersize = 5 ) 
 
            fig.canvas.draw()
 
         elif event.key == 'a': 
-		ax[1].cla()
-		ax[1].set_xlim(ax[0].get_xlim())
-		ax[1].set_ylim(ax[0].get_ylim())
-		run.animateClusters(ax[1], fig, lats, longs, interval_between_frames=100)
+		ax.cla()
+		ax.set_xlim(ax.get_xlim()) # These axes limit setting lines are important. It freezes the axes limits forever. 
+		ax.set_ylim(ax.get_ylim()) # Otherwise they keep getting updated dynamically.
+		run.animateClusters(ax, fig, lats, longs, lineTransparency=1.0,  markersize=15, interval_between_frames=interval_between_frames)
+		fig.canvas.draw()
+		
+        elif event.key == 'b': 
+		ax.cla()
+		ax.set_xlim(ax.get_xlim()) # These axes limit setting lines are important. It freezes the axes limits forever. 
+		ax.set_ylim(ax.get_ylim()) # Otherwise they keep getting updated dynamically.
+		run.mkClustersEveryTimeStep(ax, fig, lats, longs, lineTransparency=1.0,  markersize=15, interval_between_frames=interval_between_frames)
 		fig.canvas.draw()
 
     return _keyPressHandler
